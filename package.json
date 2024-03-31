@@ -1,0 +1,12 @@
+{
+  "name": "com.hextecgames.gridbasesystem",
+  "version": "1.0.0",
+  "displayName": "GridBaseSystem",
+  "description": "My Package",
+  "unity": "2019.1",
+  "dependencies": {},
+  "author": {
+    "name": "HexTecGames"
+  },
+  "hideInEditor": "false"
+}
