@@ -13,16 +13,16 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private GridEventSystem gridEventSystem = default;
 
         [Header("Settings")]
-        [SerializeField] private bool dropSelectedAfterBuild = default;
-        [SerializeField][DrawIf("dropSelectedAfterBuild", false)] private bool allowBuildHoldingDown = default;
-        [SerializeField] private bool allowRemoving = default;
-        [SerializeField][DrawIf("allowRemoving", true)] private bool allowRemoveHoldingDown = default;
-        [SerializeField][DrawIf("allowRemoving", true)] private bool allowOverwriting = default;
+        //[SerializeField] private bool dropSelectedAfterBuild = default;
+        //[SerializeField][DrawIf("dropSelectedAfterBuild", false)] private bool allowBuildHoldingDown = default;
+        //[SerializeField] private bool allowRemoving = default;
+        //[SerializeField][DrawIf("allowRemoving", true)] private bool allowRemoveHoldingDown = default;
+        //[SerializeField][DrawIf("allowRemoving", true)] private bool allowOverwriting = default;
 
         [Header("Placement")]
         [SerializeField] private TileHighlightSpawner highlightSpawner = default;
-        [SerializeField] private Color invalidLocationCol = Color.red;
-        [SerializeField] private Color validLocationCol = Color.green;
+        //[SerializeField] private Color invalidLocationCol = Color.red;
+        //[SerializeField] private Color validLocationCol = Color.green;
 
 
         public BaseTileObjectData SelectedObject
@@ -44,6 +44,7 @@ namespace HexTecGames.GridBaseSystem
         private BaseTileObjectData selectedObject;
 
         public event Action<BaseTileObjectData> OnSelectedObjectChanged;
+        public event Action<TileObject> OnObjectPlaced;
 
         private bool isDragging;
 
@@ -76,7 +77,7 @@ namespace HexTecGames.GridBaseSystem
             }
             if (SelectedObject != null)
             {
-                if (SelectedObject.IsDragable())
+                if (SelectedObject.IsDraggable)
                 {
                     isDragging = true;
                 }
@@ -88,7 +89,15 @@ namespace HexTecGames.GridBaseSystem
         {
             if (SelectedObject != null)
             {
+                if (coord.isValid == false)
+                {
+                    ghost.Deactivate();
+                    return;
+                }
+                else ghost.Activate();
+
                 ghost.SetPosition(grid.CoordToWorldPoint(coord));
+
                 if (isDragging)
                 {
                     Build(coord);
@@ -106,7 +115,8 @@ namespace HexTecGames.GridBaseSystem
             {
                 return;
             }
-            new BaseTileObject(coord, grid, SelectedObject);
+            TileObject tileObject = new TileObject(coord, grid, SelectedObject);
+            OnObjectPlaced?.Invoke(tileObject);
         }
         public void ClearSelectedObject()
         {

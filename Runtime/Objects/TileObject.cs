@@ -6,7 +6,7 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
-    public class BaseTileObject
+    public class TileObject
 	{
         public BaseGrid Grid
         {
@@ -36,10 +36,10 @@ namespace HexTecGames.GridBaseSystem
         private Coord center;
 
 
-        public event Action<BaseTileObject> OnRemoved;
-        public event Action<BaseTileObject> OnMoved;
+        public event Action<TileObject> OnRemoved;
+        public event Action<TileObject> OnMoved;
 
-        public BaseTileObject(Coord center, BaseGrid grid, BaseTileObjectData data)
+        public TileObject(Coord center, BaseGrid grid, BaseTileObjectData data)
         {
             this.grid = grid;
             this.data = data;

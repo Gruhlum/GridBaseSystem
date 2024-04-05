@@ -18,5 +18,21 @@ namespace HexTecGames.GridBaseSystem
                 }
             }
         }
-	}
+
+        public IEnumerator SpawnHighlights(List<Vector3> positions, Color col, float delay = 0.02f)
+        {          
+            foreach (var pos in positions)
+            {
+                yield return new WaitForSeconds(delay);
+                Spawn().Activate(pos, col);
+            }
+        }
+        public IEnumerator SpawnHighlights(List<List<Vector3>> positions, float delay = 0.02f)
+        {
+            foreach (var pos in positions)
+            {
+                yield return SpawnHighlights(pos, new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 0.5f), delay);
+            }
+        }
+    }
 }

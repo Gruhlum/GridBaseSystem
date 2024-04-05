@@ -8,6 +8,13 @@ namespace HexTecGames.GridBaseSystem
 	{
 		public abstract List<Coord> GetCoords();
 		public abstract Sprite GetSprite();
-		public abstract bool IsDragable();
+		public abstract bool IsDraggable
+		{
+			get;
+		}
+		public abstract bool IsWall
+		{
+			get;
+		}
 	}
 }

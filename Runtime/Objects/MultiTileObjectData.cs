@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [CreateAssetMenu(menuName = "HexTecGames/MultiTileObjectData")]
-    public class MultiTileObjectData : BaseTileObjectData
+    public abstract class MultiTileObjectData : BaseTileObjectData
     {
         [SerializeField] private List<Coord> coords = default;
         public List<Sprite> sprites = new List<Sprite>();
@@ -23,9 +23,12 @@ namespace HexTecGames.GridBaseSystem
         {
             return sprites[0];
         }
-        public override bool IsDragable()
+        public override bool IsDraggable
         {
-            return false;
+            get
+            {
+                return false;
+            }
         }
     }
 }

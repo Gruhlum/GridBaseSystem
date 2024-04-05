@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace HexTecGames.GridBaseSystem
 {
@@ -20,6 +21,8 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private BaseGrid grid = default;
 
+        [SerializeField] private EventSystem eventSys = default;
+
         public Coord MouseHoverCoord
         {
             get
@@ -33,6 +36,12 @@ namespace HexTecGames.GridBaseSystem
         public event Action<Coord, int> OnMouseClicked;
 
 
+        void Reset()
+        {
+            eventSys = FindObjectOfType<EventSystem>();
+            grid = GetComponentInParent<BaseGrid>();
+        }
+
         private void Start()
         {
             mouseHoverCoord = grid.MousePositionToCoord();
@@ -41,6 +50,12 @@ namespace HexTecGames.GridBaseSystem
 
         private void Update()
         {
+            if (eventSys != null && eventSys.IsPointerOverGameObject())
+            {
+                mouseHoverCoord.isValid = false;
+                OnMouseHoverCoordChanged?.Invoke(mouseHoverCoord);
+                return;
+            }
             MouseOverCheck();
             if (Input.GetMouseButtonDown(0))
             {

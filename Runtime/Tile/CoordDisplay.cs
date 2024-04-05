@@ -22,6 +22,11 @@ namespace HexTecGames.GridBaseSystem
         private Coord coord;
 
 
+        void Reset()
+        {
+            sr = GetComponent<SpriteRenderer>();
+        }
+
         public void Setup(Coord coord, Vector3 position)
 		{
             this.Coord = coord;

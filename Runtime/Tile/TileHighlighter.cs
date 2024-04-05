@@ -97,6 +97,7 @@ namespace HexTecGames.GridBaseSystem
             endColor.a = 0;
             yield return FadeColor(startCol, endColor, duration);
             gameObject.SetActive(false);
+            sr.color = startCol;
         }
         private IEnumerator FadeIn(Color startCol, float duration)
         {
