@@ -50,12 +50,12 @@ namespace HexTecGames.GridBaseSystem
 
         private void Update()
         {
-            if (eventSys != null && eventSys.IsPointerOverGameObject())
-            {
-                mouseHoverCoord.isValid = false;
-                OnMouseHoverCoordChanged?.Invoke(mouseHoverCoord);
-                return;
-            }
+            //if (eventSys != null && eventSys.IsPointerOverGameObject())
+            //{
+            //    mouseHoverCoord.isValid = false;
+            //    OnMouseHoverCoordChanged?.Invoke(mouseHoverCoord);
+            //    return;
+            //}
             MouseOverCheck();
             if (Input.GetMouseButtonDown(0))
             {

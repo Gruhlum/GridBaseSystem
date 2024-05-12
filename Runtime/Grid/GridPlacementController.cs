@@ -11,8 +11,9 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private BaseGrid grid = default;
         [SerializeField] private GhostObject ghost = default;
         [SerializeField] private GridEventSystem gridEventSystem = default;
+        [SerializeField] private ResourceController resourceC = default;
 
-        [Header("Settings")]
+        //[Header("Settings")]
         //[SerializeField] private bool dropSelectedAfterBuild = default;
         //[SerializeField][DrawIf("dropSelectedAfterBuild", false)] private bool allowBuildHoldingDown = default;
         //[SerializeField] private bool allowRemoving = default;
@@ -115,7 +116,16 @@ namespace HexTecGames.GridBaseSystem
             {
                 return;
             }
-            TileObject tileObject = new TileObject(coord, grid, SelectedObject);
+            if (SelectedObject is ICost cost)
+            {
+                if (!cost.IsAffordable(resourceC.GetResources()))
+                {
+                    return;
+                }
+                else cost.SubtractResources(resourceC.GetResources());
+            }
+            TileObject tileObject = SelectedObject.CreateTileObject(coord, grid);
+            grid.AddTileObject(tileObject);
             OnObjectPlaced?.Invoke(tileObject);
         }
         public void ClearSelectedObject()

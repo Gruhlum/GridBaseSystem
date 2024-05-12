@@ -16,5 +16,10 @@ namespace HexTecGames.GridBaseSystem
 		{
 			get;
 		}
+
+		public virtual TileObject CreateTileObject(Coord center, BaseGrid grid)
+		{
+			return new TileObject(center, grid, this);
+		}
 	}
 }

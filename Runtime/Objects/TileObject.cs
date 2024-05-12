@@ -7,7 +7,7 @@ namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
     public class TileObject
-	{
+    {
         public BaseGrid Grid
         {
             get
@@ -23,7 +23,39 @@ namespace HexTecGames.GridBaseSystem
                 return data;
             }
         }
-        protected BaseTileObjectData data;
+        private BaseTileObjectData data;
+
+        public Sprite Sprite
+        {
+            get
+            {
+                return sprite;
+            }
+            set
+            {
+                if (sprite == value)
+                {
+                    return;
+                }
+                sprite = value;
+                OnSpriteChanged?.Invoke(this, sprite);
+            }
+        }
+        private Sprite sprite;
+
+        public Color Color
+        {
+            get
+            {
+                return color;
+            }
+            set
+            {
+                color = value;
+                OnColorChanged?.Invoke(this, color);
+            }
+        }
+        private Color color = Color.white;
 
 
         public Coord Center
@@ -35,7 +67,8 @@ namespace HexTecGames.GridBaseSystem
         }
         private Coord center;
 
-
+        public event Action<TileObject, Sprite> OnSpriteChanged;
+        public event Action<TileObject, Color> OnColorChanged;
         public event Action<TileObject> OnRemoved;
         public event Action<TileObject> OnMoved;
 
@@ -44,16 +77,15 @@ namespace HexTecGames.GridBaseSystem
             this.grid = grid;
             this.data = data;
             this.center = center;
-          
-            grid.AddTileObject(this);
+            sprite = data.GetSprite();
         }
 
-        public void Remove()
+        public virtual void Remove()
         {
             grid.RemoveTileObject(this);
             OnRemoved?.Invoke(this);
         }
-        public void Move(Coord target)
+        public virtual void Move(Coord target)
         {
             Coord oldCenter = center;
             center = target;
@@ -74,6 +106,24 @@ namespace HexTecGames.GridBaseSystem
                 coords[i] += center;
             }
             return coords;
+        }
+
+        public List<Coord> GetAllNeighbourCoords(List<Coord> coords)
+        {
+            List<Coord> neighbours = new List<Coord>();
+
+            foreach (var coord in coords)
+            {
+                var results = grid.GetNeighbourCoords(coord);
+                foreach (var result in results)
+                {
+                    if (!coords.Contains(result) && !neighbours.Contains(result))
+                    {
+                        neighbours.Add(result);
+                    }
+                }
+            }
+            return neighbours;
         }
 
         public Vector3 GetWorldPosition()

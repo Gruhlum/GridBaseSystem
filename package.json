@@ -1,12 +1,14 @@
 {
   "name": "com.hextecgames.gridbasesystem",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "displayName": "GridBaseSystem",
-  "description": "My Package",
+  "description": "Base package for grid systems",
   "unity": "2019.1",
-  "dependencies": {},
+  "dependencies": {
+    "com.hextecgames.basics": "1.0.0",
+    "com.unity.textmeshpro": "3.0.0"
+  },
   "author": {
     "name": "HexTecGames"
-  },
-  "hideInEditor": "false"
+  }
 }

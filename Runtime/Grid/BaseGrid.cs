@@ -31,6 +31,33 @@ namespace HexTecGames.GridBaseSystem
         }
         private Coord center;
 
+        public int Width
+        {
+            get
+            {
+                return width;
+            }
+            private set
+            {
+                width = value;
+            }
+        }
+        private int width;
+
+        public int Height
+        {
+            get
+            {
+                return height;
+            }
+            private set
+            {
+                height = value;
+            }
+        }
+        private int height;
+
+
         public event Action<Coord> OnTileAdded;
         public event Action<Coord> OnTileRemoved;
         public event Action OnGridGenerated;
@@ -39,7 +66,7 @@ namespace HexTecGames.GridBaseSystem
         public event Action<TileObject> OnTileObjectRemoved;
         public event Action<TileObject> OnTileObjectMoved;
 
-
+        
         public float TileWidth
         {
             get
@@ -119,9 +146,12 @@ namespace HexTecGames.GridBaseSystem
         //}
         public virtual void GenerateGrid(int width, int height)
         {
+            this.Width = width;
+            this.Height = height;
             coordinates = new Coord[width, height];
             tileObjects = new TileObject[width, height];
             center.Set(width / 2, height / 2);
+
             for (int w = 0; w < width; w++)
             {
                 for (int h = 0; h < height; h++)
@@ -131,7 +161,7 @@ namespace HexTecGames.GridBaseSystem
                     coordinates[w, h].isValid = true;
                 }
             }
-            transform.position = new Vector2(-(width - 1) / 3f * TotalVerticalSpacing, -(height - 1) / 3f * TotalHorizontalSpacing);
+            transform.position = new Vector2(-(width - 1) / 2f * TotalVerticalSpacing, -(height - 1) / 2f * TotalHorizontalSpacing);
             OnGridGenerated?.Invoke();
         }
 
@@ -141,7 +171,7 @@ namespace HexTecGames.GridBaseSystem
         }
         public void AddTile(int x, int y)
         {
-            if (Coordinates.GetLength(0) <= x || Coordinates.GetLength(1) <= y)
+            if (Width <= x || Height <= y)
             {
                 ResizeCoordinatesArray(x, y);
             }
@@ -154,7 +184,7 @@ namespace HexTecGames.GridBaseSystem
         }
         public void RemoveTile(int x, int y)
         {
-            if (Coordinates.GetLength(0) <= x || Coordinates.GetLength(1) <= y)
+            if (Width <= x || Height <= y)
             {
                 Debug.Log("Trying to remove tile that is out of bounds");
                 return;
@@ -165,8 +195,8 @@ namespace HexTecGames.GridBaseSystem
 
         private void ResizeCoordinatesArray(int width, int height)
         {
-            int minWidth = Mathf.Min(width, Coordinates.GetLength(0));
-            int minHeight = Mathf.Min(height, Coordinates.GetLength(1));
+            int minWidth = Mathf.Min(width, Width);
+            int minHeight = Mathf.Min(height, Height);
 
             Coord[,] results = new Coord[minWidth, minHeight];
 
@@ -174,7 +204,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 for (int y = 0; y < minHeight; y++)
                 {
-                    if (coordinates.GetLength(0) > x && coordinates.GetLength(1) > y)
+                    if (Width > x && Height > y)
                     {
                         results[x, y] = Coordinates[x, y];
                     }
@@ -207,9 +237,23 @@ namespace HexTecGames.GridBaseSystem
             }
             return tileObjects[coord.x, coord.y];
         }
-        public TileObject GetTileObject<T>(Coord coord) where T : TileObject
+        //public TileObject GetTileObject<T>(Coord coord) where T : TileObject
+        //{
+        //    return tileObjects[coord.x, coord.y] as T;
+        //}
+        public List<TileObject> GetTileObjects(List<Coord> coords)
         {
-            return tileObjects[coord.x, coord.y] as T;
+            List<TileObject> results = new List<TileObject>();
+
+            foreach (var coord in coords)
+            {
+                var tileObj = GetTileObject(coord);
+                if (tileObj != null)
+                {
+                    results.Add(tileObj);
+                }
+            }
+            return results;
         }
         private void AssignCoord(TileObject obj)
         {
@@ -307,10 +351,7 @@ namespace HexTecGames.GridBaseSystem
                 return false;
             }
 
-            int lengthX = coordinates.GetLength(0);
-            int lengthY = coordinates.GetLength(1);
-
-            if (coord.x >= 0 && coord.y >= 0 && lengthX > coord.x && lengthY > coord.y)
+            if (coord.x >= 0 && coord.y >= 0 && Width > coord.x && Height > coord.y)
             {
                 //Debug.Log(lengthX + " - " + normalized.x + " - " + lengthY + " - " + normalized.y);
                 return coordinates[coord.x, coord.y].isValid;
@@ -330,10 +371,16 @@ namespace HexTecGames.GridBaseSystem
                     continue;
                 }
                 var connectedCoords = GetConnectedCoords(coord);
+                if (connectedCoords.Count == 0)
+                {
+                    //Debug.Log("is empty! " + coord.ToString());
+                    continue;
+                }
                 totalResults += connectedCoords.Count;
                 results.Add(connectedCoords);
                 if (totalResults >= coordinates.Length)
                 {
+                    Debug.Log("Finished in: " + (DateTime.Now - startTime) + " ms");
                     return results;
                 }
             }
@@ -342,38 +389,29 @@ namespace HexTecGames.GridBaseSystem
 
         }
 
-
         public List<Coord> GetConnectedCoords(Coord start)
         {
             if (!IsTilePassable(start))
             {
                 return new List<Coord>();
             }
-            return GetCoordsInLine(start, true, new List<Coord>() { start });
+            return GetCoordsInLine(start, true, new List<Coord>());
         }
 
         private List<Coord> GetCoordsInLine(Coord start, bool diagonal, List<Coord> results)
         {
             List<Coord> newResults = new List<Coord>();
             Coord currentCoord = start;
-            if (diagonal)
-            {
-                currentCoord.x += 1;
-            }
-            else currentCoord.y += 1;
-            if (results.Count >= 10000)
-            {
-                return results;
-            }
+            //if (diagonal)
+            //{
+            //    currentCoord.x += 1;
+            //}
+            //else currentCoord.y += 1;
 
             while (IsTilePassable(currentCoord) && !results.Contains(currentCoord))
             {
                 //Debug.Log(currentCoord.ToString());
                 newResults.Add(currentCoord);
-                if (results.Count >= 10000 || newResults.Count >= 10000)
-                {
-                    return results;
-                }
                 if (diagonal)
                 {
                     currentCoord.x += 1;
@@ -381,8 +419,6 @@ namespace HexTecGames.GridBaseSystem
                 else currentCoord.y += 1;
             }
 
-
-            //Debug.Log(IsTilePassable(currentCoord) + " - " + currentCoord);
             currentCoord = start;
             if (diagonal)
             {
@@ -392,10 +428,6 @@ namespace HexTecGames.GridBaseSystem
 
             while (IsTilePassable(currentCoord) && !results.Contains(currentCoord))
             {
-                if (results.Count >= 10000 || newResults.Count >= 10000)
-                {
-                    return results;
-                }
                 newResults.Add(currentCoord);
                 if (diagonal)
                 {
@@ -447,7 +479,24 @@ namespace HexTecGames.GridBaseSystem
         //}
         public abstract List<Coord> GetArea(Coord center, int radius);
         public abstract List<Coord> GetRing(Coord center, int radius);
-        public abstract List<Coord> GetNeighbourCoords(Coord center);
+        public abstract List<Coord> GetNeighbourCoords(Coord center);        
+        public List<Coord> GetNeighbourCoords(List<Coord> coords)
+        {
+            List<Coord> neighbours = new List<Coord>();
+
+            foreach (var coord in coords)
+            {
+                var results = GetNeighbourCoords(coord);
+                foreach (var result in results)
+                {
+                    if (!coords.Contains(result) && !neighbours.Contains(result))
+                    {
+                        neighbours.Add(result);
+                    }
+                }
+            }
+            return neighbours;
+        }
         public virtual List<TileObject> GetNeighbourObjects(Coord center)
         {
             var coords = GetNeighbourCoords(center);
@@ -458,6 +507,34 @@ namespace HexTecGames.GridBaseSystem
                 if (tileObj != null)
                 {
                     results.Add(tileObj);
+                }
+            }
+            return results;
+        }
+        public virtual List<TileObject> GetNeighbourObjects(List<Coord> coords)
+        {
+            var resultCoords = GetNeighbourCoords(coords);
+            List<TileObject> results = new List<TileObject>();
+            foreach (var coord in resultCoords)
+            {
+                TileObject tileObj = GetTileObject(coord);
+                if (tileObj != null)
+                {
+                    results.Add(tileObj);
+                }
+            }
+            return results;
+        }
+        public virtual List<T> GetNeighbourObjects<T>(List<Coord> coords) where T : TileObject
+        {
+            var resultCoords = GetNeighbourCoords(coords);
+            List<T> results = new List<T>();
+            foreach (var coord in resultCoords)
+            {
+                TileObject tileObj = GetTileObject(coord);
+                if (tileObj != null && tileObj is T t)
+                {
+                    results.Add(t);
                 }
             }
             return results;
