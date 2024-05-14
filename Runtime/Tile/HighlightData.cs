@@ -11,8 +11,8 @@ namespace HexTecGames.GridBaseSystem
         public float startDelay = default;
         public bool hasDuration = default;
         [DrawIf(nameof(hasDuration), true)] public float duration = 1;
-        public float fadeIn = 1;
-        public float fadeOut = 1;
-        public Color color = default;
+        public float fadeIn = 0;
+        public float fadeOut = 0;
+        public Color color = Color.white;
     }
 }

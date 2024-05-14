@@ -37,7 +37,7 @@ namespace HexTecGames.GridBaseSystem
             for (int i = 0; i < range; i++)
             {
                 var results = grid.GetRing(grid.Center, i);
-                results = grid.GetValidCoords(results);
+                grid.GetValidTiles(results);
                 yield return DisplayResults(results);
             }
         }
@@ -46,7 +46,7 @@ namespace HexTecGames.GridBaseSystem
             for (int i = 0; i < range; i++)
             {
                 var results = grid.GetArea(grid.Center, i);
-                results = grid.GetValidCoords(results);
+                grid.GetValidTiles(results);
                 yield return new WaitForSeconds(1.4f / speed);
                 yield return DisplayResults(results);
             }

@@ -12,6 +12,16 @@ namespace HexTecGames.GridBaseSystem
 
         private List<TileObjectDisplay> activeDisplays = new List<TileObjectDisplay>();
 
+
+        void Reset()
+        {
+            grid = GetComponentInParent<BaseGrid>();
+            if (srSpawner == null)
+            {
+                srSpawner = new Spawner<TileObjectDisplay>();
+            }
+            srSpawner.Parent = transform;
+        }
         private void OnEnable()
         {
             grid.OnTileObjectAdded += Grid_OnTileObjectAdded;

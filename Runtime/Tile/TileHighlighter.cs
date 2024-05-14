@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public class TileHighlighter : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer sr = default;

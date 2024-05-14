@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-	public class MouseHighlighter : MonoBehaviour
+	public class GridMouseHighlighter : MonoBehaviour
 	{
         [SerializeField] private TileHighlightSpawner highlightSpawner = default;
         [SerializeField] private GridEventSystem gridEventSys = default;
@@ -12,6 +12,19 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private HighlightData hoverData;
         [SerializeField] private HighlightData leftClickData;
 
+
+        void Reset()
+        {
+            if (transform.parent != null)
+            {
+                gridEventSys = transform.parent.GetComponentInChildren<GridEventSystem>();
+            }
+            if (highlightSpawner == null)
+            {
+                highlightSpawner = new TileHighlightSpawner();
+            }
+            highlightSpawner.Parent = transform;
+        }
         private void OnEnable()
         {
             gridEventSys.OnMouseClicked += GridEventSys_OnMouseClicked;

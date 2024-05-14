@@ -32,16 +32,25 @@ namespace HexTecGames.GridBaseSystem
             sr.color = tileObject.Color;
         }
 
-        private void TileObject_OnColorChanged(TileObject arg1, Color color)
+        private void TileObject_OnColorChanged(GridObject arg1, Color color)
         {
             sr.color = color;
         }
 
-        private void TileObject_OnSpriteChanged(TileObject arg1, Sprite sprite)
+        private void TileObject_OnSpriteChanged(GridObject arg1, Sprite sprite)
         {
             sr.sprite = sprite;
         }
+        private void TileObject_OnRemoved(GridObject obj)
+        {
+            UnsubscribeEvents();
+            visualizer.RemoveDisplay(this);
+        }
 
+        private void TileObject_OnMoved(GridObject obj)
+        {
+            transform.position = obj.GetWorldPosition();
+        }
         private void UnsubscribeEvents()
         {
             if (tileObject != null)
@@ -51,17 +60,6 @@ namespace HexTecGames.GridBaseSystem
                 tileObject.OnSpriteChanged -= TileObject_OnSpriteChanged;
                 tileObject.OnColorChanged -= TileObject_OnColorChanged;
             }
-        }
-
-        private void TileObject_OnRemoved(TileObject obj)
-        {
-            UnsubscribeEvents();
-            visualizer.RemoveDisplay(this);
-        }
-
-        private void TileObject_OnMoved(TileObject obj)
-        {
-            transform.position = obj.GetWorldPosition();
         }
     }
 }
