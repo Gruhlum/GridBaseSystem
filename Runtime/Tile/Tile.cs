@@ -40,7 +40,7 @@ namespace HexTecGames.GridBaseSystem
         //{
 
         //}
-        public Tile(Coord coord, BaseGrid grid, TileData tileData) : base(coord, grid)
+        public Tile(Coord coord, BaseGrid grid, TileData tileData) : base(coord, grid, tileData)
         {
             this.Data = tileData;
             UpdateSprite();

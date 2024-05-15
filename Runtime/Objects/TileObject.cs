@@ -17,7 +17,7 @@ namespace HexTecGames.GridBaseSystem
         }
         private BaseTileObjectData data;
 
-        public TileObject(Coord center, BaseGrid grid, BaseTileObjectData data) : base(center, grid)
+        public TileObject(Coord center, BaseGrid grid, BaseTileObjectData data) : base(center, grid, data)
         {
             this.data = data;
             Sprite = data.GetSprite();

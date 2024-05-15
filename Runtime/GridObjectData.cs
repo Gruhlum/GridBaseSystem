@@ -18,6 +18,20 @@ namespace HexTecGames.GridBaseSystem
 				return false;
 			}
 		}
+
+		public Color Color
+		{
+			get
+			{
+				return color;
+			}
+			private set
+			{
+                color = value;
+			}
+		}
+		[SerializeField] private Color color;
+
 		public abstract bool IsValidCoord(Coord coord, BaseGrid grid);
 		public abstract GridObject CreateObject(Coord center, BaseGrid grid);
 

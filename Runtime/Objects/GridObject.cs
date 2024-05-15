@@ -71,10 +71,11 @@ namespace HexTecGames.GridBaseSystem
         public event Action<GridObject> OnRemoved;
         public event Action<GridObject> OnMoved;
 
-        public GridObject(Coord center, BaseGrid grid)
+        public GridObject(Coord center, BaseGrid grid, GridObjectData data)
         {
             this.Grid = grid;
             this.Center = center;
+            Color = data.Color;
         }
 
         public virtual void Remove()
