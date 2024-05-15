@@ -12,10 +12,18 @@ namespace HexTecGames.GridBaseSystem
         public override Sprite GetSprite(Coord coord, BaseGrid grid)
         {
             var neighbours = grid.GetNeighbourCoords(coord);
-			for (int i = 0; i < neighbours.Count; i++)
+
+			for (int i = neighbours.Count - 1; i >= 0; i--)
 			{
-				neighbours[i] -= coord;
-			}
+                Tile tile = grid.GetTile(neighbours[i]);
+
+                if (tile == null || tile.Data != this)
+                {
+                    neighbours.RemoveAt(i);
+                }
+                else neighbours[i] -= coord;
+            }
+
 			foreach (var ruleData in ruleDatas)
 			{
 				if (ruleData.Matches(neighbours))
