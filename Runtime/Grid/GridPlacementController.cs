@@ -107,14 +107,14 @@ namespace HexTecGames.GridBaseSystem
 
                 ghost.SetPosition(grid.CoordToWorldPoint(coord));
 
-                if (isDragging)
+                if (isDragging && lastMouseBtn == 0)
                 {
                     Build(coord);
                 }
             }
             else
             {
-                if (isDragging)
+                if (isDragging && lastMouseBtn == 1)
                 {
                     if (SelectedObject != null)
                     {
