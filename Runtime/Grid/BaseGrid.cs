@@ -17,7 +17,7 @@ namespace HexTecGames.GridBaseSystem
         }
         protected Tile[,] coordinates = new Tile[1, 1];
 
-        protected TileObject[,] tileObjects = new TileObject[1,1];
+        protected TileObject[,] tileObjects = new TileObject[1, 1];
 
         public bool AllowResize
         {
@@ -240,12 +240,16 @@ namespace HexTecGames.GridBaseSystem
         public void AddTile(Coord coord, TileData data)
         {
             AddTile(new Tile(coord, this, data));
-        }   
+        }
         public void AddTile(Tile tile)
         {
             if (Width <= tile.X || Height <= tile.Y)
             {
                 ResizeCoordinatesArray(tile.X + 1, tile.Y + 1);
+            }
+            if (Coordinates[tile.X, tile.Y] != null)
+            {
+                RemoveTile(Coordinates[tile.X, tile.Y]);
             }
             Coordinates[tile.X, tile.Y] = tile;
             tile.UpdateSprite();
@@ -374,7 +378,7 @@ namespace HexTecGames.GridBaseSystem
             }
             return results;
         }
-     
+
         public void AddGridObject(GridObject obj)
         {
             if (obj is Tile tile)
@@ -676,7 +680,7 @@ namespace HexTecGames.GridBaseSystem
                     if (Coordinates[coord.x, coord.y] is T t)
                     {
                         results.Add(t);
-                    }                  
+                    }
                 }
             }
             return results;

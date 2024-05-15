@@ -30,7 +30,7 @@ namespace HexTecGames.GridBaseSystem
                 color = value;
 			}
 		}
-		[SerializeField] private Color color;
+		[SerializeField] private Color color = Color.white;
 
 		public abstract bool IsValidCoord(Coord coord, BaseGrid grid);
 		public abstract GridObject CreateObject(Coord center, BaseGrid grid);
