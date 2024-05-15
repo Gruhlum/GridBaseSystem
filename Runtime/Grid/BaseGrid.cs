@@ -458,7 +458,7 @@ namespace HexTecGames.GridBaseSystem
         }
         private bool IsCoordOutOfBounds(Coord coord)
         {
-            if (coord.x < 0 || coord.y < 0 || coord.x > Width || coord.y > Height)
+            if (coord.x < 0 || coord.y < 0 || coord.x >= Width || coord.y >= Height)
             {
                 return true;
             }
