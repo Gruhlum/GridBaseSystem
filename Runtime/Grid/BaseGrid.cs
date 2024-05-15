@@ -15,9 +15,9 @@ namespace HexTecGames.GridBaseSystem
                 return coordinates;
             }
         }
-        protected Tile[,] coordinates;
+        protected Tile[,] coordinates = new Tile[1, 1];
 
-        protected TileObject[,] tileObjects;
+        protected TileObject[,] tileObjects = new TileObject[1,1];
 
         public bool AllowResize
         {
@@ -57,6 +57,33 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         [SerializeField] private int maximumHeight;
+
+        public int StartWidth
+        {
+            get
+            {
+                return startWidth;
+            }
+            private set
+            {
+                startWidth = value;
+            }
+        }
+        [SerializeField] private int startWidth;
+
+        public int StartHeight
+        {
+            get
+            {
+                return startHeight;
+            }
+            private set
+            {
+                startHeight = value;
+            }
+        }
+        [SerializeField] private int startHeight;
+
 
         public Coord Center
         {
@@ -188,6 +215,16 @@ namespace HexTecGames.GridBaseSystem
         //    }
         //    OnGridGenerated?.Invoke();
         //}
+
+
+        void Awake()
+        {
+            if (StartHeight > 0 && StartWidth > 0)
+            {
+                SetupBounds(StartWidth, StartHeight);
+            }
+        }
+
         public virtual void GenerateGrid(List<Tile> tiles)
         {
             SetupBounds(tiles.Max(c => c.X + 1), tiles.Max(c => c.Y) + 1);
