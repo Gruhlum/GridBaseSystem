@@ -25,7 +25,7 @@ namespace HexTecGames.GridBaseSystem
         public void Setup(Tile tile)
 		{
             this.Tile = tile;
-            sr.sprite = tile.Sprite;
+            sr.sprite = tile.Data.GetSprite(tile.Center, tile.Grid);
             name = tile.ToString();
             transform.position = tile.GetWorldPosition();
 		}
