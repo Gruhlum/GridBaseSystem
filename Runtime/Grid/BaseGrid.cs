@@ -219,9 +219,17 @@ namespace HexTecGames.GridBaseSystem
                 ResizeCoordinatesArray(tile.X + 1, tile.Y + 1);
             }
             Coordinates[tile.X, tile.Y] = tile;
+            UpdateTileNeighbours(tile);
             OnTileAdded?.Invoke(tile);
         }
-
+        private void UpdateTileNeighbours(Tile t)
+        {
+            List<Tile> neighbours = GetNeighbourTiles(t.Center);
+            foreach (var neighbour in neighbours)
+            {
+                neighbour.UpdateSprite();
+            }
+        }
         public void RemoveGridObject(Coord coord)
         {
             if (!DoesTileExist(coord))
@@ -254,6 +262,7 @@ namespace HexTecGames.GridBaseSystem
             }
             Tile tile = Coordinates[x, y];
             Coordinates[x, y] = null;
+            UpdateTileNeighbours(tile);
             OnTileRemoved?.Invoke(tile);
         }
         private void ResizeCoordinatesArray(int width, int height)
@@ -601,6 +610,35 @@ namespace HexTecGames.GridBaseSystem
         public abstract List<Coord> GetArea(Coord center, int radius);
         public abstract List<Coord> GetRing(Coord center, int radius);
         public abstract List<Coord> GetNeighbourCoords(Coord center);
+        public List<Tile> GetNeighbourTiles(Coord center)
+        {
+            List<Coord> coords = GetNeighbourCoords(center);
+            List<Tile> results = new List<Tile>();
+            foreach (var coord in coords)
+            {
+                if (DoesTileExist(coord))
+                {
+                    results.Add(Coordinates[coord.x, coord.y]);
+                }
+            }
+            return results;
+        }
+        public List<T> GetNeighbourTiles<T>(Coord center) where T : Tile
+        {
+            List<Coord> coords = GetNeighbourCoords(center);
+            List<T> results = new List<T>();
+            foreach (var coord in coords)
+            {
+                if (DoesTileExist(coord))
+                {
+                    if (Coordinates[coord.x, coord.y] is T t)
+                    {
+                        results.Add(t);
+                    }                  
+                }
+            }
+            return results;
+        }
         public List<Coord> GetNeighbourCoords(List<Coord> coords)
         {
             List<Coord> neighbours = new List<Coord>();

@@ -43,9 +43,12 @@ namespace HexTecGames.GridBaseSystem
         public Tile(Coord coord, BaseGrid grid, TileData tileData) : base(coord, grid)
         {
             this.Data = tileData;
-            Sprite = tileData.Sprite;
+            UpdateSprite();
         }
-
+        public void UpdateSprite()
+        {
+            Sprite = Data.GetSprite(Center, Grid);
+        }
         protected override void MoveGridPosition(Coord oldCenter)
         {
             throw new NotImplementedException();
