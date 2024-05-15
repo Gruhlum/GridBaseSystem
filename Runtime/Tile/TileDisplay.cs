@@ -32,6 +32,7 @@ namespace HexTecGames.GridBaseSystem
 
             this.Tile = tile;
             sr.sprite = tile.Sprite;
+            sr.color = tile.Color;
             name = tile.ToString();
             tile.OnSpriteChanged += Tile_OnSpriteChanged;
             tile.OnColorChanged += Tile_OnColorChanged;
