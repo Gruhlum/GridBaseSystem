@@ -11,6 +11,13 @@ namespace HexTecGames.GridBaseSystem
 		{
 			get;
 		}
+		public virtual bool IsReplaceable
+		{
+			get
+			{
+				return false;
+			}
+		}
 		public abstract bool IsValidCoord(Coord coord, BaseGrid grid);
 		public abstract GridObject CreateObject(Coord center, BaseGrid grid);
 

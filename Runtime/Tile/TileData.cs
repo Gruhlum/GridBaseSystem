@@ -24,6 +24,14 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
+        public override bool IsReplaceable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         [SerializeField] private Sprite sprite;
 
         public override GridObject CreateObject(Coord center, BaseGrid grid)
@@ -33,9 +41,19 @@ namespace HexTecGames.GridBaseSystem
 
         public override bool IsValidCoord(Coord coord, BaseGrid grid)
         {
-            return !grid.DoesTileExist(coord);
-        }
-
-        
+            if (!grid.IsAllowedCoord(coord))
+            {
+                return false;
+            }
+            if (!grid.DoesTileExist(coord))
+            {
+                return true;
+            }
+            if (grid.GetTile(coord).Data.IsReplaceable)
+            {
+                return true;
+            }
+            return false;
+        }      
     }
 }

@@ -202,20 +202,6 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        //public virtual void GenerateGrid(int width, int height)
-        //{
-        //    SetupBounds(width, height);
-
-        //    for (int w = 0; w < width; w++)
-        //    {
-        //        for (int h = 0; h < height; h++)
-        //        {
-        //            SetupCoordinate(w, h);
-        //        }
-        //    }
-        //    OnGridGenerated?.Invoke();
-        //}
-
 
         void Awake()
         {
@@ -232,6 +218,10 @@ namespace HexTecGames.GridBaseSystem
             {
                 coordinates[tile.X, tile.Y] = tile;
             }
+            foreach (var tile in tiles)
+            {
+                tile.UpdateSprite();
+            }
             OnGridGenerated?.Invoke();
         }
 
@@ -239,6 +229,8 @@ namespace HexTecGames.GridBaseSystem
         {
             this.Width = width;
             this.Height = height;
+            MaximumWidth = Mathf.Max(MaximumWidth, this.Width);
+            MaximumHeight = Mathf.Max(MaximumHeight, this.Height);
             coordinates = new Tile[width, height];
             tileObjects = new TileObject[width, height];
             center.Set(width / 2, height / 2);
@@ -256,6 +248,7 @@ namespace HexTecGames.GridBaseSystem
                 ResizeCoordinatesArray(tile.X + 1, tile.Y + 1);
             }
             Coordinates[tile.X, tile.Y] = tile;
+            tile.UpdateSprite();
             UpdateTileNeighbours(tile);
             OnTileAdded?.Invoke(tile);
         }
@@ -524,6 +517,18 @@ namespace HexTecGames.GridBaseSystem
                 return coordinates[coord.x, coord.y] != null;
             }
             return false;
+        }
+        public bool IsAllowedCoord(Coord coord)
+        {
+            if (coord.x < 0 || coord.y < 0)
+            {
+                return false;
+            }
+            if (coord.x >= maximumWidth || coord.y >= maximumHeight)
+            {
+                return false;
+            }
+            return true;
         }
 
         //public List<List<Coord>> GetAllConnectedCoords()
