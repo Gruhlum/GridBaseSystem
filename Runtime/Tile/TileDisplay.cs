@@ -24,10 +24,28 @@ namespace HexTecGames.GridBaseSystem
 
         public void Setup(Tile tile)
 		{
+            if (Tile != null)
+            {
+                Tile.OnSpriteChanged -= Tile_OnSpriteChanged;
+                tile.OnColorChanged -= Tile_OnColorChanged;
+            }
+
             this.Tile = tile;
             sr.sprite = tile.Sprite;
             name = tile.ToString();
+            tile.OnSpriteChanged += Tile_OnSpriteChanged;
+            tile.OnColorChanged += Tile_OnColorChanged;
             transform.position = tile.GetWorldPosition();
 		}
-	}
+
+        private void Tile_OnColorChanged(GridObject arg1, Color color)
+        {
+            sr.color = color;
+        }
+
+        private void Tile_OnSpriteChanged(GridObject arg1, Sprite sprite)
+        {
+            sr.sprite = sprite;
+        }
+    }
 }
