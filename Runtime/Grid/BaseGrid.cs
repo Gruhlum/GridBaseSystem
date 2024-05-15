@@ -445,14 +445,6 @@ namespace HexTecGames.GridBaseSystem
             }
             return GetTiles(coords);
         }
-        public Tile GetTile(Coord coord)
-        {
-            if (IsCoordOutOfBounds(coord))
-            {
-                return null;
-            }
-            return Coordinates[coord.x, coord.y];
-        }
         private bool IsCoordOutOfBounds(Coord coord)
         {
             if (coord.x < 0 || coord.y < 0 || coord.x >= Width || coord.y >= Height)
@@ -461,11 +453,23 @@ namespace HexTecGames.GridBaseSystem
             }
             return false;
         }
+        public Tile GetTile(Coord coord)
+        {
+            if (IsCoordOutOfBounds(coord))
+            {
+                return null;
+            }
+            return Coordinates[coord.x, coord.y];
+        }
         public List<Tile> GetTiles(List<Coord> coords)
         {
             List<Tile> results = new List<Tile>();
             foreach (var coord in coords)
             {
+                if (IsCoordOutOfBounds(coord))
+                {
+                    continue;
+                }
                 if (Coordinates[coord.x, coord.y] != null)
                 {
                     results.Add(Coordinates[coord.x, coord.y]);
