@@ -1,3 +1,4 @@
+using HexTecGames.Basics.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,19 +6,36 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
 	[CreateAssetMenu(menuName = "HexTecGames/Grid/TileData")]
-	public class TileData : ScriptableObject
-	{
-        public Sprite Sprite
+	public class TileData : GridObjectData
+    {
+        public override Sprite Sprite
         {
             get
             {
                 return sprite;
             }
-            private set
+        }
+
+        public override bool IsDraggable
+        {
+            get
             {
-                sprite = value;
+                return true;
             }
         }
+
         [SerializeField] private Sprite sprite;
+
+        public override GridObject CreateObject(Coord center, BaseGrid grid)
+        {
+            return new Tile(center, grid, this);
+        }
+
+        public override bool IsValidCoord(Coord coord, BaseGrid grid)
+        {
+            return !grid.DoesTileExist(coord);
+        }
+
+        
     }
 }

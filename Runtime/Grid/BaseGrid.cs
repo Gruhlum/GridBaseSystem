@@ -19,6 +19,45 @@ namespace HexTecGames.GridBaseSystem
 
         protected TileObject[,] tileObjects;
 
+        public bool AllowResize
+        {
+            get
+            {
+                return allowResize;
+            }
+            private set
+            {
+                allowResize = value;
+            }
+        }
+        [SerializeField] private bool allowResize;
+
+        public int MaximumWidth
+        {
+            get
+            {
+                return maximumWidth;
+            }
+            private set
+            {
+                maximumWidth = value;
+            }
+        }
+        [SerializeField] private int maximumWidth;
+
+        public int MaximumHeight
+        {
+            get
+            {
+                return maximumHeight;
+            }
+            private set
+            {
+                maximumHeight = value;
+            }
+        }
+        [SerializeField] private int maximumHeight;
+
         public Coord Center
         {
             get
@@ -177,10 +216,26 @@ namespace HexTecGames.GridBaseSystem
         {
             if (Width <= tile.X || Height <= tile.Y)
             {
-                ResizeCoordinatesArray(tile.X, tile.Y);
+                ResizeCoordinatesArray(tile.X + 1, tile.Y + 1);
             }
             Coordinates[tile.X, tile.Y] = tile;
             OnTileAdded?.Invoke(tile);
+        }
+
+        public void RemoveGridObject(Coord coord)
+        {
+            if (!DoesTileExist(coord))
+            {
+                return;
+            }
+            if (tileObjects[coord.x, coord.y] != null)
+            {
+                RemoveTileObject(tileObjects[coord.x, coord.y]);
+            }
+            else if (Coordinates[coord.x, coord.y] != null)
+            {
+                RemoveTile(coord);
+            }
         }
         public void RemoveTile(Tile tile)
         {
@@ -197,14 +252,14 @@ namespace HexTecGames.GridBaseSystem
                 Debug.Log("Trying to remove tile that is out of bounds");
                 return;
             }
+            Tile tile = Coordinates[x, y];
             Coordinates[x, y] = null;
-            OnTileRemoved?.Invoke(Coordinates[x, y]);
+            OnTileRemoved?.Invoke(tile);
         }
-
         private void ResizeCoordinatesArray(int width, int height)
         {
-            int minWidth = Mathf.Min(width, Width);
-            int minHeight = Mathf.Min(height, Height);
+            int minWidth = Mathf.Max(width, Width);
+            int minHeight = Mathf.Max(height, Height);
 
             Tile[,] results = new Tile[minWidth, minHeight];
 
@@ -219,6 +274,24 @@ namespace HexTecGames.GridBaseSystem
                 }
             }
             coordinates = results;
+
+            TileObject[,] tileObjs = new TileObject[minWidth, minHeight];
+
+            for (int x = 0; x < minWidth; x++)
+            {
+                for (int y = 0; y < minHeight; y++)
+                {
+                    if (Width > x && Height > y)
+                    {
+                        tileObjs[x, y] = tileObjects[x, y];
+                    }
+                }
+            }
+            tileObjects = tileObjs;
+
+
+            Width = minWidth;
+            Height = minHeight;
         }
         public abstract Vector3 CoordToWorldPoint(Coord coord);
         public List<Vector3> CoordsToWorldPoint(List<Coord> coords)
@@ -263,6 +336,17 @@ namespace HexTecGames.GridBaseSystem
             return results;
         }
      
+        public void AddGridObject(GridObject obj)
+        {
+            if (obj is Tile tile)
+            {
+                AddTile(tile);
+            }
+            else if (obj is TileObject tileObj)
+            {
+                AddTileObject(tileObj);
+            }
+        }
         public void AddTileObject(TileObject obj)
         {
             AddTileObjectCoords(obj, obj.GetNormalizedCoords());

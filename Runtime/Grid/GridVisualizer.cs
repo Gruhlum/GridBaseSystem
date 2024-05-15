@@ -58,11 +58,6 @@ namespace HexTecGames.GridBaseSystem
         }
         private void Grid_OnTileRemoved(Tile tile)
         {
-            SpawnTileDisplay(tile);
-        }
-
-        private void Grid_OnTileAdded(Tile tile)
-        {
             var results = displaySpawner.GetActiveBehaviours();
             foreach (var result in results)
             {
@@ -72,6 +67,13 @@ namespace HexTecGames.GridBaseSystem
                     return;
                 }
             }
+            Debug.Log(tile.ToString());
+        }
+
+        private void Grid_OnTileAdded(Tile tile)
+        {
+            SpawnTileDisplay(tile);
+            
         }
         private void Grid_OnGridGenerated()
         {

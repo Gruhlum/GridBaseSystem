@@ -55,5 +55,10 @@ namespace HexTecGames.GridBaseSystem
         {
             Grid.RemoveTile(this);
         }
+
+        public override string ToString()
+        {
+            return $"({X}, {Y}) {Data.Name}";
+        }
     }
 }

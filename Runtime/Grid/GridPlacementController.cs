@@ -26,7 +26,7 @@ namespace HexTecGames.GridBaseSystem
         //[SerializeField] private Color validLocationCol = Color.green;
 
 
-        public BaseTileObjectData SelectedObject
+        public GridObjectData SelectedObject
         {
             get
             {
@@ -42,12 +42,13 @@ namespace HexTecGames.GridBaseSystem
                 OnSelectedObjectChanged?.Invoke(selectedObject);
             }
         }
-        private BaseTileObjectData selectedObject;
+        private GridObjectData selectedObject;
 
-        public event Action<BaseTileObjectData> OnSelectedObjectChanged;
-        public event Action<TileObject> OnObjectPlaced;
+        public event Action<GridObjectData> OnSelectedObjectChanged;
+        public event Action<GridObject> OnObjectPlaced;
 
         private bool isDragging;
+        private int lastMouseBtn;
 
         private void OnEnable()
         {
@@ -61,20 +62,26 @@ namespace HexTecGames.GridBaseSystem
         }
         private void Update()
         {
-            if (isDragging && Input.GetMouseButtonUp(0))
+            if (isDragging && Input.GetMouseButtonUp(lastMouseBtn))
             {
                 isDragging = false;
+                lastMouseBtn = -1;
             }
         }
         private void GridEventSystem_OnMouseClicked(Coord coord, int btn)
         {
+            lastMouseBtn = btn;
             if (btn == 0)
             {
                 Build(coord);
             }
             else if (btn == 1)
             {
-                ClearSelectedObject();
+                if (SelectedObject != null)
+                {
+                    ClearSelectedObject();
+                }
+                else grid.RemoveGridObject(coord);
             }
             if (SelectedObject != null)
             {
@@ -84,13 +91,14 @@ namespace HexTecGames.GridBaseSystem
                 }
                 else isDragging = false;
             }
+            else isDragging = true;
         }
 
         private void GridEventSystem_OnMouseHoverCoordChanged(Coord coord)
         {
             if (SelectedObject != null)
             {
-                if (coord.isValid == false)
+                if (!SelectedObject.IsValidCoord(coord, grid))
                 {
                     ghost.Deactivate();
                     return;
@@ -104,6 +112,17 @@ namespace HexTecGames.GridBaseSystem
                     Build(coord);
                 }
             }
+            else
+            {
+                if (isDragging)
+                {
+                    if (SelectedObject != null)
+                    {
+                        ClearSelectedObject();
+                    }
+                    else grid.RemoveGridObject(coord);
+                }
+            }
         }
 
         public void Build(Coord coord)
@@ -112,7 +131,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 return;
             }
-            if (!grid.IsTileEmpty(coord))
+            if (!SelectedObject.IsValidCoord(coord, grid))
             {
                 return;
             }
@@ -124,8 +143,8 @@ namespace HexTecGames.GridBaseSystem
                 }
                 else cost.SubtractResources(resourceC.GetResources());
             }
-            TileObject tileObject = SelectedObject.CreateTileObject(coord, grid);
-            grid.AddTileObject(tileObject);
+            GridObject tileObject = SelectedObject.CreateObject(coord, grid);
+            grid.AddGridObject(tileObject);
             OnObjectPlaced?.Invoke(tileObject);
         }
         public void ClearSelectedObject()
@@ -134,10 +153,10 @@ namespace HexTecGames.GridBaseSystem
             isDragging = false;
             ghost.Deactivate();
         }
-        public void SetSelectedObject(BaseTileObjectData data)
+        public void SetSelectedObject(GridObjectData data)
         {
             SelectedObject = data;
-            ghost.Activate(gridEventSystem.MouseHoverToWorldPoint(), data.GetSprite());           
+            ghost.Activate(gridEventSystem.MouseHoverToWorldPoint(), data.Sprite);
         }
     }
 }
