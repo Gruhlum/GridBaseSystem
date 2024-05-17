@@ -131,6 +131,11 @@ namespace HexTecGames.GridBaseSystem
             {
                 return;
             }
+            Tile tile = grid.GetTile(coord);
+            if (tile != null && SelectedObject == grid.GetTile(coord).Data)
+            {
+                return;
+            }
             if (!SelectedObject.IsValidCoord(coord, grid))
             {
                 return;
@@ -144,6 +149,10 @@ namespace HexTecGames.GridBaseSystem
                 else cost.SubtractResources(resourceC.GetResources());
             }
             GridObject tileObject = SelectedObject.CreateObject(coord, grid);
+            if (SelectedObject.PlacementSound != null)
+            {
+                SelectedObject.PlacementSound.Play();
+            }
             grid.AddGridObject(tileObject);
             OnObjectPlaced?.Invoke(tileObject);
         }

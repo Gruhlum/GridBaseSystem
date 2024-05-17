@@ -8,6 +8,17 @@ namespace HexTecGames.GridBaseSystem
 	{
 		[SerializeField] private SpriteRenderer sr = default;
 
+        public TileObject TileObject
+        {
+            get
+            {
+                return tileObject;
+            }
+            private set
+            {
+                tileObject = value;
+            }
+        }
         private TileObject tileObject;
         private TileObjectVisualizer visualizer;
 
@@ -45,6 +56,7 @@ namespace HexTecGames.GridBaseSystem
         {
             UnsubscribeEvents();
             visualizer.RemoveDisplay(this);
+            gameObject.SetActive(false);
         }
 
         private void TileObject_OnMoved(GridObject obj)

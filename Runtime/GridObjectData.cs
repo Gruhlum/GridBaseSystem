@@ -1,4 +1,5 @@
 using HexTecGames.Basics.UI;
+using HexTecGames.SoundSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,6 +32,15 @@ namespace HexTecGames.GridBaseSystem
 			}
 		}
 		[SerializeField] private Color color = Color.white;
+
+		public SoundClipBase PlacementSound
+		{
+			get
+			{
+				return placementSound;
+			}
+		}
+		[SerializeField] private SoundClipBase placementSound = default;
 
 		public abstract bool IsValidCoord(Coord coord, BaseGrid grid);
 		public abstract GridObject CreateObject(Coord center, BaseGrid grid);

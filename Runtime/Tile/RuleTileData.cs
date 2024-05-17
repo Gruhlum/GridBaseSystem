@@ -8,8 +8,9 @@ namespace HexTecGames.GridBaseSystem
 	public class RuleTileData : TileData
 	{
 		public List<RuleData> ruleDatas = new List<RuleData>();
+		[SerializeField] private List<TileData> affectedTileDatas = default;
 
-        public override Sprite GetSprite(Coord coord, BaseGrid grid)
+		public override Sprite GetSprite(Coord coord, BaseGrid grid)
         {
             var neighbours = grid.GetNeighbourCoords(coord);
 
@@ -17,7 +18,11 @@ namespace HexTecGames.GridBaseSystem
 			{
                 Tile tile = grid.GetTile(neighbours[i]);
 
-                if (tile == null || tile.Data != this)
+                if (tile == null)
+                {
+                    neighbours.RemoveAt(i);
+                }
+                else if (tile.Data != this && (affectedTileDatas == null || affectedTileDatas.Count == 0 || !affectedTileDatas.Contains(tile.Data)))
                 {
                     neighbours.RemoveAt(i);
                 }

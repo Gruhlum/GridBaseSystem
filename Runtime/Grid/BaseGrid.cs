@@ -492,6 +492,44 @@ namespace HexTecGames.GridBaseSystem
             }
             return results;
         }
+        public List<Tile> GetAllTiles(TileData data)
+        {
+            var results = new List<Tile>();
+            for (int x = 0; x < coordinates.GetLength(0); x++)
+            {
+                for (int y = 0; y < coordinates.GetLength(1); y++)
+                {
+                    if (coordinates[x, y] != null)
+                    {
+                        //Debug.Log((coordinates[x, y]).GetType());
+                        if (coordinates[x, y].Data == data)
+                        {
+                            results.Add(coordinates[x, y]);
+                        }
+                    }
+                }
+            }
+            return results;
+        }
+        public List<T> GetAllTiles<T>() where T : Tile
+        {
+            var results = new List<T>();
+            for (int x = 0; x < coordinates.GetLength(0); x++)
+            {
+                for (int y = 0; y < coordinates.GetLength(1); y++)
+                {
+                    if (coordinates[x, y] != null)
+                    {
+                        //Debug.Log((coordinates[x, y]).GetType());
+                        if (coordinates[x, y] is T t)
+                        {
+                            results.Add(t);
+                        }
+                    }
+                }
+            }
+            return results;
+        }
         public bool IsTileEmpty(Coord coord)
         {
             if (!DoesTileExist(coord))
@@ -539,35 +577,39 @@ namespace HexTecGames.GridBaseSystem
             return true;
         }
 
-        //public List<List<Coord>> GetAllConnectedCoords()
-        //{
-        //    List<List<Coord>> results = new List<List<Coord>>();
-        //    int totalResults = 0;
-        //    DateTime startTime = DateTime.Now;
-        //    foreach (var coord in coordinates)
-        //    {
-        //        if (results.Any(x => x.Contains(coord)))
-        //        {
-        //            continue;
-        //        }
-        //        var connectedCoords = GetConnectedCoords(coord);
-        //        if (connectedCoords.Count == 0)
-        //        {
-        //            //Debug.Log("is empty! " + coord.ToString());
-        //            continue;
-        //        }
-        //        totalResults += connectedCoords.Count;
-        //        results.Add(connectedCoords);
-        //        if (totalResults >= coordinates.Length)
-        //        {
-        //            Debug.Log("Finished in: " + (DateTime.Now - startTime) + " ms");
-        //            return results;
-        //        }
-        //    }
-        //    Debug.Log("Finished in: " + (DateTime.Now - startTime) + " ms");
-        //    return results;
+        public List<List<Coord>> GetAllConnectedCoords()
+        {
+            List<List<Coord>> results = new List<List<Coord>>();
+            int totalResults = 0;
+            DateTime startTime = DateTime.Now;
+            foreach (var tile in coordinates)
+            {
+                if (tile == null)
+                {
+                    continue;
+                }
+                if (results.Any(x => x.Contains(tile.Center)))
+                {
+                    continue;
+                }
+                var connectedCoords = GetConnectedCoords(tile.Center);
+                if (connectedCoords.Count == 0)
+                {
+                    //Debug.Log("is empty! " + coord.ToString());
+                    continue;
+                }
+                totalResults += connectedCoords.Count;
+                results.Add(connectedCoords);
+                if (totalResults >= coordinates.Length)
+                {
+                    Debug.Log("Finished in: " + (DateTime.Now - startTime) + " ms");
+                    return results;
+                }
+            }
+            Debug.Log("Finished in: " + (DateTime.Now - startTime) + " ms");
+            return results;
 
-        //}
+        }
 
         public List<Coord> GetConnectedCoords(Coord start)
         {

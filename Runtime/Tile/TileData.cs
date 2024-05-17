@@ -28,9 +28,10 @@ namespace HexTecGames.GridBaseSystem
         {
             get
             {
-                return true;
+                return isReplaceable;
             }
         }
+        [SerializeField] private bool isReplaceable = default;
 
         [SerializeField] private Sprite sprite;
 

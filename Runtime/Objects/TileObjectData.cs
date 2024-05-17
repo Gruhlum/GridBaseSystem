@@ -7,7 +7,7 @@ namespace HexTecGames.GridBaseSystem
 	[CreateAssetMenu(menuName = "HexTecGames/TileObjectData")]
 	public abstract class TileObjectData : BaseTileObjectData
 	{
-        public Sprite sprite;
+        [SerializeField] private Sprite sprite;
 
         public override List<Coord> GetCoords()
         {
