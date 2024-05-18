@@ -6,7 +6,7 @@ namespace HexTecGames.GridBaseSystem
 {
 	public class TileDisplay : MonoBehaviour
 	{
-        [SerializeField] private SpriteRenderer sr = default;
+        [SerializeField] protected SpriteRenderer sr = default;
 
         public Tile Tile
         {
@@ -22,14 +22,13 @@ namespace HexTecGames.GridBaseSystem
         private Tile tile;
 
 
-        public void Setup(Tile tile)
+        public virtual void Setup(Tile tile)
 		{
             if (Tile != null)
             {
                 Tile.OnSpriteChanged -= Tile_OnSpriteChanged;
                 tile.OnColorChanged -= Tile_OnColorChanged;
             }
-
             this.Tile = tile;
             sr.sprite = tile.Sprite;
             sr.color = tile.Color;

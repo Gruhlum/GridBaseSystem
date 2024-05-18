@@ -11,7 +11,6 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private TMP_Text textGUI = default;
         [SerializeField] private Image img = default;
 
-
         void Reset()
         {
             textGUI = GetComponentInChildren<TMP_Text>();

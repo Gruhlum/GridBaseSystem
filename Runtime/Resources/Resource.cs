@@ -15,9 +15,13 @@ namespace HexTecGames.GridBaseSystem
             {
                 return maximumValue;
             }
-            private set
+            set
             {
                 maximumValue = value;
+                if (this.Value > maximumValue)
+                {
+                    this.Value = maximumValue;
+                }
             }
         }
         [SerializeField] private int maximumValue = 9999;
