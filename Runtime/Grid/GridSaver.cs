@@ -98,14 +98,14 @@ namespace HexTecGames.GridBaseSystem
             Debug.Log("Not possible to save in Assets in a build");
 #endif
         }
-        private bool AssetAlreadyExist(string name)
-        {
-            string[] results = AssetDatabase.FindAssets(name, new string[] { assetPath });
-            if (results.Length == 0)
-            {
-                return false;
-            }
-            return true;
-        }
+        //private bool AssetAlreadyExist(string name)
+        //{
+        //    string[] results = AssetDatabase.FindAssets(name, new string[] { assetPath });
+        //    if (results.Length == 0)
+        //    {
+        //        return false;
+        //    }
+        //    return true;
+        //}
     }
 }

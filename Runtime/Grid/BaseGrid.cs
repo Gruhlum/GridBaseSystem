@@ -211,6 +211,17 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
+        void OnDestroy()
+        {
+            foreach (var tile in Coordinates)
+            {
+                tile.Remove();
+            }
+            foreach (var tileObj in tileObjects)
+            {
+                tileObj.Remove();
+            }
+        }
         public virtual void GenerateGrid(List<Tile> tiles)
         {
             SetupBounds(tiles.Max(c => c.X + 1), tiles.Max(c => c.Y) + 1);

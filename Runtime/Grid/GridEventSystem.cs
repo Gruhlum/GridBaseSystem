@@ -45,7 +45,7 @@ namespace HexTecGames.GridBaseSystem
         private void Start()
         {
             mouseHoverCoord = grid.MousePositionToCoord();
-            mouseHoverCoord.isValid = false;
+            mouseHoverCoord.isValid = true;
         }
 
         private void Update()

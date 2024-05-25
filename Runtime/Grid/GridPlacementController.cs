@@ -1,4 +1,5 @@
 using HexTecGames.Basics;
+using HexTecGames.SoundSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace HexTecGames.GridBaseSystem
         //[SerializeField] private Color invalidLocationCol = Color.red;
         //[SerializeField] private Color validLocationCol = Color.green;
 
-
+        [SerializeField] private SoundClipBase errorSound = default;
         public GridObjectData SelectedObject
         {
             get
@@ -49,6 +50,8 @@ namespace HexTecGames.GridBaseSystem
 
         private bool isDragging;
         private int lastMouseBtn;
+
+        [SerializeField] private bool allowRemoval = default;
 
         private void OnEnable()
         {
@@ -81,7 +84,7 @@ namespace HexTecGames.GridBaseSystem
                 {
                     ClearSelectedObject();
                 }
-                else grid.RemoveGridObject(coord);
+                else if(allowRemoval) grid.RemoveGridObject(coord);
             }
             if (SelectedObject != null)
             {
@@ -120,7 +123,7 @@ namespace HexTecGames.GridBaseSystem
                     {
                         ClearSelectedObject();
                     }
-                    else grid.RemoveGridObject(coord);
+                    else if (allowRemoval) grid.RemoveGridObject(coord);
                 }
             }
         }
@@ -138,12 +141,14 @@ namespace HexTecGames.GridBaseSystem
             }
             if (!SelectedObject.IsValidCoord(coord, grid))
             {
+                errorSound?.Play();
                 return;
             }
             if (SelectedObject is ICost cost)
             {
                 if (!cost.IsAffordable(resourceC.GetResources()))
                 {
+                    errorSound?.Play();
                     return;
                 }
                 else cost.SubtractResources(resourceC.GetResources());

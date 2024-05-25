@@ -19,6 +19,14 @@ namespace HexTecGames.GridBaseSystem
 			}
         }
 
+		public Resource GetResource(ResourceValue resource)
+		{
+			return GetResource(resource.Data);
+		}
+		public Resource GetResource(ResourceType type)
+		{
+			return resources.Find(x => x.Data == type);
+		}
 		public List<Resource> GetResources()
 		{
 			return resources;

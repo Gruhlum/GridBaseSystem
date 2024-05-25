@@ -35,8 +35,16 @@ namespace HexTecGames.GridBaseSystem
             name = tile.ToString();
             tile.OnSpriteChanged += Tile_OnSpriteChanged;
             tile.OnColorChanged += Tile_OnColorChanged;
+            tile.OnRemoved += Tile_OnRemoved;
             transform.position = tile.GetWorldPosition();
 		}
+
+        private void Tile_OnRemoved(GridObject gridObj)
+        {
+            gridObj.OnRemoved -= Tile_OnRemoved;
+            Tile = null;
+            gameObject.SetActive(false);
+        }
 
         private void Tile_OnColorChanged(GridObject arg1, Color color)
         {
