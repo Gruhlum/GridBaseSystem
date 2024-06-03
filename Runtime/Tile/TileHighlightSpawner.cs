@@ -10,7 +10,7 @@ namespace HexTecGames.GridBaseSystem
 	{
 		public override void DeactivateAll()
 		{
-            foreach (var behaviour in behaviours)
+            foreach (var behaviour in items)
             {
                 if (behaviour != null)
                 {

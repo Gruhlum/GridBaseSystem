@@ -58,7 +58,7 @@ namespace HexTecGames.GridBaseSystem
         }
         private void Grid_OnTileRemoved(Tile tile)
         {
-            var results = displaySpawner.GetActiveBehaviours();
+            var results = displaySpawner.GetActiveInstances();
             foreach (var result in results)
             {
                 if (result.Tile == tile)
@@ -77,10 +77,6 @@ namespace HexTecGames.GridBaseSystem
         }
         private void Grid_OnGridGenerated()
         {
-            if (grid.Coordinates == null)
-            {
-                return;
-            }
             SpawnTileDisplays(grid.GetAllTiles());
         }
         protected virtual void SpawnTileDisplays(List<Tile> tiles) 

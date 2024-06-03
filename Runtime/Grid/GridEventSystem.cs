@@ -35,6 +35,7 @@ namespace HexTecGames.GridBaseSystem
         public event Action<Coord> OnMouseHoverCoordChanged;
         public event Action<Coord, int> OnMouseClicked;
 
+        [SerializeField] private bool showDebugs = default;
 
         void Reset()
         {
@@ -75,7 +76,11 @@ namespace HexTecGames.GridBaseSystem
             {
                 return;
             }
-
+            if (showDebugs)
+            {
+                Debug.Log("Current Position: " + coord.ToString());
+            }
+            
             mouseHoverCoord.isValid = grid.DoesTileExist(coord);
             mouseHoverCoord.Set(coord);
             OnMouseHoverCoordChanged?.Invoke(mouseHoverCoord);

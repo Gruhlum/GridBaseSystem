@@ -24,7 +24,7 @@ namespace HexTecGames.GridBaseSystem
         }
         private void GridPlacementController_OnSelectedObjectChanged(GridObjectData data)
         {
-            foreach (var display in displaySpawner.GetActiveBehaviours())
+            foreach (var display in displaySpawner.GetActiveInstances())
             {
                 display.SetHighlight(data == display.Item);
             }
