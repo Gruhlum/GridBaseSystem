@@ -18,7 +18,7 @@ namespace HexTecGames.GridBaseSystem
             set
             {
                 maximumValue = value;
-                if (this.Value > maximumValue)
+                if (maximumValue > 0 && this.Value > maximumValue)
                 {
                     this.Value = maximumValue;
                 }
@@ -30,7 +30,7 @@ namespace HexTecGames.GridBaseSystem
         {
             set
             {
-                if (value > MaximumValue)
+                if (MaximumValue > 0 && value > MaximumValue)
                 {
                     value = MaximumValue;
                 }

@@ -33,7 +33,18 @@ namespace HexTecGames.GridBaseSystem
 		}
 		[SerializeField] private Color color = Color.white;
 
-		public SoundClipBase PlacementSound
+        public List<Sprite> sprites = new List<Sprite>();
+
+        public int totalRotations;
+        public override Sprite Sprite
+        {
+            get
+            {
+				return sprites[0];
+            }
+        }
+
+        public SoundClipBase PlacementSound
 		{
 			get
 			{
@@ -42,9 +53,13 @@ namespace HexTecGames.GridBaseSystem
 		}
 		[SerializeField] private SoundClipBase placementSound = default;
 
-		public abstract bool IsValidCoord(Coord coord, BaseGrid grid);
+		public abstract bool IsValidCoord(Coord coord, BaseGrid grid, int rotation);
 		public abstract GridObject CreateObject(Coord center, BaseGrid grid);
 
+		//public Sprite GetRotationSprite(int index)
+		//{
+		//	return sprites[index];
+		//}
         public virtual Sprite GetSprite(Coord coord, BaseGrid grid)
 		{
 			return Sprite;

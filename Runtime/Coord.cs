@@ -47,6 +47,25 @@ namespace HexTecGames.GridBaseSystem
         {
             return System.HashCode.Combine(x, y);
         }
+
+        public List<Coord> GetRotatedCoords(List<Coord> coords)
+        {
+            List<Coord> results = new List<Coord>();
+            foreach (var coord in coords)
+            {
+                results.Add(this + coord);
+            }
+            return results;
+        }
+        public List<Coord> GetNormalizedCoords(List<Coord> coords)
+        {
+            List<Coord> results = new List<Coord>();
+            foreach (var coord in coords)
+            {
+                results.Add(this + coord);
+            }
+            return results;
+        }
         public static bool operator ==(Coord coord1, Coord coord2)
         {
             if (coord1.x != coord2.x)

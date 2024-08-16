@@ -17,20 +17,25 @@ namespace HexTecGames.GridBaseSystem
         }
         private BaseTileObjectData data;
 
+
         public TileObject(Coord center, BaseGrid grid, BaseTileObjectData data) : base(center, grid, data)
         {
             this.data = data;
             Sprite = data.GetSprite();
         }          
 
+        public List<Coord> GetRotatedCoords()
+        {
+            return GetRotatedCoords(Center);
+        }
+        public List<Coord> GetRotatedCoords(Coord center)
+        {
+            List<Coord> normalized = GetNormalizedCoords(center);
+            return Grid.GetRotatedCoords(center, normalized, Rotation);
+        }
         public List<Coord> GetNormalizedCoords(Coord center)
         {
-            var coords = data.GetCoords();
-            for (int i = 0; i < coords.Count; i++)
-            {
-                coords[i] += center;
-            }
-            return coords;
+            return center.GetNormalizedCoords(data.GetCoords());
         }
         public List<Coord> GetNormalizedCoords()
         {

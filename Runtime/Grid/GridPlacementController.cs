@@ -51,6 +51,8 @@ namespace HexTecGames.GridBaseSystem
         private bool isDragging;
         private int lastMouseBtn;
 
+        private int currentRotation;
+
         [SerializeField] private bool allowRemoval = default;
 
         private void OnEnable()
@@ -69,6 +71,29 @@ namespace HexTecGames.GridBaseSystem
             {
                 isDragging = false;
                 lastMouseBtn = -1;
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                if (SelectedObject == null)
+                {
+                    return;
+                }
+                if (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift))
+                {
+                    currentRotation--;                   
+                }
+                else currentRotation++;
+
+                if (currentRotation >= SelectedObject.totalRotations)
+                {
+                    currentRotation = 0;
+                }
+                else if (currentRotation < 0)
+                {
+                    currentRotation = SelectedObject.totalRotations - 1;
+                }
+                ghost.Rotate(currentRotation);
+                CheckForValidTile(gridEventSystem.MouseHoverCoord);
             }
         }
         private void GridEventSystem_OnMouseClicked(Coord coord, int btn)
@@ -96,12 +121,11 @@ namespace HexTecGames.GridBaseSystem
             }
             else isDragging = true;
         }
-
-        private void GridEventSystem_OnMouseHoverCoordChanged(Coord coord)
+        private void CheckForValidTile(Coord coord)
         {
             if (SelectedObject != null)
             {
-                if (!SelectedObject.IsValidCoord(coord, grid))
+                if (!SelectedObject.IsValidCoord(coord, grid, currentRotation))
                 {
                     ghost.Deactivate();
                     return;
@@ -114,6 +138,13 @@ namespace HexTecGames.GridBaseSystem
                 {
                     Build(coord);
                 }
+            }
+        }
+        private void GridEventSystem_OnMouseHoverCoordChanged(Coord coord)
+        {
+            if (SelectedObject != null)
+            {
+                CheckForValidTile(coord);
             }
             else
             {
@@ -139,7 +170,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 return;
             }
-            if (!SelectedObject.IsValidCoord(coord, grid))
+            if (!SelectedObject.IsValidCoord(coord, grid, currentRotation))
             {
                 errorSound?.Play();
                 return;
@@ -154,6 +185,7 @@ namespace HexTecGames.GridBaseSystem
                 else cost.SubtractResources(resourceC.GetResources());
             }
             GridObject tileObject = SelectedObject.CreateObject(coord, grid);
+            tileObject.Rotation = currentRotation;
             if (SelectedObject.PlacementSound != null)
             {
                 SelectedObject.PlacementSound.Play();
@@ -169,8 +201,15 @@ namespace HexTecGames.GridBaseSystem
         }
         public void SetSelectedObject(GridObjectData data)
         {
+            ResetRotation();
             SelectedObject = data;
             ghost.Activate(gridEventSystem.MouseHoverToWorldPoint(), data.Sprite);
+        }
+
+        private void ResetRotation()
+        {
+            currentRotation = 0;
+            ghost.Rotate(0);
         }
     }
 }

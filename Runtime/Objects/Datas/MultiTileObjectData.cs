@@ -4,21 +4,27 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    [CreateAssetMenu(menuName = "HexTecGames/MultiTileObjectData")]
+    //[CreateAssetMenu(menuName = "HexTecGames/MultiTileObjectData")]
     public abstract class MultiTileObjectData : BaseTileObjectData
     {
         [SerializeField] private List<Coord> coords = default;
-        public List<Sprite> sprites = new List<Sprite>();
-
-        public int rotationCount;
 
         public override List<Coord> GetCoords()
         {
-            var results = new List<Coord>();
-            results.AddRange(coords);
-            return results;
+            return new List<Coord>(coords);
         }
 
+        public override bool IsValidCoord(Coord center, BaseGrid grid, int rotation)
+        {
+            foreach (var coord in grid.GetRotatedCoords(center, center.GetNormalizedCoords(coords), rotation))
+            {
+                if (!grid.IsTileEmpty(coord))
+                {
+                    return false;
+                }
+            }          
+            return true;
+        }
         public override Sprite GetSprite()
         {
             return sprites[0];

@@ -54,31 +54,31 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private int maximumHeight;
 
-        public int StartWidth
-        {
-            get
-            {
-                return startWidth;
-            }
-            private set
-            {
-                startWidth = value;
-            }
-        }
-        [SerializeField] private int startWidth;
+        //public int StartWidth
+        //{
+        //    get
+        //    {
+        //        return startWidth;
+        //    }
+        //    private set
+        //    {
+        //        startWidth = value;
+        //    }
+        //}
+        //[SerializeField] private int startWidth;
 
-        public int StartHeight
-        {
-            get
-            {
-                return startHeight;
-            }
-            private set
-            {
-                startHeight = value;
-            }
-        }
-        [SerializeField] private int startHeight;
+        //public int StartHeight
+        //{
+        //    get
+        //    {
+        //        return startHeight;
+        //    }
+        //    private set
+        //    {
+        //        startHeight = value;
+        //    }
+        //}
+        //[SerializeField] private int startHeight;
 
 
         public Coord Center
@@ -443,7 +443,7 @@ namespace HexTecGames.GridBaseSystem
         }
         public void AddTileObject(TileObject obj)
         {
-            AddTileObjectCoords(obj, obj.GetNormalizedCoords());
+            AddTileObjectCoords(obj, obj.GetRotatedCoords());
             OnTileObjectAdded?.Invoke(obj);
         }
         public void AddTileObjectCoords(TileObject obj, List<Coord> coords)
@@ -682,6 +682,16 @@ namespace HexTecGames.GridBaseSystem
             return results;
         }
 
+        public List<Coord> GetRotatedCoords(Coord center, List<Coord> coords, int rotation)
+        {
+            List<Coord> results = new List<Coord>();
+            foreach (var coord in coords)
+            {
+                results.Add(GetRotatedCoord(center, coord, rotation));
+            }
+            return results;
+        }
+        public abstract Coord GetRotatedCoord(Coord center, Coord coord, int rotation);
         public abstract List<Coord> GetArea(Coord center, int radius);
         public abstract List<Coord> GetRing(Coord center, int radius);
         public abstract List<Coord> GetNeighbourCoords(Coord center);

@@ -40,7 +40,7 @@ namespace HexTecGames.GridBaseSystem
             return new Tile(center, grid, this);
         }
 
-        public override bool IsValidCoord(Coord coord, BaseGrid grid)
+        public override bool IsValidCoord(Coord coord, BaseGrid grid, int rotation)
         {
             if (!grid.IsAllowedCoord(coord))
             {

@@ -38,7 +38,7 @@ namespace HexTecGames.GridBaseSystem
             tileObject.OnSpriteChanged += TileObject_OnSpriteChanged;
             tileObject.OnColorChanged += TileObject_OnColorChanged;
 
-            transform.position = tileObject.GetWorldPosition();
+            SetPosition(tileObject);
             sr.sprite = tileObject.Sprite;
             sr.color = tileObject.Color;
         }
@@ -61,7 +61,12 @@ namespace HexTecGames.GridBaseSystem
 
         private void TileObject_OnMoved(GridObject obj)
         {
+            SetPosition(obj);
+        }
+        private void SetPosition(GridObject obj)
+        {
             transform.position = obj.GetWorldPosition();
+            transform.eulerAngles = new Vector3(0, 0, obj.Rotation * -90);
         }
         private void UnsubscribeEvents()
         {

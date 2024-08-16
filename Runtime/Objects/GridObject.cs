@@ -71,6 +71,22 @@ namespace HexTecGames.GridBaseSystem
         public event Action<GridObject> OnRemoved;
         public event Action<GridObject> OnMoved;
 
+
+        public int Rotation
+        {
+            get
+            {
+                return rotation;
+            }
+            set
+            {
+                rotation = value;
+                OnMoved?.Invoke(this);
+            }
+        }
+        private int rotation;
+
+
         public GridObject(Coord center, BaseGrid grid, GridObjectData data)
         {
             this.Grid = grid;
