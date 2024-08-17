@@ -8,34 +8,27 @@ namespace HexTecGames.GridBaseSystem
     [System.Serializable]
     public class TileObject : GridObject
     {
-        public BaseTileObjectData Data
+        public TileObjectData Data
         {
             get
             {
                 return data;
             }
         }
-        private BaseTileObjectData data;
+        private TileObjectData data;
 
-
-        public TileObject(Coord center, BaseGrid grid, BaseTileObjectData data) : base(center, grid, data)
+        public TileObject(Coord center, BaseGrid grid, TileObjectData data) : base(center, grid, data)
         {
             this.data = data;
-            Sprite = data.GetSprite();
-        }          
-
-        public List<Coord> GetRotatedCoords()
-        {
-            return GetRotatedCoords(Center);
+            Sprite = data.GetSprite(center, grid);
         }
-        public List<Coord> GetRotatedCoords(Coord center)
+        public List<Coord> GetNormalizedSafeZones()
         {
-            List<Coord> normalized = GetNormalizedCoords(center);
-            return Grid.GetRotatedCoords(center, normalized, Rotation);
+            return Data.GetNormalizedSaveZones(Grid, Center, Rotation);
         }
         public List<Coord> GetNormalizedCoords(Coord center)
         {
-            return center.GetNormalizedCoords(data.GetCoords());
+            return Data.GetNormalizedCoords(Grid, center, Rotation);
         }
         public List<Coord> GetNormalizedCoords()
         {

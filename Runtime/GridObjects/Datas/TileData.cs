@@ -8,14 +8,6 @@ namespace HexTecGames.GridBaseSystem
 	[CreateAssetMenu(menuName = "HexTecGames/Grid/TileData")]
 	public class TileData : GridObjectData
     {
-        public override Sprite Sprite
-        {
-            get
-            {
-                return sprite;
-            }
-        }
-
         public override bool IsDraggable
         {
             get
@@ -33,14 +25,17 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private bool isReplaceable = default;
 
-        [SerializeField] private Sprite sprite;
-
         public override GridObject CreateObject(Coord center, BaseGrid grid)
         {
             return new Tile(center, grid, this);
         }
 
-        public override bool IsValidCoord(Coord coord, BaseGrid grid, int rotation)
+        public override bool IsValidPlacement(Coord coord, BaseGrid grid, int rotation)
+        {
+            return IsValidCoord(coord, grid);
+        }
+
+        public override bool IsValidCoord(Coord coord, BaseGrid grid)
         {
             if (!grid.IsAllowedCoord(coord))
             {
@@ -55,6 +50,6 @@ namespace HexTecGames.GridBaseSystem
                 return true;
             }
             return false;
-        }      
+        }
     }
 }

@@ -47,7 +47,19 @@ namespace HexTecGames.GridBaseSystem
         {
             return System.HashCode.Combine(x, y);
         }
-
+        public static List<Vector3> ToWorldPositions(List<Coord> coords)
+        {
+            List<Vector3> results = new List<Vector3>();
+            foreach (var coord in coords)
+            {
+                results.Add(coord.ToWorldPosition());
+            }
+            return results;
+        }
+        public Vector3 ToWorldPosition()
+        {
+            return new Vector3(x, y, 0);
+        }
         public List<Coord> GetRotatedCoords(List<Coord> coords)
         {
             List<Coord> results = new List<Coord>();

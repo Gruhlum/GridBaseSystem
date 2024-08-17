@@ -11,9 +11,23 @@ namespace HexTecGames.GridBaseSystem
     /// </summary>
     public abstract class BaseGrid : MonoBehaviour
     {
+        public GridEventSystem EventSystem
+        {
+            get
+            {
+                return eventSystem;
+            }
+            private set
+            {
+                eventSystem = value;
+            }
+        }
+        [SerializeField] private GridEventSystem eventSystem;
+
+
         protected readonly Dictionary<Coord, Tile> tiles = new Dictionary<Coord, Tile>();
 
-        protected readonly Dictionary<Coord, TileObject> tileObjects = new Dictionary<Coord, TileObject>();
+        protected readonly List<TileObject> tileObjects = new List<TileObject>();
 
         public bool AllowResize
         {
@@ -53,33 +67,6 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         [SerializeField] private int maximumHeight;
-
-        //public int StartWidth
-        //{
-        //    get
-        //    {
-        //        return startWidth;
-        //    }
-        //    private set
-        //    {
-        //        startWidth = value;
-        //    }
-        //}
-        //[SerializeField] private int startWidth;
-
-        //public int StartHeight
-        //{
-        //    get
-        //    {
-        //        return startHeight;
-        //    }
-        //    private set
-        //    {
-        //        startHeight = value;
-        //    }
-        //}
-        //[SerializeField] private int startHeight;
-
 
         public Coord Center
         {
@@ -220,11 +207,15 @@ namespace HexTecGames.GridBaseSystem
         }
         private void RemoveAllTileObjects()
         {
-            List<Coord> keys = tileObjects.Keys.ToList();
-            for (int i = keys.Count - 1; i >= 0; i--)
+            foreach (var tile in tiles.Values)
             {
-                tileObjects[keys[i]].Remove();
+                tile.RemoveAllTileObjects();
             }
+            foreach (var tileObject in tileObjects)
+            {
+                tileObject.Remove();
+            }
+            tileObjects.Clear();
         }
 
         public virtual void GenerateGrid(List<Tile> tiles)
@@ -258,7 +249,7 @@ namespace HexTecGames.GridBaseSystem
             AddTile(new Tile(coord, this, data));
         }
         public void AddTile(Tile tile)
-        {           
+        {
             if (tiles.TryGetValue(tile.Center, out Tile otherTile))
             {
                 RemoveTile(otherTile);
@@ -278,17 +269,13 @@ namespace HexTecGames.GridBaseSystem
         }
         public void RemoveGridObject(Coord coord)
         {
-            if (!DoesTileExist(coord))
+            if (tiles.TryGetValue(coord, out Tile tile))
             {
-                return;
-            }
-            if (tileObjects.TryGetValue(coord, out TileObject obj))
-            {
-                RemoveTileObject(obj);
-            }
-            else if (tiles.TryGetValue(coord, out Tile tile))
-            {
-                RemoveTile(coord);
+                if (tile.TryGetTileObject(out TileObject obj))
+                {
+                    RemoveTileObject(obj);
+                }
+                else RemoveTile(coord);
             }
         }
         public void RemoveTile(Tile tile)
@@ -377,11 +364,11 @@ namespace HexTecGames.GridBaseSystem
         /// <returns>The TileObject if found, otherwise null</returns>
         public TileObject GetTileObject(Coord coord)
         {
-            if (!DoesTileExist(coord))
+            if (tiles.TryGetValue(coord, out Tile tile))
             {
-                return null;
+                return tile.GetTileObject();
             }
-            return tileObjects[coord];
+            else return null;
         }
 
         /// <summary>
@@ -396,9 +383,13 @@ namespace HexTecGames.GridBaseSystem
             {
                 return null;
             }
-            if (tileObjects[coord] is T t)
+            if (tiles.TryGetValue(coord, out Tile tile))
             {
-                return t;
+                TileObject tileObj = tile.GetTileObject();
+                if (tileObj is T t)
+                {
+                    return t;
+                }
             }
             return null;
         }
@@ -443,34 +434,57 @@ namespace HexTecGames.GridBaseSystem
         }
         public void AddTileObject(TileObject obj)
         {
-            AddTileObjectCoords(obj, obj.GetRotatedCoords());
+            AddSafetyCoords(obj);
+            AddNormalCoords(obj);
             OnTileObjectAdded?.Invoke(obj);
         }
-        public void AddTileObjectCoords(TileObject obj, List<Coord> coords)
+
+        private void AddNormalCoords(TileObject obj)
         {
+            List<Coord> coords = obj.GetNormalizedCoords();
             foreach (var coord in coords)
             {
-                tileObjects[coord] = obj;
+                if (tiles.TryGetValue(coord, out Tile tile))
+                {
+                    tile.AddTileObject(new TileObjectPlacementData(obj, true, false));
+                }
+                else Debug.Log("Invalid Coord: " + coord);
+            }
+        }
+
+        private void AddSafetyCoords(TileObject obj)
+        {
+            List<Coord> safetyCoords = obj.GetNormalizedSafeZones();
+            foreach (var coord in safetyCoords)
+            {
+                if (tiles.TryGetValue(coord, out Tile tile))
+                {
+                    tile.AddTileObject(new TileObjectPlacementData(obj, false, true));
+                }
+                else Debug.Log("Invalid Coord: " + coord);
             }
         }
         public void RemoveTileObject(TileObject obj)
         {
-            List<Coord> coords = obj.GetNormalizedCoords();
-            RemoveTileObjectCoords(coords);
+            tileObjects.Remove(obj);
+            RemoveTileObjectCoords(obj, obj.Center);
             OnTileObjectRemoved?.Invoke(obj);
         }
-        private void RemoveTileObjectCoords(List<Coord> coords)
+
+        private void RemoveTileObjectCoords(TileObject obj, Coord center)
         {
-            foreach (var coord in coords)
+            List<Coord> coords = obj.GetNormalizedCoords(center);
+            foreach (var tile in GetTiles(coords))
             {
-                tileObjects.Remove(coord);
+                tile.RemoveTileObject(obj);
             }
         }
+
         public void MoveTileObject(TileObject obj, Coord oldCenter)
         {
-            var oldCoords = obj.GetNormalizedCoords(oldCenter);
-            RemoveTileObjectCoords(oldCoords);
-            AddTileObjectCoords(obj, obj.GetNormalizedCoords());
+            RemoveTileObjectCoords(obj, oldCenter);
+            AddSafetyCoords(obj);
+            AddNormalCoords(obj);
             OnTileObjectMoved?.Invoke(obj);
         }
 
@@ -560,13 +574,81 @@ namespace HexTecGames.GridBaseSystem
             }
             return results;
         }
+        public bool IsTileSafetyZone(List<Coord> coords)
+        {
+            foreach (var coord in coords)
+            {
+                if (IsTileSafetyZone(coord))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool IsTileSafetyZone(Coord coord)
+        {
+            if (tiles.TryGetValue(coord, out Tile tile))
+            {
+                return tile.IsSaveZone();
+            }
+            else return false;
+        }
+        public bool IsTileBlocked(List<Coord> coords)
+        {
+            foreach (var coord in coords)
+            {
+                if (IsTileBlocked(coord))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool IsTileBlocked(Coord coord)
+        {
+            if (tiles.TryGetValue(coord, out Tile tile))
+            {
+                return tile.IsBlocked();
+            }
+            else return false;
+        }
+        public bool CanPlaceBuilding(Coord coord)
+        {
+            if (tiles.TryGetValue(coord, out Tile tile))
+            {
+                return !(tile.IsSaveZone() || tile.IsBlocked());
+            }
+            else return false;
+        }
+        public bool CanPlaceBuilding(List<Coord> coords)
+        {
+            foreach (var coord in coords)
+            {
+                if (!CanPlaceBuilding(coord))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        public bool IsTileEmpty(List<Coord> coords)
+        {
+            foreach (var coord in coords)
+            {
+                if (!IsTileEmpty(coord))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         public bool IsTileEmpty(Coord coord)
         {
-            if (!DoesTileExist(coord))
+            if (tiles.TryGetValue(coord, out Tile tile))
             {
-                return false;
+                return !tile.IsBlocked();
             }
-            return !tileObjects.ContainsKey(coord);
+            return false;
         }
         public bool IsTilePassable(Coord coord)
         {
@@ -578,11 +660,22 @@ namespace HexTecGames.GridBaseSystem
             {
                 return true;
             }
-            return !GetTileObject(coord).Data.IsWall;
+            return !GetTileObject(coord).Data.IsPassable;
         }
         public bool DoesTileExist(Coord coord)
         {
             return tiles.ContainsKey(coord);
+        }
+        public bool DoesTileExist(List<Coord> coords)
+        {
+            foreach (var coord in coords)
+            {
+                if (!DoesTileExist(coord))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
         public bool IsAllowedCoord(Coord coord)
         {
@@ -620,7 +713,7 @@ namespace HexTecGames.GridBaseSystem
                 }
                 totalResults += connectedCoords.Count;
                 results.Add(connectedCoords);
-                
+
             }
             Debug.Log("Finished in: " + (DateTime.Now - startTime) + " ms");
             return results;

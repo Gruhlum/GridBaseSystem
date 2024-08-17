@@ -98,3 +98,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sr: {fileID: 7443766843399466623}
+  highlightSpawner:
+    prefab: {fileID: 8268310537270034576, guid: 32f4cfd227aeddd488ddc6977a8f803d, type: 3}
+    parent: {fileID: 8354694511235016500}

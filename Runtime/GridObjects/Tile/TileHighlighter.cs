@@ -8,6 +8,14 @@ namespace HexTecGames.GridBaseSystem
     [RequireComponent(typeof(SpriteRenderer))]
     public class TileHighlighter : MonoBehaviour
     {
+        public Color Color
+        {
+            get
+            {
+                return sr.color;
+            }
+        }
+
         [SerializeField] private SpriteRenderer sr = default;
 
         [SerializeField] private float startDelay = default;
@@ -44,9 +52,9 @@ namespace HexTecGames.GridBaseSystem
         {
             StartCoroutine(ShowHighlight(position));
         }
-        public void Activate(Vector3 position, Color col)
+        public void Activate(Vector3 position, Color color)
         {
-            sr.color = col;
+            sr.color = color;
             Activate(position);
         }
         public void Deactivate()

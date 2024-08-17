@@ -7,7 +7,7 @@ namespace HexTecGames.GridBaseSystem
 	public class TileObjectDisplay : MonoBehaviour
 	{
 		[SerializeField] private SpriteRenderer sr = default;
-
+        [SerializeField] private TileHighlightSpawner highlightSpawner = default;
         public TileObject TileObject
         {
             get
@@ -21,6 +21,8 @@ namespace HexTecGames.GridBaseSystem
         }
         private TileObject tileObject;
         private TileObjectVisualizer visualizer;
+
+        private bool showSafetyZones = true;
 
         private void Reset()
         {
@@ -41,6 +43,7 @@ namespace HexTecGames.GridBaseSystem
             SetPosition(tileObject);
             sr.sprite = tileObject.Sprite;
             sr.color = tileObject.Color;
+            ActivateSafetyZoneHighlight(showSafetyZones);
         }
 
         private void TileObject_OnColorChanged(GridObject arg1, Color color)
@@ -77,6 +80,15 @@ namespace HexTecGames.GridBaseSystem
                 tileObject.OnSpriteChanged -= TileObject_OnSpriteChanged;
                 tileObject.OnColorChanged -= TileObject_OnColorChanged;
             }
+        }
+
+        public void ActivateSafetyZoneHighlight(bool active)
+        {
+            if (active)
+            {
+                highlightSpawner.SpawnHighlights(TileObject.GetNormalizedSafeZones());
+            }
+            else highlightSpawner.DeactivateAll();
         }
     }
 }
