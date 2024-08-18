@@ -49,7 +49,7 @@ namespace HexTecGames.GridBaseSystem
         }
         public void UpdateSprite()
         {
-            Sprite = Data.GetSprite(Center, Grid);
+            Sprite = Data.GetSprite(Center, Grid, 0);
         }
         public void RemoveAllTileObjects()
         {

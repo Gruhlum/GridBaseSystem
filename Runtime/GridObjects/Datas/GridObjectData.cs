@@ -33,14 +33,21 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private Color color = Color.white;
 
-        public List<Sprite> sprites = new List<Sprite>();
+        [SerializeField]  protected List<SpriteData> spriteDatas = new List<SpriteData>();
 
-        public int totalRotations;
+        public int TotalSprites
+        {
+            get
+            {
+                return spriteDatas.Count;
+            }
+        }
+
         public override Sprite Sprite
         {
             get
             {
-                return sprites[0];
+                return spriteDatas[0].sprite;
             }
         }
 
@@ -57,14 +64,14 @@ namespace HexTecGames.GridBaseSystem
         public abstract bool IsValidPlacement(Coord coord, BaseGrid grid, int rotation);
 
         public abstract GridObject CreateObject(Coord center, BaseGrid grid);
-
-        //public Sprite GetRotationSprite(int index)
-        //{
-        //	return sprites[index];
-        //}
-        public virtual Sprite GetSprite(Coord coord, BaseGrid grid)
+        public virtual SpriteData GetSpriteData(int rotation)
         {
-            return Sprite;
+            return spriteDatas[rotation % spriteDatas.Count];
+        }
+        public virtual Sprite GetSprite(Coord coord, BaseGrid grid, int rotation)
+        {
+            rotation %= spriteDatas.Count;
+            return spriteDatas[rotation].sprite;
         }
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    [System.Serializable]
     public class TileObject : GridObject
     {
         public TileObjectData Data
@@ -20,7 +19,7 @@ namespace HexTecGames.GridBaseSystem
         public TileObject(Coord center, BaseGrid grid, TileObjectData data) : base(center, grid, data)
         {
             this.data = data;
-            Sprite = data.GetSprite(center, grid);
+            Sprite = data.GetSprite(center, grid, Rotation);
         }
         public List<Coord> GetNormalizedSafeZones()
         {

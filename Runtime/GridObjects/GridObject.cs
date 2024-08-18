@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-	[System.Serializable]
 	public abstract class GridObject
 	{
         public BaseGrid Grid
@@ -71,7 +70,6 @@ namespace HexTecGames.GridBaseSystem
         public event Action<GridObject> OnRemoved;
         public event Action<GridObject> OnMoved;
 
-
         public int Rotation
         {
             get
@@ -81,16 +79,20 @@ namespace HexTecGames.GridBaseSystem
             set
             {
                 rotation = value;
+                Sprite = baseData.GetSprite(center, grid, Rotation);
                 OnMoved?.Invoke(this);
             }
         }
         private int rotation;
 
 
+        private GridObjectData baseData;
+
         public GridObject(Coord center, BaseGrid grid, GridObjectData data)
         {
             this.Grid = grid;
             this.Center = center;
+            this.baseData = data;
             Color = data.Color;
         }
 
@@ -111,6 +113,10 @@ namespace HexTecGames.GridBaseSystem
         public Vector3 GetWorldPosition()
         {
             return grid.CoordToWorldPoint(Center);
+        }
+        public SpriteData GetSpriteData()
+        {
+            return baseData.GetSpriteData(Rotation);
         }
 
     }

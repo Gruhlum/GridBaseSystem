@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-	public class TileObjectDisplay : MonoBehaviour
+	public class TileObjectVisual : MonoBehaviour
 	{
-		[SerializeField] private SpriteRenderer sr = default;
-        [SerializeField] private TileHighlightSpawner highlightSpawner = default;
+		[SerializeField] protected SpriteRenderer sr = default;
+        //[SerializeField] protected TileHighlightSpawner highlightSpawner = default;
         public TileObject TileObject
         {
             get
@@ -20,13 +20,21 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         private TileObject tileObject;
-        private TileObjectVisualizer visualizer;
+        protected TileObjectVisualizer visualizer;
 
         private bool showSafetyZones = true;
 
-        private void Reset()
+        protected void Reset()
         {
             sr = GetComponent<SpriteRenderer>();
+            if (sr == null)
+            {
+               sr = GetComponent<SpriteRenderer>();
+            }
+            if (sr == null)
+            {
+                sr = gameObject.AddComponent<SpriteRenderer>();
+            }
         }
 
         public virtual void Setup(TileObject tileObject, TileObjectVisualizer visualizer)
@@ -43,7 +51,7 @@ namespace HexTecGames.GridBaseSystem
             SetPosition(tileObject);
             sr.sprite = tileObject.Sprite;
             sr.color = tileObject.Color;
-            ActivateSafetyZoneHighlight(showSafetyZones);
+            //ActivateSafetyZoneHighlight(showSafetyZones);
         }
 
         private void TileObject_OnColorChanged(GridObject arg1, Color color)
@@ -69,9 +77,11 @@ namespace HexTecGames.GridBaseSystem
         private void SetPosition(GridObject obj)
         {
             transform.position = obj.GetWorldPosition();
-            transform.eulerAngles = new Vector3(0, 0, obj.Rotation * -90);
+            SpriteData spriteData = obj.GetSpriteData();
+            sr.transform.localPosition = spriteData.offset;
+            transform.eulerAngles = spriteData.rotation;
         }
-        private void UnsubscribeEvents()
+        protected void UnsubscribeEvents()
         {
             if (tileObject != null)
             {
@@ -84,11 +94,11 @@ namespace HexTecGames.GridBaseSystem
 
         public void ActivateSafetyZoneHighlight(bool active)
         {
-            if (active)
-            {
-                highlightSpawner.SpawnHighlights(TileObject.GetNormalizedSafeZones());
-            }
-            else highlightSpawner.DeactivateAll();
+            //if (active)
+            //{
+            //    highlightSpawner.SpawnHighlights(TileObject.GetNormalizedSafeZones());
+            //}
+            //else highlightSpawner.DeactivateAll();
         }
     }
 }

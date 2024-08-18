@@ -5,42 +5,48 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-	public class TileObjectVisualizer : MonoBehaviour
-	{
-        [SerializeField] private Spawner<TileObjectDisplay> srSpawner = default;
+    public class TileObjectVisualizer : MonoBehaviour
+    {
+        [SerializeField] private TileObjectVisual defaultVisual = default;
+        [SerializeField] private MultiSpawner spawner = default;
         [SerializeField] private BaseGrid grid = default;
 
-        private List<TileObjectDisplay> activeDisplays = new List<TileObjectDisplay>();
+        private List<TileObjectVisual> activeDisplays = new List<TileObjectVisual>();
 
 
-        void Reset()
+        protected void Reset()
         {
             grid = GetComponentInParent<BaseGrid>();
-            if (srSpawner == null)
+            if (spawner == null)
             {
-                srSpawner = new Spawner<TileObjectDisplay>();
+                spawner = new MultiSpawner();
             }
-            srSpawner.Parent = transform;
+            spawner.Parent = transform;
         }
-        private void OnEnable()
+        protected void OnEnable()
         {
             grid.OnTileObjectAdded += Grid_OnTileObjectAdded;
         }
-        private void OnDisable()
+        protected void OnDisable()
         {
             grid.OnTileObjectAdded -= Grid_OnTileObjectAdded;
         }
 
-        public void RemoveDisplay(TileObjectDisplay display)
+        public void RemoveDisplay(TileObjectVisual display)
         {
             activeDisplays.Remove(display);
         }
 
         private void Grid_OnTileObjectAdded(TileObject obj)
         {
-            TileObjectDisplay display = srSpawner.Spawn();
-            activeDisplays.Add(display);
-            display.Setup(obj, this);
+            TileObjectVisual visual;
+            if (obj.Data.VisualPrefab == null)
+            {
+                visual = spawner.Spawn(defaultVisual);
+            }
+            else visual = spawner.Spawn(obj.Data.VisualPrefab);
+            activeDisplays.Add(visual);
+            visual.Setup(obj, this);
         }
     }
 }

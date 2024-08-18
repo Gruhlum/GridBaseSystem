@@ -93,13 +93,13 @@ namespace HexTecGames.GridBaseSystem
                 }
                 else currentRotation++;
 
-                if (currentRotation >= SelectedObject.totalRotations)
+                if (currentRotation >= SelectedObject.TotalSprites)
                 {
                     currentRotation = 0;
                 }
                 else if (currentRotation < 0)
                 {
-                    currentRotation = SelectedObject.totalRotations - 1;
+                    currentRotation = SelectedObject.TotalSprites - 1;
                 }
                 ghost.Rotate(currentRotation);
                 CheckForValidTile(gridEventSystem.MouseHoverCoord);
@@ -193,10 +193,17 @@ namespace HexTecGames.GridBaseSystem
             {
                 SelectedObject.PlacementSound.Play();
             }
+            StartCoroutine(BuildDelayed(tileObject));
+        }
+
+        private IEnumerator BuildDelayed(GridObject tileObject)
+        {
+            yield return null;
             grid.AddGridObject(tileObject);
             OnObjectPlaced?.Invoke(tileObject);
-            ghost.UpdatePlacementArea();
+            //ghost.UpdatePlacementArea();
         }
+
         public void ClearSelectedObject()
         {
             SelectedObject = null;
@@ -205,6 +212,11 @@ namespace HexTecGames.GridBaseSystem
         }
         public void SetSelectedObject(GridObjectData data)
         {
+            if (data == null)
+            {
+                ClearSelectedObject();
+                return;
+            }
             ResetRotation();
             SelectedObject = data;
             ghost.Activate(data, HoverCoord);

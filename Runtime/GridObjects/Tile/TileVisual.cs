@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-	public class TileDisplay : MonoBehaviour
+	public class TileVisual : MonoBehaviour
 	{
         [SerializeField] protected SpriteRenderer sr = default;
 

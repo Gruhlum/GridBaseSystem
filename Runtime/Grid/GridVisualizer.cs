@@ -9,9 +9,9 @@ namespace HexTecGames.GridBaseSystem
     public class TileVisualizer : MonoBehaviour
     {
         [SerializeField] protected BaseGrid grid = default;
-        [SerializeField] protected Spawner<TileDisplay> displaySpawner = default;
+        [SerializeField] protected Spawner<TileVisual> displaySpawner = default;
 
-        public event Action<TileDisplay> OnCoordDisplaySpawned;
+        public event Action<TileVisual> OnCoordDisplaySpawned;
 
 
         void Reset()
@@ -22,7 +22,7 @@ namespace HexTecGames.GridBaseSystem
             }
             if (displaySpawner == null)
             {
-                displaySpawner = new Spawner<TileDisplay>();
+                displaySpawner = new Spawner<TileVisual>();
             }
             displaySpawner.Parent = transform;
         }
@@ -48,11 +48,11 @@ namespace HexTecGames.GridBaseSystem
         }
         protected void SpawnTileDisplay(Tile tile)
         {
-            TileDisplay display = displaySpawner.Spawn();
+            TileVisual display = displaySpawner.Spawn();
             SetupCoordDisplay(display, tile);
             OnCoordDisplaySpawned?.Invoke(display);
         }
-        protected virtual void SetupCoordDisplay(TileDisplay display, Tile tile)
+        protected virtual void SetupCoordDisplay(TileVisual display, Tile tile)
         {
             display.Setup(tile);
         }

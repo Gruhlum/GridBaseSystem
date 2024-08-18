@@ -10,6 +10,19 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private List<Coord> coords = default;
         [SerializeField] private List<Coord> saveZones = default;
 
+        public TileObjectVisual VisualPrefab
+        {
+            get
+            {
+                return visualPrefab;
+            }
+            private set
+            {
+                visualPrefab = value;
+            }
+        }
+        [SerializeField] private TileObjectVisual visualPrefab;
+
         public bool IsPassable
         {
             get
@@ -50,7 +63,7 @@ namespace HexTecGames.GridBaseSystem
                 {
                     results.invalidCoords.Add(coord);
                 }
-                else results.validCoords.Add(coord);
+                //else results.validCoords.Add(coord);
             }
 
             return results;

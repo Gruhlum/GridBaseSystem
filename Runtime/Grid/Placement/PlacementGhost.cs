@@ -13,6 +13,7 @@ namespace HexTecGames.GridBaseSystem
         private GridObjectData activeData;
         private Coord coord;
         private int rotation;
+        private Vector2 spriteOffset;
 
         [SerializeField] private Color validPlacementColor = Color.green;
         [SerializeField] private Color invalidPlacementColor = Color.red;
@@ -44,10 +45,24 @@ namespace HexTecGames.GridBaseSystem
             gameObject.SetActive(false);
             highlightSpawner.DeactivateAll();
         }
+
+        private void UpdateSpritePosition()
+        {
+            sr.transform.localPosition = spriteOffset;
+        }
+
         public void Rotate(int index)
         {
             rotation = index;
-            transform.eulerAngles = new Vector3(0, 0, -90 * index);
+            
+            if (activeData != null)
+            {
+                sr.sprite = activeData.GetSprite(coord, grid, rotation);
+                SpriteData spriteData = activeData.GetSpriteData(rotation);
+                spriteOffset = spriteData.offset;
+                transform.eulerAngles = spriteData.rotation;
+                UpdateSpritePosition();
+            }           
         }
         public void UpdatePlacementArea()
         {
