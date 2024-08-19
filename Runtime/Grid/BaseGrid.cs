@@ -362,7 +362,7 @@ namespace HexTecGames.GridBaseSystem
         /// </summary>
         /// <param name="coord">Coord of the TileObject</param>
         /// <returns>The TileObject if found, otherwise null</returns>
-        public TileObject GetTileObject(Coord coord)
+        public List<TileObjectPlacementData> GetTileObject(Coord coord)
         {
             if (tiles.TryGetValue(coord, out Tile tile))
             {
@@ -370,57 +370,69 @@ namespace HexTecGames.GridBaseSystem
             }
             else return null;
         }
-
-        /// <summary>
-        /// Looks for a TileObject with a specified Coord and specified Type.
-        /// </summary>
-        /// <typeparam name="T">Looks for a TileObject of this Type</typeparam>
-        /// <param name="coord">Coord of the TileObject</param>
-        /// <returns>The TileObject if found, otherwise null</returns>
-        public T GetTileObject<T>(Coord coord) where T : TileObject
+        public List<TileObjectPlacementData> GetTileObjects(List<Coord> coords)
         {
-            if (!DoesTileExist(coord))
-            {
-                return null;
-            }
-            if (tiles.TryGetValue(coord, out Tile tile))
-            {
-                TileObject tileObj = tile.GetTileObject();
-                if (tileObj is T t)
-                {
-                    return t;
-                }
-            }
-            return null;
-        }
-        public List<TileObject> GetTileObjects(List<Coord> coords)
-        {
-            List<TileObject> results = new List<TileObject>();
-
+            List<TileObjectPlacementData> results = new List<TileObjectPlacementData>();
             foreach (var coord in coords)
             {
-                var tileObj = GetTileObject(coord);
-                if (tileObj != null)
+                List<TileObjectPlacementData> result = GetTileObject(coord);
+                if (result != null)
                 {
-                    results.Add(tileObj);
+                    results.AddRange(result);
                 }
             }
             return results;
         }
-        public List<T> GetTileObjects<T>(List<Coord> coords) where T : TileObject
-        {
-            List<T> results = new List<T>();
+        ///// <summary>
+        ///// Looks for a TileObject with a specified Coord and specified Type.
+        ///// </summary>
+        ///// <typeparam name="T">Looks for a TileObject of this Type</typeparam>
+        ///// <param name="coord">Coord of the TileObject</param>
+        ///// <returns>The TileObject if found, otherwise null</returns>
+        //public T GetTileObject<T>(Coord coord) where T : TileObject
+        //{
+        //    if (!DoesTileExist(coord))
+        //    {
+        //        return null;
+        //    }
+        //    if (tiles.TryGetValue(coord, out Tile tile))
+        //    {
+        //        TileObject tileObj = tile.GetTileObject();
+        //        if (tileObj is T t)
+        //        {
+        //            return t;
+        //        }
+        //    }
+        //    return null;
+        //}
+        //public List<TileObject> GetTileObjects(List<Coord> coords)
+        //{
+        //    List<TileObject> results = new List<TileObject>();
 
-            foreach (var coord in coords)
-            {
-                var tileObj = GetTileObject<T>(coord);
-                if (tileObj != null)
-                {
-                    results.Add(tileObj);
-                }
-            }
-            return results;
-        }
+        //    foreach (var coord in coords)
+        //    {
+        //        var tileObj = GetTileObject(coord);
+        //        if (tileObj != null)
+        //        {
+        //            results.Add(tileObj);
+        //        }
+        //    }
+        //    return results;
+        //}
+        //public List<T> GetTileObjects<T>(List<Coord> coords) where T : TileObject
+        //{
+        //    List<T> results = new List<T>();
+
+        //    foreach (var coord in coords)
+        //    {
+        //        var tileObj = GetTileObject<T>(coord);
+        //        if (tileObj != null)
+        //        {
+        //            results.Add(tileObj);
+        //        }
+        //    }
+        //    return results;
+        //}
         public void AddGridObject(GridObject obj)
         {
             if (obj is Tile tile)
@@ -446,7 +458,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 if (tiles.TryGetValue(coord, out Tile tile))
                 {
-                    tile.AddTileObject(new TileObjectPlacementData(obj, true, false));
+                    tile.AddTileObject(new TileObjectPlacementData(obj, !obj.Data.IsPassable, false));
                 }
                 else Debug.Log("Invalid Coord: " + coord);
             }
@@ -488,6 +500,8 @@ namespace HexTecGames.GridBaseSystem
             OnTileObjectMoved?.Invoke(obj);
         }
 
+        public abstract Coord GetDirectionCoord(Coord coord, int direction);
+        public abstract int GetDirection(Coord center, Coord coord);
         public List<Tile> GetValidTiles(List<Coord> coords)
         {
             for (int i = coords.Count - 1; i >= 0; i--)
@@ -535,13 +549,9 @@ namespace HexTecGames.GridBaseSystem
             List<Tile> results = new List<Tile>();
             foreach (var coord in coords)
             {
-                if (IsCoordOutOfBounds(coord))
+                if (tiles.TryGetValue(coord, out Tile tile))
                 {
-                    continue;
-                }
-                if (tiles.ContainsKey(coord))
-                {
-                    results.Add(tiles[coord]);
+                    results.Add(tile);
                 }
             }
             return results;
@@ -651,16 +661,12 @@ namespace HexTecGames.GridBaseSystem
             return false;
         }
         public bool IsTilePassable(Coord coord)
-        {
-            if (!DoesTileExist(coord))
-            {
-                return false;
+        {           
+            if (tiles.TryGetValue(coord, out Tile tile))
+            {              
+                return tile.IsPassable;
             }
-            if (IsTileEmpty(coord))
-            {
-                return true;
-            }
-            return !GetTileObject(coord).Data.IsPassable;
+            return false;
         }
         public bool DoesTileExist(Coord coord)
         {
@@ -788,6 +794,20 @@ namespace HexTecGames.GridBaseSystem
         public abstract List<Coord> GetArea(Coord center, int radius);
         public abstract List<Coord> GetRing(Coord center, int radius);
         public abstract List<Coord> GetNeighbourCoords(Coord center);
+        public abstract List<Coord> GetAdjacents(Coord center);
+        public List<Tile> GetAdjacentTiles(Coord center)
+        {
+            var adjacents = GetAdjacents(center);
+            List<Tile> results = new List<Tile>();
+            foreach (var adjacent in adjacents)
+            {
+                if (tiles.TryGetValue(adjacent, out Tile tile))
+                {
+                    results.Add(tile);
+                }
+            }
+            return results;
+        }
         public List<Tile> GetNeighbourTiles(Coord center)
         {
             List<Coord> coords = GetNeighbourCoords(center);
@@ -834,47 +854,47 @@ namespace HexTecGames.GridBaseSystem
             }
             return neighbours;
         }
-        public virtual List<TileObject> GetNeighbourObjects(Coord center)
-        {
-            var coords = GetNeighbourCoords(center);
-            List<TileObject> results = new List<TileObject>();
-            foreach (var coord in coords)
-            {
-                TileObject tileObj = GetTileObject(coord);
-                if (tileObj != null)
-                {
-                    results.Add(tileObj);
-                }
-            }
-            return results;
-        }
-        public virtual List<TileObject> GetNeighbourObjects(List<Coord> coords)
-        {
-            var resultCoords = GetNeighbourCoords(coords);
-            List<TileObject> results = new List<TileObject>();
-            foreach (var coord in resultCoords)
-            {
-                TileObject tileObj = GetTileObject(coord);
-                if (tileObj != null)
-                {
-                    results.Add(tileObj);
-                }
-            }
-            return results;
-        }
-        public virtual List<T> GetNeighbourObjects<T>(List<Coord> coords) where T : TileObject
-        {
-            var resultCoords = GetNeighbourCoords(coords);
-            List<T> results = new List<T>();
-            foreach (var coord in resultCoords)
-            {
-                TileObject tileObj = GetTileObject(coord);
-                if (tileObj != null && tileObj is T t)
-                {
-                    results.Add(t);
-                }
-            }
-            return results;
-        }
+        //public virtual List<TileObject> GetNeighbourObjects(Coord center)
+        //{
+        //    var coords = GetNeighbourCoords(center);
+        //    List<TileObject> results = new List<TileObject>();
+        //    foreach (var coord in coords)
+        //    {
+        //        TileObject tileObj = GetTileObject(coord);
+        //        if (tileObj != null)
+        //        {
+        //            results.Add(tileObj);
+        //        }
+        //    }
+        //    return results;
+        //}
+        //public virtual List<TileObject> GetNeighbourObjects(List<Coord> coords)
+        //{
+        //    var resultCoords = GetNeighbourCoords(coords);
+        //    List<TileObject> results = new List<TileObject>();
+        //    foreach (var coord in resultCoords)
+        //    {
+        //        TileObject tileObj = GetTileObject(coord);
+        //        if (tileObj != null)
+        //        {
+        //            results.Add(tileObj);
+        //        }
+        //    }
+        //    return results;
+        //}
+        //public virtual List<T> GetNeighbourObjects<T>(List<Coord> coords) where T : TileObject
+        //{
+        //    var resultCoords = GetNeighbourCoords(coords);
+        //    List<T> results = new List<T>();
+        //    foreach (var coord in resultCoords)
+        //    {
+        //        TileObject tileObj = GetTileObject(coord);
+        //        if (tileObj != null && tileObj is T t)
+        //        {
+        //            results.Add(t);
+        //        }
+        //    }
+        //    return results;
+        //}
     }
 }

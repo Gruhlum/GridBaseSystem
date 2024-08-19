@@ -24,6 +24,8 @@ namespace HexTecGames.GridBaseSystem
 
         private bool showSafetyZones = true;
 
+        protected BaseGrid grid;
+
         protected void Reset()
         {
             sr = GetComponent<SpriteRenderer>();
@@ -37,10 +39,10 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        public virtual void Setup(TileObject tileObject, TileObjectVisualizer visualizer)
+        public virtual void Setup(TileObject tileObject, TileObjectVisualizer visualizer, BaseGrid grid)
         {
             UnsubscribeEvents();
-
+            this.grid = grid;
             this.visualizer = visualizer;
             this.tileObject = tileObject;
             tileObject.OnRemoved += TileObject_OnRemoved;
@@ -70,16 +72,16 @@ namespace HexTecGames.GridBaseSystem
             gameObject.SetActive(false);
         }
 
-        private void TileObject_OnMoved(GridObject obj)
+        protected virtual void TileObject_OnMoved(GridObject obj)
         {
             SetPosition(obj);
         }
-        private void SetPosition(GridObject obj)
+        protected void SetPosition(GridObject obj)
         {
             transform.position = obj.GetWorldPosition();
             SpriteData spriteData = obj.GetSpriteData();
             sr.transform.localPosition = spriteData.offset;
-            transform.eulerAngles = spriteData.rotation;
+            sr.transform.eulerAngles = spriteData.rotation;
         }
         protected void UnsubscribeEvents()
         {

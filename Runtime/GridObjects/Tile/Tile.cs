@@ -23,6 +23,20 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
+        public bool IsPassable
+        {
+            get
+            {
+                return isPassable;
+            }
+            private set
+            {
+                isPassable = value;
+            }
+        }
+        private bool isPassable = true;
+
+
         public TileData Data
         {
             get
@@ -51,23 +65,41 @@ namespace HexTecGames.GridBaseSystem
         {
             Sprite = Data.GetSprite(Center, Grid, 0);
         }
+        private void CheckForPassable()
+        {
+            foreach (var item in placementDatas)
+            {
+                if (!item.tileObject.Data.IsPassable)
+                {
+                    IsPassable = false;
+                    return;
+                }
+            }
+            IsPassable = true;
+        }
         public void RemoveAllTileObjects()
         {
             placementDatas.Clear();
+            IsPassable = true;
         }
-        public void RemoveBlockingTileObject()
-        {
-            TileObjectPlacementData placementData = placementDatas.Find(x => x.IsBlocking);
-            placementDatas.Remove(placementData);
-        }
+        
         public void RemoveTileObject(TileObject tileObj)
         {
             TileObjectPlacementData placementData = placementDatas.Find(x => x.tileObject == tileObj);
             placementDatas.Remove(placementData);
+            if (!tileObj.Data.IsPassable)
+            {
+                CheckForPassable();
+            }
         }
-        public void AddTileObject(TileObjectPlacementData placmentData)
+     
+        public void AddTileObject(TileObjectPlacementData placementData)
         {
-            placementDatas.Add(placmentData);
+            placementDatas.Add(placementData);
+            if (!placementData.tileObject.Data.IsPassable)
+            {
+                IsPassable = false;
+            }
         }
         public bool TryGetTileObject(out TileObject tileObj)
         {
@@ -80,14 +112,13 @@ namespace HexTecGames.GridBaseSystem
             tileObj = null;
             return false;
         }
-        public TileObject GetTileObject()
+        public List<TileObjectPlacementData> GetTileObject()
         {
-            TileObjectPlacementData placementData = placementDatas.Find(x => x.IsBlocking);
-            if (placementData != null)
+            if (placementDatas == null)
             {
-                return placementData.tileObject;
+                return null;
             }
-            else return null;
+            return new List<TileObjectPlacementData>(placementDatas);
         }
         public bool IsSaveZone()
         {

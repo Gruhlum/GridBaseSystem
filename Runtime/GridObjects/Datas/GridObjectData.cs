@@ -66,12 +66,20 @@ namespace HexTecGames.GridBaseSystem
         public abstract GridObject CreateObject(Coord center, BaseGrid grid);
         public virtual SpriteData GetSpriteData(int rotation)
         {
-            return spriteDatas[rotation % spriteDatas.Count];
+            return spriteDatas[WrapRotation(rotation)];
+        }
+        private int WrapRotation(int rotation)
+        {
+            rotation %= spriteDatas.Count;
+            if (rotation < 0)
+            {
+                rotation += spriteDatas.Count;
+            }
+            return rotation;
         }
         public virtual Sprite GetSprite(Coord coord, BaseGrid grid, int rotation)
         {
-            rotation %= spriteDatas.Count;
-            return spriteDatas[rotation].sprite;
+            return spriteDatas[WrapRotation(rotation)].sprite;
         }
     }
 }

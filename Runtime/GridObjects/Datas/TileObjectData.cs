@@ -27,9 +27,10 @@ namespace HexTecGames.GridBaseSystem
         {
             get
             {
-                return false;
+                return isPassable;
             }
         }
+        [SerializeField] private bool isPassable = default;
         public override bool IsDraggable
         {
             get

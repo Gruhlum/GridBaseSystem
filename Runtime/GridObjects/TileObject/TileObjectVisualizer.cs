@@ -46,7 +46,7 @@ namespace HexTecGames.GridBaseSystem
             }
             else visual = spawner.Spawn(obj.Data.VisualPrefab);
             activeDisplays.Add(visual);
-            visual.Setup(obj, this);
+            visual.Setup(obj, this, grid);
         }
     }
 }
