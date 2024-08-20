@@ -16,15 +16,6 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        public override bool IsReplaceable
-        {
-            get
-            {
-                return isReplaceable;
-            }
-        }
-        [SerializeField] private bool isReplaceable = default;
-
         public override GridObject CreateObject(Coord center, BaseGrid grid)
         {
             return new Tile(center, grid, this);

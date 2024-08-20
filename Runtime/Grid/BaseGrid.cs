@@ -271,11 +271,11 @@ namespace HexTecGames.GridBaseSystem
         {
             if (tiles.TryGetValue(coord, out Tile tile))
             {
-                if (tile.TryGetTileObject(out TileObject obj))
+                if (tile.TryGetTileObject(out TileObject obj) && obj.IsReplaceable)
                 {
                     RemoveTileObject(obj);
                 }
-                else RemoveTile(coord);
+                // else RemoveTile(coord);
             }
         }
         public void RemoveTile(Tile tile)
@@ -288,6 +288,11 @@ namespace HexTecGames.GridBaseSystem
             tiles.Remove(coord);
             UpdateTileNeighbours(tile);
             OnTileRemoved?.Invoke(tile);
+        }
+
+        public List<TileObject> GetAllTileObjects()
+        {
+            return new List<TileObject>(tileObjects);
         }
 
         //private void ResizeCoordinatesArray(int width, int height)
@@ -480,6 +485,7 @@ namespace HexTecGames.GridBaseSystem
         {
             tileObjects.Remove(obj);
             RemoveTileObjectCoords(obj, obj.Center);
+            obj.Remove();
             OnTileObjectRemoved?.Invoke(obj);
         }
 

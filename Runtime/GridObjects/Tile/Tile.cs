@@ -103,14 +103,13 @@ namespace HexTecGames.GridBaseSystem
         }
         public bool TryGetTileObject(out TileObject tileObj)
         {
-            TileObjectPlacementData placementData = placementDatas.Find(x => x.IsBlocking);
-            if (placementData != null)
+            if (placementDatas == null || placementDatas.Count <= 0)
             {
-                tileObj = placementData.tileObject;
-                return true;
+                tileObj = null;
+                return false;
             }
-            tileObj = null;
-            return false;
+            tileObj = placementDatas[0].tileObject;
+            return true;
         }
         public List<TileObjectPlacementData> GetTileObject()
         {
@@ -147,10 +146,11 @@ namespace HexTecGames.GridBaseSystem
             throw new NotImplementedException();
         }
 
-        protected override void RemoveFromGrid()
+
+        public override void Remove()
         {
             RemoveAllTileObjects();
-            Grid.RemoveTile(this);
+            base.Remove();
         }
 
         public override string ToString()

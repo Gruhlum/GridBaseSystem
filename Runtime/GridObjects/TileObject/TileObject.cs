@@ -16,9 +16,23 @@ namespace HexTecGames.GridBaseSystem
         }
         private TileObjectData data;
 
+        public virtual bool IsReplaceable
+        {
+            get
+            {
+                return isReplaceable;
+            }
+            set
+            {
+                isReplaceable = value;
+            }
+        }
+        private bool isReplaceable;
+
         public TileObject(Coord center, BaseGrid grid, TileObjectData data) : base(center, grid, data)
         {
             this.data = data;
+            IsReplaceable = data.IsReplaceable;
             Sprite = data.GetSprite(center, grid, Rotation);
         }
         public List<Coord> GetNormalizedSafeZones()
@@ -54,11 +68,6 @@ namespace HexTecGames.GridBaseSystem
         protected override void MoveGridPosition(Coord oldCenter)
         {
             Grid.MoveTileObject(this, oldCenter);
-        }
-
-        protected override void RemoveFromGrid()
-        {
-            Grid.RemoveTileObject(this);
         }
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     public abstract class GridObjectData : DisplayableScriptableObject
-    {         
+    {
         public abstract bool IsDraggable
         {
             get;
@@ -16,10 +16,14 @@ namespace HexTecGames.GridBaseSystem
         {
             get
             {
-                return false;
+                return isReplaceable;
+            }
+            private set
+            {
+                isReplaceable = value;
             }
         }
-
+        [SerializeField] private bool isReplaceable;
         public Color Color
         {
             get
@@ -33,7 +37,7 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private Color color = Color.white;
 
-        [SerializeField]  protected List<SpriteData> spriteDatas = new List<SpriteData>();
+        [SerializeField] protected List<SpriteData> spriteDatas = new List<SpriteData>();
 
         public int TotalSprites
         {

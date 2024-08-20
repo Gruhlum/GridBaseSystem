@@ -98,10 +98,8 @@ namespace HexTecGames.GridBaseSystem
 
         public virtual void Remove()
         {
-            RemoveFromGrid();
             OnRemoved?.Invoke(this);
         }
-        protected abstract void RemoveFromGrid();
         public virtual void Move(Coord target)
         {
             Coord oldCenter = center;
