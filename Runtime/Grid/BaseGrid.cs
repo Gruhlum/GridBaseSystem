@@ -273,6 +273,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 if (tile.TryGetTileObject(out TileObject obj) && obj.IsReplaceable)
                 {
+                    Debug.Log("Removing: " + obj);
                     RemoveTileObject(obj);
                 }
                 // else RemoveTile(coord);

@@ -87,10 +87,11 @@ namespace HexTecGames.GridBaseSystem
         {
             TileObjectPlacementData placementData = placementDatas.Find(x => x.tileObject == tileObj);
             placementDatas.Remove(placementData);
-            if (!tileObj.Data.IsPassable)
-            {
-                CheckForPassable();
-            }
+            CheckForPassable();
+            //if (!tileObj.Data.IsPassable)
+            //{
+            //    CheckForPassable();
+            //}
         }
      
         public void AddTileObject(TileObjectPlacementData placementData)
