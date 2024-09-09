@@ -26,6 +26,22 @@ namespace HexTecGames.GridBaseSystem
                 }
             }
         }
+        public void SpawnHighlight(Coord coord, bool clear = true)
+        {
+            if (clear)
+            {
+                DeactivateAll();
+            }
+            Spawn().Activate(coord.ToWorldPosition());
+        }
+        public void SpawnHighlight(Coord coord, Color color, bool clear = true)
+        {
+            if (clear)
+            {
+                DeactivateAll();
+            }
+            Spawn().Activate(coord.ToWorldPosition(), color);
+        }
         public void SpawnHighlights(List<Coord> coords, bool clear = true)
         {
             SpawnHighlights(coords, StartColor, clear);
@@ -34,7 +50,7 @@ namespace HexTecGames.GridBaseSystem
         {
             SpawnHighlights(Coord.ToWorldPositions(coords), color, clear);
         }
-        
+
         public void SpawnHighlights(List<Coord> coords, Color color, BaseGrid grid, bool clear = true)
         {
             SpawnHighlights(grid.CoordsToWorldPoint(coords), color, clear);
@@ -58,7 +74,6 @@ namespace HexTecGames.GridBaseSystem
             {
                 DeactivateAll();
             }
-            
             foreach (var position in positions)
             {
                 Spawn().Activate(position, color);

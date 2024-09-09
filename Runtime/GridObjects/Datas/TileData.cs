@@ -16,22 +16,22 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
+        public override Sprite Sprite
+        {
+            get
+            {
+                return sprite;
+            }
+        }
+        [SerializeField] private Sprite sprite = default;
+
         public override GridObject CreateObject(Coord center, BaseGrid grid)
         {
             return new Tile(center, grid, this);
         }
 
-        public override bool IsValidPlacement(Coord coord, BaseGrid grid, int rotation)
+        public bool IsValidCoord(Coord coord, BaseGrid grid)
         {
-            return IsValidCoord(coord, grid);
-        }
-
-        public override bool IsValidCoord(Coord coord, BaseGrid grid)
-        {
-            if (!grid.IsAllowedCoord(coord))
-            {
-                return false;
-            }
             if (!grid.DoesTileExist(coord))
             {
                 return true;

@@ -13,6 +13,19 @@ namespace HexTecGames.GridBaseSystem
 
         private List<TileObjectVisual> activeDisplays = new List<TileObjectVisual>();
 
+        public int SpawnIndex
+        {
+            get
+            {
+                return spawnIndex;
+            }
+            private set
+            {
+                spawnIndex = value;
+            }
+        }
+        private int spawnIndex;
+
 
         protected void Reset()
         {
@@ -47,6 +60,7 @@ namespace HexTecGames.GridBaseSystem
             else visual = spawner.Spawn(obj.Data.VisualPrefab);
             activeDisplays.Add(visual);
             visual.Setup(obj, this, grid);
+            SpawnIndex++;
         }
     }
 }

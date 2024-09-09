@@ -70,21 +70,6 @@ namespace HexTecGames.GridBaseSystem
         public event Action<GridObject> OnRemoved;
         public event Action<GridObject> OnMoved;
 
-        public int Rotation
-        {
-            get
-            {
-                return rotation;
-            }
-            set
-            {
-                rotation = value;
-                Sprite = baseData.GetSprite(center, grid, Rotation);
-                OnMoved?.Invoke(this);
-            }
-        }
-        private int rotation;
-
 
         private GridObjectData baseData;
 
@@ -107,15 +92,11 @@ namespace HexTecGames.GridBaseSystem
             MoveGridPosition(oldCenter);
             OnMoved?.Invoke(this);
         }
+
         protected abstract void MoveGridPosition(Coord oldCenter);
         public Vector3 GetWorldPosition()
         {
             return grid.CoordToWorldPoint(Center);
         }
-        public SpriteData GetSpriteData()
-        {
-            return baseData.GetSpriteData(Rotation);
-        }
-
     }
 }

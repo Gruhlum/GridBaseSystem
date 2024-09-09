@@ -10,7 +10,7 @@ namespace HexTecGames.GridBaseSystem
 		public List<RuleData> ruleDatas = new List<RuleData>();
 		[SerializeField] private List<TileData> affectedTileDatas = default;
 
-		public override Sprite GetSprite(Coord coord, BaseGrid grid, int rotation)
+		public Sprite GetSprite(Coord coord, BaseGrid grid)
         {
             var neighbours = grid.GetNeighbourCoords(coord);
 

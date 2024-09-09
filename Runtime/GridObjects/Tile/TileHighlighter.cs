@@ -50,6 +50,7 @@ namespace HexTecGames.GridBaseSystem
         }
         public void Activate(Vector3 position)
         {
+            gameObject.SetActive(true);
             StartCoroutine(ShowHighlight(position));
         }
         public void Activate(Vector3 position, Color color)

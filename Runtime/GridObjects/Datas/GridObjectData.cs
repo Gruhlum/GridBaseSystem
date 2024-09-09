@@ -24,6 +24,7 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         [SerializeField] private bool isReplaceable;
+
         public Color Color
         {
             get
@@ -37,24 +38,6 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private Color color = Color.white;
 
-        [SerializeField] protected List<SpriteData> spriteDatas = new List<SpriteData>();
-
-        public int TotalSprites
-        {
-            get
-            {
-                return spriteDatas.Count;
-            }
-        }
-
-        public override Sprite Sprite
-        {
-            get
-            {
-                return spriteDatas[0].sprite;
-            }
-        }
-
         public SoundClipBase PlacementSound
         {
             get
@@ -64,26 +47,16 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private SoundClipBase placementSound = default;
 
-        public abstract bool IsValidCoord(Coord coord, BaseGrid grid);
-        public abstract bool IsValidPlacement(Coord coord, BaseGrid grid, int rotation);
+        //public virtual bool IsValidCoord(Coord coord, BaseGrid grid)
+        //{
+        //    return true;
+        //}
+        //public abstract bool IsValidPlacement(Coord coord, BaseGrid grid);
 
         public abstract GridObject CreateObject(Coord center, BaseGrid grid);
-        public virtual SpriteData GetSpriteData(int rotation)
-        {
-            return spriteDatas[WrapRotation(rotation)];
-        }
-        private int WrapRotation(int rotation)
-        {
-            rotation %= spriteDatas.Count;
-            if (rotation < 0)
-            {
-                rotation += spriteDatas.Count;
-            }
-            return rotation;
-        }
-        public virtual Sprite GetSprite(Coord coord, BaseGrid grid, int rotation)
-        {
-            return spriteDatas[WrapRotation(rotation)].sprite;
-        }
+        //public abstract SpriteData GetSpriteData(int rotation)
+        //{
+        //    return spriteDatas[];
+        //}
     }
 }

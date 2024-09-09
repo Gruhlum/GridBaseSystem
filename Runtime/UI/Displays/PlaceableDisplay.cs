@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class PlaceableDisplay : Display<GridObjectData>
+    public abstract class PlaceableDisplay<T> : Display<T> where T : GridObjectData
     {
         [SerializeField] private TMP_Text nameGUI = default;
         [SerializeField] private Image img = default;
@@ -16,10 +16,11 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private Color backgroundColor = Color.black;
         [SerializeField] private Color selectedColor = Color.black;
 
-        protected override void DrawItem(GridObjectData item)
+        protected override void DrawItem(T item)
         {
             nameGUI.text = item.name;
             img.sprite = item.Sprite;
+            img.color = item.Color;
         }
         public override void SetHighlight(bool active)
         {

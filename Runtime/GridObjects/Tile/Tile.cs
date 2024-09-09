@@ -36,6 +36,26 @@ namespace HexTecGames.GridBaseSystem
         }
         private bool isPassable = true;
 
+        public bool IsBuildable
+        {
+            get
+            {
+                return isBuildable;
+            }
+            private set
+            {
+                isBuildable = value;
+            }
+        }
+        private bool isBuildable = true;
+
+        public bool IsEmpty
+        {
+            get
+            {
+                return placementDatas.Count == 0;
+            }
+        }
 
         public TileData Data
         {
@@ -59,17 +79,17 @@ namespace HexTecGames.GridBaseSystem
         public Tile(Coord coord, BaseGrid grid, TileData tileData) : base(coord, grid, tileData)
         {
             this.Data = tileData;
-            UpdateSprite();
+            Sprite = this.Data.Sprite;
         }
-        public void UpdateSprite()
-        {
-            Sprite = Data.GetSprite(Center, Grid, 0);
-        }
+        //public void UpdateSprite()
+        //{
+        //    Sprite = Data.GetSprite(Center, Grid, 0);
+        //}
         private void CheckForPassable()
         {
             foreach (var item in placementDatas)
             {
-                if (!item.tileObject.Data.IsPassable)
+                if (item.type != CoordType.Passable)
                 {
                     IsPassable = false;
                     return;
@@ -82,25 +102,33 @@ namespace HexTecGames.GridBaseSystem
             placementDatas.Clear();
             IsPassable = true;
         }
-        
+
         public void RemoveTileObject(TileObject tileObj)
         {
             TileObjectPlacementData placementData = placementDatas.Find(x => x.tileObject == tileObj);
             placementDatas.Remove(placementData);
             CheckForPassable();
-            //if (!tileObj.Data.IsPassable)
-            //{
-            //    CheckForPassable();
-            //}
+            CheckForBlocking();
         }
-     
-        public void AddTileObject(TileObjectPlacementData placementData)
+        private void CheckForBlocking()
         {
-            placementDatas.Add(placementData);
-            if (!placementData.tileObject.Data.IsPassable)
+            foreach (var placementData in placementDatas)
+            {
+                if (placementData.type != CoordType.Blocking)
+                {
+                    IsBuildable = false;
+                }
+            }
+            IsBuildable = true;
+        }
+        public void AddTileObject(TileObject tileObj, CoordType type)
+        {
+            placementDatas.Add(new TileObjectPlacementData(tileObj, type));
+            if (type == CoordType.Passable)
             {
                 IsPassable = false;
             }
+            else IsBuildable = false;
         }
         public bool TryGetTileObject(out TileObject tileObj)
         {
@@ -120,33 +148,11 @@ namespace HexTecGames.GridBaseSystem
             }
             return new List<TileObjectPlacementData>(placementDatas);
         }
-        public bool IsSaveZone()
-        {
-            foreach (var placementData in placementDatas)
-            {
-                if (placementData.isSaveZone)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        public bool IsBlocked()
-        {
-            foreach (var placementData in placementDatas)
-            {
-                if (placementData.IsBlocking)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+
         protected override void MoveGridPosition(Coord oldCenter)
         {
             throw new NotImplementedException();
         }
-
 
         public override void Remove()
         {

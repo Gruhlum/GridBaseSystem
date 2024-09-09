@@ -8,12 +8,11 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class GridPlacementController : MonoBehaviour
+    public abstract class GridPlacementController : MonoBehaviour
     {
-        [SerializeField] private BaseGrid grid = default;
-        [SerializeField] private PlacementGhost ghost = default;
-        [SerializeField] private GridEventSystem gridEventSystem = default;
-        [SerializeField] private ResourceController resourceC = default;
+        [SerializeField] protected BaseGrid grid = default;
+        [SerializeField] protected GridEventSystem gridEventSystem = default;
+        [SerializeField] protected PlacementGhost ghost = default;
 
         //[Header("Settings")]
         //[SerializeField] private bool dropSelectedAfterBuild = default;
@@ -28,23 +27,11 @@ namespace HexTecGames.GridBaseSystem
         //[SerializeField] private Color validLocationCol = Color.green;
 
         [SerializeField] private SoundClipBase errorSound = default;
-        public GridObjectData SelectedObject
+
+        public abstract GridObjectData SelectedObject
         {
-            get
-            {
-                return selectedObject;
-            }
-            private set
-            {
-                if (selectedObject == value)
-                {
-                    return;
-                }
-                selectedObject = value;
-                OnSelectedObjectChanged?.Invoke(selectedObject);
-            }
+            get;
         }
-        private GridObjectData selectedObject;
 
         public Coord HoverCoord
         {
@@ -56,12 +43,22 @@ namespace HexTecGames.GridBaseSystem
 
         public event Action<GridObjectData> OnSelectedObjectChanged;
         public event Action<GridObject> OnObjectPlaced;
+        public event Action<PreBuildInfo> OnBeforeBuild;
 
         private bool isDragging;
         private int lastMouseBtn;
 
-        private int currentRotation;
-
+        public bool AllowRemoval
+        {
+            get
+            {
+                return allowRemoval;
+            }
+            set
+            {
+                allowRemoval = value;
+            }
+        }
         [SerializeField] private bool allowRemoval = default;
 
         private void OnEnable()
@@ -74,35 +71,12 @@ namespace HexTecGames.GridBaseSystem
             gridEventSystem.OnMouseHoverCoordChanged -= GridEventSystem_OnMouseHoverCoordChanged;
             gridEventSystem.OnMouseClicked -= GridEventSystem_OnMouseClicked;
         }
-        private void Update()
+        protected virtual void Update()
         {
             if (isDragging && Input.GetMouseButtonUp(lastMouseBtn))
             {
                 isDragging = false;
                 lastMouseBtn = -1;
-            }
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                if (SelectedObject == null)
-                {
-                    return;
-                }
-                if (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift))
-                {
-                    currentRotation--;
-                }
-                else currentRotation++;
-
-                if (currentRotation >= SelectedObject.TotalSprites)
-                {
-                    currentRotation = 0;
-                }
-                else if (currentRotation < 0)
-                {
-                    currentRotation = SelectedObject.TotalSprites - 1;
-                }
-                ghost.Rotate(currentRotation);
-                CheckForValidTile(gridEventSystem.MouseHoverCoord);
             }
         }
 
@@ -119,7 +93,10 @@ namespace HexTecGames.GridBaseSystem
                 {
                     ClearSelectedObject();
                 }
-                else if (allowRemoval) grid.RemoveGridObject(coord);
+                else if (AllowRemoval)
+                {
+                    grid.RemoveGridObject(coord);
+                }
             }
             if (SelectedObject != null)
             {
@@ -130,18 +107,6 @@ namespace HexTecGames.GridBaseSystem
                 else isDragging = false;
             }
             else isDragging = true;
-        }
-        private void CheckForValidTile(Coord coord)
-        {
-            if (SelectedObject != null)
-            {
-                ghost.Activate(coord);
-
-                if (isDragging && lastMouseBtn == 0)
-                {
-                    Build(coord);
-                }
-            }
         }
         private void GridEventSystem_OnMouseHoverCoordChanged(Coord coord)
         {
@@ -161,8 +126,21 @@ namespace HexTecGames.GridBaseSystem
                 }
             }
         }
+        protected void CheckForValidTile(Coord coord)
+        {
+            if (SelectedObject != null)
+            {
+                ghost.Activate(coord);
 
-        public void Build(Coord coord)
+                if (isDragging && lastMouseBtn == 0)
+                {
+                    Build(coord);
+                }
+            }
+        }
+
+        protected abstract bool IsValidCoord(Coord coord);
+        public virtual void Build(Coord coord)
         {
             if (SelectedObject == null)
             {
@@ -173,59 +151,44 @@ namespace HexTecGames.GridBaseSystem
             {
                 return;
             }
-            if (!SelectedObject.IsValidPlacement(coord, grid, currentRotation))
+            if (!IsValidCoord(coord))
             {
                 errorSound?.Play();
                 return;
             }
-            if (SelectedObject is ICost cost)
+
+            PreBuildInfo info = new PreBuildInfo();
+            OnBeforeBuild?.Invoke(info);
+            if (info.IsBlocked)
             {
-                if (!cost.IsAffordable(resourceC.GetResources()))
-                {
-                    errorSound?.Play();
-                    return;
-                }
-                else cost.SubtractResources(resourceC.GetResources());
+                errorSound?.Play();
+                info.PrintBlockReasons();
+                return;
             }
-            GridObject tileObject = SelectedObject.CreateObject(coord, grid);
-            tileObject.Rotation = currentRotation;
+           
+
             if (SelectedObject.PlacementSound != null)
             {
                 SelectedObject.PlacementSound.Play();
             }
-            StartCoroutine(BuildDelayed(tileObject));
+            StartCoroutine(BuildDelayed(coord));
         }
 
-        private IEnumerator BuildDelayed(GridObject tileObject)
+        protected abstract GridObject GenerateObject(Coord coord);
+
+        private IEnumerator BuildDelayed(Coord coord)
         {
             yield return null;
-            grid.AddGridObject(tileObject);
+            GridObject tileObject = GenerateObject(coord);
             OnObjectPlaced?.Invoke(tileObject);
             //ghost.UpdatePlacementArea();
         }
-
+        protected abstract void ClearSelected();
         public void ClearSelectedObject()
         {
-            SelectedObject = null;
+            ClearSelected();
             isDragging = false;
             ghost.Deactivate();
-        }
-        public void SetSelectedObject(GridObjectData data)
-        {
-            if (data == null)
-            {
-                ClearSelectedObject();
-                return;
-            }
-            ResetRotation();
-            SelectedObject = data;
-            ghost.Activate(data, HoverCoord);
-        }
-
-        private void ResetRotation()
-        {
-            currentRotation = 0;
-            ghost.Rotate(0);
         }
     }
 }

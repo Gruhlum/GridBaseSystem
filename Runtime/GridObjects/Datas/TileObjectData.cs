@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    [CreateAssetMenu(menuName = "HexTecGames/TileObjectData")]
-    public abstract class TileObjectData : GridObjectData
+    [CreateAssetMenu(menuName = "HexTecGames/Grid/TileObjectData")]
+    public class TileObjectData : GridObjectData
     {
-        [SerializeField] private List<Coord> coords = default;
-        [SerializeField] private List<Coord> saveZones = default;
+        [SerializeField] private List<PlacementCoord> coords = default;
+        [SerializeField] protected List<SpriteData> spriteDatas = new List<SpriteData>();
 
         public TileObjectVisual VisualPrefab
         {
@@ -22,89 +22,100 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         [SerializeField] private TileObjectVisual visualPrefab;
-
-        public bool IsPassable
-        {
-            get
-            {
-                return isPassable;
-            }
-        }
-        [SerializeField] private bool isPassable = default;
+      
         public override bool IsDraggable
         {
             get
             {
-                return false;
+                return isDraggable;
             }
         }
+        [SerializeField] private bool isDraggable;
 
-
-        public override bool IsValidCoord(Coord coord, BaseGrid grid)
+        public int TotalSprites
         {
-            return grid.IsTileEmpty(coord);
-        }
-        public CoordCollection GetNormalizedValidCoords(BaseGrid grid, Coord center, int rotation)
-        {
-            CoordCollection results = new CoordCollection();
-            var saveZones = GetNormalizedSaveZones(grid, center, rotation);
-            foreach (var coord in saveZones)
+            get
             {
-                if (grid.IsTileBlocked(coord))
-                {
-                    results.invalidCoords.Add(coord);
-                }
-                else results.validCoords.Add(coord);
+                return spriteDatas.Count;
             }
+        }
 
-            var coords = GetNormalizedCoords(grid, center, rotation);
+        public override Sprite Sprite
+        {
+            get
+            {
+                return spriteDatas[0].sprite;
+            }
+        }
+
+        public List<PlacementCoord> GetCoords()
+        {
+            return new List<PlacementCoord>(coords);
+        }
+
+        public List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord center, int rotation)
+        {
+            List<BoolCoord> boolCoords = new List<BoolCoord>();
             foreach (var coord in coords)
             {
-                if (!grid.CanPlaceBuilding(coord))
-                {
-                    results.invalidCoords.Add(coord);
-                }
-                //else results.validCoords.Add(coord);
+                center.NormalizedAndRotated(coord.coord, rotation);
+                boolCoords.Add(new BoolCoord(center, IsValidPlacement(center, grid, rotation)));
             }
-
-            return results;
+            return boolCoords;
         }
-        public override bool IsValidPlacement(Coord center, BaseGrid grid, int rotation)
+        public bool IsValidPlacement(Coord center, BaseGrid grid, int rotation)
         {
-            if (!grid.CanPlaceBuilding(GetNormalizedCoords(grid, center, rotation)))
+            foreach (var coord in coords)
             {
-                return false;
-            }
-            if (grid.IsTileBlocked(GetNormalizedSaveZones(grid, center, rotation)))
-            {
-                return false;
+                center.NormalizedAndRotated(coord.coord, rotation);
+                var tile = grid.GetTile(center);
+                if (tile == null)
+                {
+                    return false;
+                }
+                if (!tile.IsBuildable)
+                {
+                    Debug.Log("Not Buildable!");
+                    return false;
+                }
+                if (coord.type == CoordType.Blocking && !tile.IsPassable)
+                {
+                    Debug.Log(" 2 2 2 Not Buildable!");
+                    return false;
+                }
             }
             return true;
         }
-        public List<Coord> GetNormalizedCoords(BaseGrid grid, Coord center, int rotation = 0)
+
+        public virtual SpriteData GetSpriteData(Coord center, BaseGrid grid, int rotation)
         {
-            return GetNormalizedAndRotatedCoords(grid, center, coords, rotation);
+            return spriteDatas[rotation % spriteDatas.Count];
         }
-        public List<Coord> GetCoords()
+        public virtual Sprite GetSprite(Coord center, BaseGrid grid, int rotation)
         {
-            return new List<Coord>(coords);
+            return spriteDatas[rotation % spriteDatas.Count].sprite;
         }
-        public List<Coord> GetSaveZones()
+
+        public override GridObject CreateObject(Coord center, BaseGrid grid)
         {
-            return new List<Coord>(saveZones);
+            return new TileObject(center, grid, this, 0);
         }
-        public List<Coord> GetNormalizedSaveZones(BaseGrid grid, Coord center, int rotation = 0)
-        {
-            return GetNormalizedAndRotatedCoords(grid, center, saveZones, rotation);
-        }
-        private List<Coord> GetNormalizedAndRotatedCoords(BaseGrid grid, Coord center, List<Coord> coords, int rotation)
-        {
-            var results = center.GetNormalizedCoords(coords);
-            if (rotation != 0)
-            {
-                results = grid.GetRotatedCoords(center, results, rotation);
-            }
-            return results;
-        }
+        //public List<PlacementCoord> GetNormalizedCoords(BaseGrid grid, Coord center, int rotation = 0)
+        //{
+        //    return GetNormalizedCoords(grid, center, coords, rotation);
+        //}
+        //public List<PlacementCoord> GetCoords()
+        //{
+        //    return new List<PlacementCoord>(coords);
+        //}
+        //private List<PlacementCoord> GetNormalizedCoords(BaseGrid grid, Coord center, List<PlacementCoord> coords, int rotation)
+        //{
+        //    var results = center.GetNormalizedCoords(coords);
+        //    if (rotation != 0)
+        //    {
+        //        results = grid.GetRotatedCoords(center, results, rotation);
+        //    }
+        //    return results;
+        //}
     }
 }

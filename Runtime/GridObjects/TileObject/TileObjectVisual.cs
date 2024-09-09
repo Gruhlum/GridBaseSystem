@@ -74,9 +74,9 @@ namespace HexTecGames.GridBaseSystem
 
         protected virtual void TileObject_OnMoved(GridObject obj)
         {
-            SetPosition(obj);
+            SetPosition(obj as TileObject);
         }
-        protected void SetPosition(GridObject obj)
+        protected void SetPosition(TileObject obj)
         {
             transform.position = obj.GetWorldPosition();
             SpriteData spriteData = obj.GetSpriteData();

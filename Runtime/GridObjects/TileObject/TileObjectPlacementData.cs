@@ -5,17 +5,15 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
 	[System.Serializable]
-	public class TileObjectPlacementData
+	public struct TileObjectPlacementData
 	{
 		public TileObject tileObject;
-		public bool IsBlocking;
-		public bool isSaveZone;
+		public CoordType type;
 
-        public TileObjectPlacementData(TileObject tileObject, bool isBlocking, bool isSaveZone)
+        public TileObjectPlacementData(TileObject tileObject, CoordType type)
         {
             this.tileObject = tileObject;
-            this.IsBlocking = isBlocking;
-            this.isSaveZone = isSaveZone;
+            this.type = type;
         }
     }
 }

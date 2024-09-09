@@ -57,10 +57,10 @@ namespace HexTecGames.GridBaseSystem
             
             if (activeData != null)
             {
-                sr.sprite = activeData.GetSprite(coord, grid, rotation);
-                SpriteData spriteData = activeData.GetSpriteData(rotation);
-                spriteOffset = spriteData.offset;
-                transform.eulerAngles = spriteData.rotation;
+                //sr.sprite = activeData.GetSprite(coord, grid, rotation);
+                //SpriteData spriteData = activeData.GetSpriteData(rotation);
+                //spriteOffset = spriteData.offset;
+                //transform.eulerAngles = spriteData.rotation;
                 UpdateSpritePosition();
             }           
         }
@@ -74,13 +74,12 @@ namespace HexTecGames.GridBaseSystem
         private void UpdatePlacementArea(TileObjectData data)
         {
             var results = data.GetNormalizedValidCoords(grid, coord, rotation);
-            //if (results.invalidCoords.Count > 0)
-            //{
-            //    sr.color = invalidPlacementColor;
-            //}
-            //else sr.color = data.Color;
-            highlightSpawner.SpawnHighlights(results.validCoords, validPlacementColor, grid);
-            highlightSpawner.SpawnHighlights(results.invalidCoords, invalidPlacementColor, grid, false);
+
+            foreach (var result in results)
+            {
+                //Debug.Log(result.ToString());//
+                highlightSpawner.SpawnHighlight(result.coord, result.valid ? validPlacementColor : invalidPlacementColor, grid);
+            }
         }
     }
 }

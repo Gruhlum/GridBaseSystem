@@ -21,7 +21,7 @@ namespace HexTecGames.GridBaseSystem
         public Coord(int x, int y) : this(x, y, true)
         {
         }
-        public Coord(int x, int y, bool isValid) 
+        public Coord(int x, int y, bool isValid)
         {
             this.x = x;
             this.y = y;
@@ -60,15 +60,15 @@ namespace HexTecGames.GridBaseSystem
         {
             return new Vector3(x, y, 0);
         }
-        public List<Coord> GetRotatedCoords(List<Coord> coords)
-        {
-            List<Coord> results = new List<Coord>();
-            foreach (var coord in coords)
-            {
-                results.Add(this + coord);
-            }
-            return results;
-        }
+        //public List<Coord> GetRotatedCoords(List<Coord> coords)
+        //{
+        //    List<Coord> results = new List<Coord>();
+        //    foreach (var coord in coords)
+        //    {
+        //        results.Add(this + coord);
+        //    }
+        //    return results;
+        //}
         public List<Coord> GetNormalizedCoords(List<Coord> coords)
         {
             List<Coord> results = new List<Coord>();
@@ -77,6 +77,50 @@ namespace HexTecGames.GridBaseSystem
                 results.Add(this + coord);
             }
             return results;
+        }
+        public Coord Normalize(Coord center)
+        {
+            return this - center;
+        }
+        public Coord Rotate(Coord center, int rotation)
+        {
+            Coord result = this;
+            result.Rotated(center, rotation);
+            return result;
+        }
+        public Coord NormalizeAndRotate(Coord center, int rotation)
+        {
+            Coord result = Normalize(center);
+            result.Rotated(center, rotation);
+            return result;
+        }
+        public void NormalizedAndRotated(Coord center, int rotation)
+        {
+            Normalized(center);
+            Rotated(center, rotation);
+        }
+        public void Normalized(Coord center)
+        {
+            x -= center.x;
+            y -= center.y;
+        }
+        public void Rotated(Coord center, int rotation)
+        {
+            if (rotation == 0)
+            {
+                return;
+            }
+            this -= center;
+
+            int c = -(this.x + this.y);
+
+            for (int i = 0; i < rotation; i++)
+            {
+                this = new Coord(this.y, this.y + c);
+                c = -(this.x + this.y);
+            }
+
+            this += center;
         }
         public static bool operator ==(Coord coord1, Coord coord2)
         {
