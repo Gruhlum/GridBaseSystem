@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class TileObjectDisplay : PlaceableDisplay<TileObjectData>
+    public class TileObjectDisplay : PlaceableDisplay<PlacementData>
     {
 
     }

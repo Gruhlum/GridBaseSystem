@@ -7,9 +7,9 @@ namespace HexTecGames.GridBaseSystem
 {
     public class TileObjectVisualizer : MonoBehaviour
     {
+        [SerializeField] private BaseGrid grid = default;
         [SerializeField] private TileObjectVisual defaultVisual = default;
         [SerializeField] private MultiSpawner spawner = default;
-        [SerializeField] private BaseGrid grid = default;
 
         private List<TileObjectVisual> activeDisplays = new List<TileObjectVisual>();
 

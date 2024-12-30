@@ -23,11 +23,11 @@ namespace HexTecGames.GridBaseSystem
         }
         private TileData selectedTileData;
 
-        public override GridObjectData SelectedObject
+        public override PlacementData SelectedObject
         {
             get
             {
-                return SelectedTileData;
+                return null; //TODO
             }
         }
 
@@ -38,11 +38,11 @@ namespace HexTecGames.GridBaseSystem
 
         protected override GridObject GenerateObject(Coord coord)
         {
-            Tile tile = SelectedTileData.CreateObject(coord, grid) as Tile;
+            Tile tile = SelectedTileData.CreateObject(grid, coord) as Tile;
             grid.AddTile(tile);
             return tile;
         }
-        public void SetSelectedObject(TileData data)
+        public void SetSelectedObject(PlacementData data)
         {
             if (data == null)
             {
@@ -50,8 +50,8 @@ namespace HexTecGames.GridBaseSystem
                 return;
             }
 
-            SelectedTileData = data;
-            ghost.Activate(data, HoverCoord);
+            //SelectedTileData = data;
+            //ghost.Activate(data, HoverCoord);
         }
         protected override void ClearSelected()
         {

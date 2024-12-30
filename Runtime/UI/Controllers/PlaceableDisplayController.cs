@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class PlaceableDisplayController<T> : DisplayController<T> where T : GridObjectData
+    public abstract class PlaceableDisplayController<T> : DisplayController<T> where T : PlacementData
     {
-        void Start()
+        protected void Start()
         {
             DisplayItems();
         }
 
-        protected void GridPlacementController_OnSelectedObjectChanged(GridObjectData data)
+        protected void TileObjPlacementController_OnSelectedObjectChanged(PlacementData data)
         {
             foreach (var display in displaySpawner.GetActiveInstances())
             {

@@ -5,12 +5,12 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
 	[System.Serializable]
-	public struct TileObjectPlacementData
+	public struct TileObjectPlacement
 	{
 		public TileObject tileObject;
 		public CoordType type;
 
-        public TileObjectPlacementData(TileObject tileObject, CoordType type)
+        public TileObjectPlacement(TileObject tileObject, CoordType type)
         {
             this.tileObject = tileObject;
             this.type = type;

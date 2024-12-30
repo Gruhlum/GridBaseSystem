@@ -5,23 +5,29 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class TileObjectDisplayController : PlaceableDisplayController<TileObjectData>
+    public class TileObjectDisplayController : PlaceableDisplayController<PlacementData>
     {
-        [SerializeField] private TileObjectPlacementController gridPlacementController = default;
+        [SerializeField] private TileObjectPlacementController tileObjPlacementController = default;
 
+
+        protected override void Reset()
+        {
+            base.Reset();
+            tileObjPlacementController = FindObjectOfType<TileObjectPlacementController>();
+        }
         private void OnEnable()
         {
-            gridPlacementController.OnSelectedObjectChanged += GridPlacementController_OnSelectedObjectChanged;
+            tileObjPlacementController.OnSelectedObjectChanged += TileObjPlacementController_OnSelectedObjectChanged;
         }
         private void OnDisable()
         {
-            gridPlacementController.OnSelectedObjectChanged -= GridPlacementController_OnSelectedObjectChanged;
+            tileObjPlacementController.OnSelectedObjectChanged -= TileObjPlacementController_OnSelectedObjectChanged;
         }
 
-        public override void DisplayClicked(Display<TileObjectData> display)
+        public override void DisplayClicked(Display<PlacementData> display)
         {
             base.DisplayClicked(display);
-            gridPlacementController.SetSelectedObject(display.Item);
+            tileObjPlacementController.SetSelectedObject(display.Item);
         }
     }
 }

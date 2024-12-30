@@ -9,22 +9,24 @@ namespace HexTecGames.GridBaseSystem
     public class TileVisualizer : MonoBehaviour
     {
         [SerializeField] protected BaseGrid grid = default;
-        [SerializeField] protected Spawner<TileVisual> displaySpawner = default;
+
+        [SerializeField] private TileVisual defaultVisual = default;
+        [SerializeField] private MultiSpawner spawner = default;
 
         public event Action<TileVisual> OnCoordDisplaySpawned;
 
 
-        void Reset()
+        private void Reset()
         {
             if (transform.parent != null)
             {
                 grid = GetComponentInParent<BaseGrid>();
             }
-            if (displaySpawner == null)
+            if (spawner != null)
             {
-                displaySpawner = new Spawner<TileVisual>();
+                spawner.Parent = transform;
             }
-            displaySpawner.Parent = transform;
+           
         }
 
         private void OnEnable()
@@ -32,7 +34,6 @@ namespace HexTecGames.GridBaseSystem
             if (grid != null)
             {
                 grid.OnTileAdded += Grid_OnTileAdded;
-                grid.OnTileRemoved += Grid_OnTileRemoved;
                 grid.OnGridGenerated += Grid_OnGridGenerated;
             }
         }
@@ -42,32 +43,24 @@ namespace HexTecGames.GridBaseSystem
             if (grid != null)
             {
                 grid.OnTileAdded -= Grid_OnTileAdded;
-                grid.OnTileRemoved -= Grid_OnTileRemoved;
                 grid.OnGridGenerated -= Grid_OnGridGenerated;
             }
         }
         protected void SpawnTileDisplay(Tile tile)
         {
-            TileVisual display = displaySpawner.Spawn();
+            TileVisual display;
+            if (tile.Data.VisualPrefab != null)
+            {
+                display = spawner.Spawn(tile.Data.VisualPrefab);
+            }
+            else display = spawner.Spawn(defaultVisual);
+
             SetupCoordDisplay(display, tile);
             OnCoordDisplaySpawned?.Invoke(display);
         }
         protected virtual void SetupCoordDisplay(TileVisual display, Tile tile)
         {
             display.Setup(tile);
-        }
-        private void Grid_OnTileRemoved(Tile tile)
-        {
-            var results = displaySpawner.GetActiveInstances();
-            foreach (var result in results)
-            {
-                if (result.Tile == tile)
-                {
-                    result.gameObject.SetActive(false);
-                    return;
-                }
-            }
-            Debug.Log(tile.ToString());
         }
 
         private void Grid_OnTileAdded(Tile tile)
@@ -77,7 +70,7 @@ namespace HexTecGames.GridBaseSystem
         }
         private void Grid_OnGridGenerated()
         {
-            SpawnTileDisplays(grid.GetAllTiles());
+            SpawnTileDisplays(grid.GetTiles());
         }
         protected virtual void SpawnTileDisplays(List<Tile> tiles) 
         {

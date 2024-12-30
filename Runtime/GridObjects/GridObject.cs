@@ -20,37 +20,37 @@ namespace HexTecGames.GridBaseSystem
         }
         private BaseGrid grid;
 
-        public Sprite Sprite
-        {
-            get
-            {
-                return sprite;
-            }
-            set
-            {
-                if (sprite == value)
-                {
-                    return;
-                }
-                sprite = value;
-                OnSpriteChanged?.Invoke(this, sprite);
-            }
-        }
-        private Sprite sprite;
+        //public Sprite Sprite
+        //{
+        //    get
+        //    {
+        //        return sprite;
+        //    }
+        //    set
+        //    {
+        //        if (sprite == value)
+        //        {
+        //            return;
+        //        }
+        //        sprite = value;
+        //        OnSpriteChanged?.Invoke(this, sprite);
+        //    }
+        //}
+        //private Sprite sprite;
 
-        public Color Color
-        {
-            get
-            {
-                return color;
-            }
-            set
-            {
-                color = value;
-                OnColorChanged?.Invoke(this, color);
-            }
-        }
-        private Color color = Color.white;
+        //public Color Color
+        //{
+        //    get
+        //    {
+        //        return color;
+        //    }
+        //    set
+        //    {
+        //        color = value;
+        //        OnColorChanged?.Invoke(this, color);
+        //    }
+        //}
+        //private Color color = Color.white;
 
         public Coord Center
         {
@@ -65,20 +65,30 @@ namespace HexTecGames.GridBaseSystem
         }
         private Coord center;
 
-        public event Action<GridObject, Sprite> OnSpriteChanged;
-        public event Action<GridObject, Color> OnColorChanged;
+        public string Name
+        {
+            get
+            {
+                if (baseData == null)
+                {
+                    return "No Data";
+                }
+                return baseData.name;
+            }
+        }
+        private GridObjectData baseData;
+
+        //public event Action<GridObject, Sprite> OnSpriteChanged;
+        //public event Action<GridObject, Color> OnColorChanged;
         public event Action<GridObject> OnRemoved;
         public event Action<GridObject> OnMoved;
 
-
-        private GridObjectData baseData;
-
-        public GridObject(Coord center, BaseGrid grid, GridObjectData data)
+        public GridObject(BaseGrid grid, GridObjectData data, Coord center)
         {
             this.Grid = grid;
-            this.Center = center;
             this.baseData = data;
-            Color = data.Color;
+            this.Center = center;
+            //Color = data.Color;
         }
 
         public virtual void Remove()
@@ -98,5 +108,11 @@ namespace HexTecGames.GridBaseSystem
         {
             return grid.CoordToWorldPoint(Center);
         }
+
+        public virtual CustomSaveData GetCustomSaveData()
+        { return null; }
+
+        public virtual void LoadCustomSaveData(CustomSaveData data) 
+        { }
     }
 }

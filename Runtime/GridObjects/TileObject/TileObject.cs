@@ -25,7 +25,17 @@ namespace HexTecGames.GridBaseSystem
             }
             private set
             {
+                if (rotation == value)
+                {
+                    return;
+                }
+                value = value.LoopValue(Grid.MaximumRotation);
+                if (rotation == value)
+                {
+                    return;
+                }
                 rotation = value;
+                OnRotated?.Invoke(this, rotation);
             }
         }
         private int rotation;
@@ -43,30 +53,46 @@ namespace HexTecGames.GridBaseSystem
         }
         private bool isReplaceable;
 
-
         public List<Tile> occupyingTiles = new List<Tile>();
 
-        public TileObject(Coord center, BaseGrid grid, TileObjectData data, int rotation) : base(center, grid, data)
+        public event Action<TileObject, int> OnRotated;
+
+
+
+        public TileObject(BaseGrid grid, TileObjectData data, Coord center, int rotation = 0) : base(grid, data, center)
         {
             this.data = data;
-            IsReplaceable = data.IsReplaceable;
+            //IsReplaceable = data.IsReplaceable;
             this.Rotation = rotation;
-            Sprite = data.GetSprite(center, grid, rotation);
+            //Sprite = data.GetSprite(center, grid, rotation);
             SetOccupyingTiles();
         }
 
-        public void Rotate(int rotation)
+        public void SetRotation(int rotation)
         {
             Rotation = rotation;
-            Sprite = Data.GetSprite(Center, Grid, Rotation);
         }
-
+        public void Rotate(int turns)
+        {
+            Rotation += turns;
+        }
+        public float DirectionToDegrees()
+        {
+            return DirectionToDegrees(Rotation);
+        }
+        public float DirectionToDegrees(int rotation)
+        {
+            return Grid.DirectionToDegrees(rotation);
+        }
         public override void Remove()
         {
             base.Remove();
             RemoveOccupyingTiles();
         }
-
+        public Coord GetFacingCoord()
+        {
+            return Grid.GetDirectionCoord(Center, Rotation);
+        }
         private void RemoveOccupyingTiles()
         {
             foreach (var tile in occupyingTiles)
@@ -76,9 +102,13 @@ namespace HexTecGames.GridBaseSystem
         }
         private void SetOccupyingTiles()
         {
+            if (Grid == null)
+            {
+                return;
+            }
             foreach (var coord in Data.GetCoords())
             {
-                Coord normalized = Center.NormalizeAndRotate(coord.coord, Rotation);
+                Coord normalized = Center.NormalizedAndRotated(coord.coord, Rotation);
                 var tile = Grid.GetTile(normalized);
                 tile.AddTileObject(this, coord.type);
                 occupyingTiles.Add(tile);
@@ -110,32 +140,39 @@ namespace HexTecGames.GridBaseSystem
         //    return neighbours;
         //}
 
-        public SpriteData GetSpriteData()
-        {
-            return Data.GetSpriteData(Center, Grid, Rotation);
-        }
+        //public SpriteData GetSpriteData()
+        //{
+        //    return Data.GetSpriteData(Center, Grid, Rotation);
+        //}
         protected override void MoveGridPosition(Coord oldCenter)
         {
             List<PlacementCoord> newPlacements = new List<PlacementCoord>();
             List<PlacementCoord> oldPlacements = new List<PlacementCoord>();
 
-            foreach (var coord in Data.GetCoords())
+            foreach (var placementCoord in Data.GetCoords())
             {
-                coord.coord.NormalizedAndRotated(Center, Rotation);
-                newPlacements.Add(coord);
+                placementCoord.NormalizeAndRotate(Center, Rotation);
+                newPlacements.Add(placementCoord);
+                //Debug.Log(placementCoord.test + " - " + newPlacements.Last().test);
+                //Debug.Log(newPlacements[0].coord.ToString());
             }
-            foreach (var coord in Data.GetCoords())
+            foreach (var placementCoord in Data.GetCoords())
             {
-                coord.coord.NormalizedAndRotated(oldCenter, Rotation);
+                placementCoord.NormalizeAndRotate(oldCenter, Rotation);
+                //Check each new position if they are the same as an old position, if yes we can ignore it
                 for (int i = newPlacements.Count - 1; i >= 0; i--)
                 {
-                    if (newPlacements[i].coord == coord.coord && newPlacements[i].type == coord.type)
+                    if (newPlacements[i].coord == placementCoord.coord && newPlacements[i].type == placementCoord.type)
                     {
+                        //Debug.Log(newPlacements[i].coord + " - " + placementCoord.coord);
                         newPlacements.RemoveAt(i);
                     }
-                    else oldPlacements.Add(coord);
+                    else oldPlacements.Add(placementCoord);
                 }
             }
+
+            //Debug.Log(newPlacements.Count + " - " + oldPlacements.Count);
+
             foreach (var placement in oldPlacements)
             {
                 Tile tile = Grid.GetTile(placement.coord);

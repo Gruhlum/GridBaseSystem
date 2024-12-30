@@ -78,39 +78,46 @@ namespace HexTecGames.GridBaseSystem
             }
             return results;
         }
-        public Coord Normalize(Coord center)
+        public Coord Normalized(Coord center)
         {
             return this - center;
         }
-        public Coord Rotate(Coord center, int rotation)
+        public Coord Rotated(Coord center, int rotation)
         {
             Coord result = this;
-            result.Rotated(center, rotation);
+            result.Rotate(center, rotation);
             return result;
         }
-        public Coord NormalizeAndRotate(Coord center, int rotation)
+        public Coord NormalizedAndRotated(Coord center, int rotation)
         {
-            Coord result = Normalize(center);
-            result.Rotated(center, rotation);
+            Coord result = Normalized(center);
+            result.Rotate(center, rotation);
             return result;
         }
-        public void NormalizedAndRotated(Coord center, int rotation)
+        public void NormalizeAndRotate(Coord center, int rotation)
         {
-            Normalized(center);
-            Rotated(center, rotation);
+            Normalize(center);
+            //Rotate(center, rotation);
         }
-        public void Normalized(Coord center)
+        public void Normalize(Coord center)
         {
-            x -= center.x;
-            y -= center.y;
+            x += center.x;
+            y += center.y;
         }
-        public void Rotated(Coord center, int rotation)
+        public void Rotate(Coord center, int rotation)
         {
-            if (rotation == 0)
+            if (rotation <= 0)
             {
                 return;
             }
             this -= center;
+
+            // (0,  1) -> ( 1,  0)
+            // (1,  0) -> ( 0, -1)
+            // (0, -1) -> (-1,  0)
+            // (-1, 0) -> ( 0,  1)
+
+            this = new Coord(x * rotation, y * rotation);
 
             int c = -(this.x + this.y);
 

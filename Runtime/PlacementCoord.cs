@@ -10,17 +10,19 @@ namespace HexTecGames.GridBaseSystem
         public Coord coord;
         public CoordType type;
 
-        //public void Normalize(Coord center)
-        //{
-        //    coord.Normalized(center);
-        //}
-        //public void Rotate(Coord center, int rotation)
-        //{
-        //    coord.Rotated(center, rotation);
-        //}
-        //public void NormalizeAndRotate(Coord center, int rotation)
-        //{
-        //    coord.NormalizedAndRotated(center, rotation);
-        //}
+        public void Normalize(Coord center)
+        {
+            coord.Normalize(center);
+        }
+        public void Rotate(Coord center, int rotation)
+        {
+            coord.Rotate(center, rotation);
+        }
+        public void NormalizeAndRotate(Coord center, int rotation)
+        {
+            //Debug.Log("Before: " + coord.ToString());
+            coord.NormalizeAndRotate(center, rotation);
+            //Debug.Log("After: " + coord.ToString() + " - C: " + center.ToString());
+        }
     }
 }

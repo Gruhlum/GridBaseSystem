@@ -37,7 +37,7 @@ namespace HexTecGames.GridBaseSystem
 
         [SerializeField] private bool showDebugs = default;
 
-        void Reset()
+        private void Reset()
         {
             eventSys = FindObjectOfType<EventSystem>();
             grid = GetComponentInParent<BaseGrid>();

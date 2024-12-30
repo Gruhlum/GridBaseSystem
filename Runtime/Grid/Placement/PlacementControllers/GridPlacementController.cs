@@ -28,7 +28,7 @@ namespace HexTecGames.GridBaseSystem
 
         [SerializeField] private SoundClipBase errorSound = default;
 
-        public abstract GridObjectData SelectedObject
+        public abstract PlacementData SelectedObject
         {
             get;
         }
@@ -41,7 +41,7 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        public event Action<GridObjectData> OnSelectedObjectChanged;
+        public event Action<PlacementData> OnSelectedObjectChanged;
         public event Action<GridObject> OnObjectPlaced;
         public event Action<PreBuildInfo> OnBeforeBuild;
 
@@ -89,14 +89,14 @@ namespace HexTecGames.GridBaseSystem
             }
             else if (btn == 1)
             {
-                if (SelectedObject != null)
-                {
-                    ClearSelectedObject();
-                }
-                else if (AllowRemoval)
-                {
-                    grid.RemoveGridObject(coord);
-                }
+                //if (SelectedObject != null)
+                //{
+                //    ClearSelectedObject();
+                //}
+                //else if (AllowRemoval)
+                //{
+                //    grid.RemoveGridObject(coord);
+                //}
             }
             if (SelectedObject != null)
             {
@@ -122,7 +122,7 @@ namespace HexTecGames.GridBaseSystem
                     {
                         ClearSelectedObject();
                     }
-                    else if (allowRemoval) grid.RemoveGridObject(coord);
+                    //else if (allowRemoval) grid.RemoveGridObject(coord);
                 }
             }
         }
@@ -180,6 +180,7 @@ namespace HexTecGames.GridBaseSystem
         {
             yield return null;
             GridObject tileObject = GenerateObject(coord);
+            Debug.Log("Placing Object: " + tileObject.Name + " at: " + coord.ToString());
             OnObjectPlaced?.Invoke(tileObject);
             //ghost.UpdatePlacementArea();
         }

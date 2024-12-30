@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-	public class PlacementGhost : MonoBehaviour
-	{
+    public class PlacementGhost : MonoBehaviour
+    {
         [SerializeField] private SpriteRenderer sr = default;
-
         [SerializeField] private BaseGrid grid = default;
         [SerializeField] private TileHighlightSpawner highlightSpawner = default;
-        private GridObjectData activeData;
+
+        private PlacementData activeData;
         private Coord coord;
         private int rotation;
         private Vector2 spriteOffset;
@@ -18,15 +18,23 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private Color validPlacementColor = Color.green;
         [SerializeField] private Color invalidPlacementColor = Color.red;
 
-        public void SetSprite(Sprite sprite, Color color)
+
+
+        protected virtual void Reset()
+        {
+            sr = GetComponent<SpriteRenderer>();
+            grid = transform.GetComponentInParent<BaseGrid>();
+        }
+
+        public void SetSprite(Sprite sprite)
         {
             sr.sprite = sprite;
-            sr.color = color;
+            //sr.color = color;
         }
-        public void Activate(GridObjectData data, Coord center)
+        public void Activate(PlacementData placementData, Coord center)
         {
-            activeData = data;            
-            SetSprite(data.Sprite, data.Color);
+            activeData = placementData;
+            SetSprite(placementData.Icon);
             rotation = 0;
             Activate(center);
         }
@@ -35,7 +43,7 @@ namespace HexTecGames.GridBaseSystem
             this.coord = coord;
             transform.position = grid.CoordToWorldPoint(coord);
             gameObject.SetActive(true);
-            if (activeData is TileObjectData tileObjectData)
+            if (activeData.data is TileObjectData tileObjectData)
             {
                 UpdatePlacementArea(tileObjectData);
             }
@@ -54,7 +62,7 @@ namespace HexTecGames.GridBaseSystem
         public void Rotate(int index)
         {
             rotation = index;
-            
+
             if (activeData != null)
             {
                 //sr.sprite = activeData.GetSprite(coord, grid, rotation);
@@ -62,14 +70,14 @@ namespace HexTecGames.GridBaseSystem
                 //spriteOffset = spriteData.offset;
                 //transform.eulerAngles = spriteData.rotation;
                 UpdateSpritePosition();
-            }           
+            }
         }
         public void UpdatePlacementArea()
         {
-            if (activeData != null && activeData is TileObjectData tileObjData)
+            if (activeData != null && activeData.data is TileObjectData tileObjData)
             {
                 UpdatePlacementArea(tileObjData);
-            }           
+            }
         }
         private void UpdatePlacementArea(TileObjectData data)
         {

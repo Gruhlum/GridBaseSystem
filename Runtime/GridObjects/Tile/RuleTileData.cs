@@ -37,7 +37,7 @@ namespace HexTecGames.GridBaseSystem
 				}
 			}
 			//Debug.Log("Unable to find maching rule!");
-			return Sprite;
+			return null;
         }
     }
 }

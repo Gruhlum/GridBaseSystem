@@ -19,7 +19,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 return gridName;
             }
-            private set
+            set
             {
                 gridName = value;
             }
@@ -72,7 +72,7 @@ namespace HexTecGames.GridBaseSystem
                 return;
             }
 
-            SavedGrid savedGrid = new SavedGrid(grid.GetAllTiles());
+            SavedGrid savedGrid = new SavedGrid(grid.GetTiles(), grid.GetAllTileObjects());
 
             switch (saveMode)
             {

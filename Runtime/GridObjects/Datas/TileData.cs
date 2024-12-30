@@ -8,35 +8,27 @@ namespace HexTecGames.GridBaseSystem
 	[CreateAssetMenu(menuName = "HexTecGames/Grid/TileData")]
 	public class TileData : GridObjectData
     {
-        public override bool IsDraggable
+        public TileVisual VisualPrefab
         {
             get
             {
-                return true;
+                return visualPrefab;
             }
-        }
-
-        public override Sprite Sprite
-        {
-            get
+            private set
             {
-                return sprite;
+                visualPrefab = value;
             }
         }
-        [SerializeField] private Sprite sprite = default;
+        [SerializeField] private TileVisual visualPrefab;
 
-        public override GridObject CreateObject(Coord center, BaseGrid grid)
+        public virtual Tile CreateObject(BaseGrid grid, Coord center)
         {
-            return new Tile(center, grid, this);
+            return new Tile(grid, this, center);
         }
 
         public bool IsValidCoord(Coord coord, BaseGrid grid)
         {
             if (!grid.DoesTileExist(coord))
-            {
-                return true;
-            }
-            if (grid.GetTile(coord).Data.IsReplaceable)
             {
                 return true;
             }
