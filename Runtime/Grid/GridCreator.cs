@@ -70,7 +70,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 for (int y = startY; y < endY; y++)
                 {
-                    tiles.Add((Tile)tileData.CreateObject(grid, new Coord(x, y)));
+                    tiles.Add(tileData.CreateObject(grid, new Coord(x, y)));
                 }
             }
             return tiles;
@@ -81,7 +81,7 @@ namespace HexTecGames.GridBaseSystem
             foreach (var saveData in savedGrid.tileSaveDatas)
             {
                 TileData tileData = allTileDatas.Find(x => x.name == saveData.dataName);
-                results.Add((Tile)tileData.CreateObject(grid, saveData.position));
+                results.Add(tileData.CreateObject(grid, saveData.position));
             }
             return results;
         }

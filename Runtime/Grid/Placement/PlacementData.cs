@@ -9,7 +9,31 @@ namespace HexTecGames.GridBaseSystem
     [CreateAssetMenu(menuName = "HexTecGames/Grid/PlacementData")]
     public class PlacementData : DisplayableObject
     {
-        public GridObjectData data;
+        public GridObjectData Data
+        {
+            get
+            {
+                return this.data;
+            }
+            private set
+            {
+                this.data = value;
+            }
+        }
+        [SerializeField] private GridObjectData data;
+
+        public Transform GhostPrefab
+        {
+            get
+            {
+                return ghostPrefab;
+            }
+            private set
+            {
+                ghostPrefab = value;
+            }
+        }
+        [SerializeField] private Transform ghostPrefab;
 
         public string DisplayName
         {
@@ -23,7 +47,6 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         [SerializeField] private string displayName;
-
         public bool IsDraggable
         {
             get
@@ -75,7 +98,7 @@ namespace HexTecGames.GridBaseSystem
         {
             if (string.IsNullOrEmpty(DisplayName))
             {
-                DisplayName = data.name;
+                DisplayName = Data.name;
             }           
         }
     }

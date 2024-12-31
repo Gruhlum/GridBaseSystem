@@ -7,7 +7,19 @@ namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
     public class TileHighlightSpawner : Spawner<TileHighlighter>
-    {
+    {       
+        public BaseGrid Grid
+        {
+            get
+            {
+                return this.grid;
+            }
+            set
+            {
+                this.grid = value;
+            }
+        }
+        [SerializeField] private BaseGrid grid = default;
         private Color StartColor
         {
             get
@@ -32,7 +44,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 DeactivateAll();
             }
-            Spawn().Activate(coord.ToWorldPosition());
+            Spawn().Activate(Grid.CoordToWorldPoint(coord));
         }
         public void SpawnHighlight(Coord coord, Color color, bool clear = true)
         {
@@ -40,7 +52,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 DeactivateAll();
             }
-            Spawn().Activate(coord.ToWorldPosition(), color);
+            Spawn().Activate(Grid.CoordToWorldPoint(coord), color);
         }
         public void SpawnHighlights(List<Coord> coords, bool clear = true)
         {
@@ -48,9 +60,8 @@ namespace HexTecGames.GridBaseSystem
         }
         public void SpawnHighlights(List<Coord> coords, Color color, bool clear = true)
         {
-            SpawnHighlights(Coord.ToWorldPositions(coords), color, clear);
+            SpawnHighlights(Grid.CoordsToWorldPoint(coords), color, clear);
         }
-
         public void SpawnHighlights(List<Coord> coords, Color color, BaseGrid grid, bool clear = true)
         {
             SpawnHighlights(grid.CoordsToWorldPoint(coords), color, clear);

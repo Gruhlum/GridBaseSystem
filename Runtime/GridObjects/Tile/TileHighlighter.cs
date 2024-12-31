@@ -64,6 +64,11 @@ namespace HexTecGames.GridBaseSystem
             {
                 return;
             }
+            else if (!gameObject.activeInHierarchy)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
             StartCoroutine(FadeOut(sr.color, fadeOut));
         }
         public IEnumerator ShowHighlight(Vector2 position)

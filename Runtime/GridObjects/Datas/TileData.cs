@@ -26,13 +26,18 @@ namespace HexTecGames.GridBaseSystem
             return new Tile(grid, this, center);
         }
 
-        public bool IsValidCoord(Coord coord, BaseGrid grid)
+        public override bool IsValidCoord(BaseGrid grid, Coord coord, int rotation = 0)
         {
-            if (!grid.DoesTileExist(coord))
+            return !grid.DoesTileExist(coord);
+        }
+
+        public override List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord center, int rotation)
+        {
+            if (IsValidCoord(grid, center, rotation))
             {
-                return true;
+                return new List<BoolCoord>() { new BoolCoord(center, true) };
             }
-            return false;
+            else return new List<BoolCoord>() { new BoolCoord(center, false) };
         }
     }
 }

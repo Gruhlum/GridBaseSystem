@@ -37,38 +37,15 @@ namespace HexTecGames.GridBaseSystem
             return new List<PlacementCoord>(coords);
         }
 
-        public List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord center, int rotation)
+        public override List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord center, int rotation)
         {
             List<BoolCoord> boolCoords = new List<BoolCoord>();
             foreach (var coord in coords)
             {
                 center.NormalizeAndRotate(coord.coord, rotation);
-                boolCoords.Add(new BoolCoord(center, IsValidPlacement(center, grid, rotation)));
+                boolCoords.Add(new BoolCoord(center, IsValidCoord(grid, center, rotation)));
             }
             return boolCoords;
-        }
-        public bool IsValidPlacement(Coord center, BaseGrid grid, int rotation)
-        {
-            foreach (var coord in coords)
-            {
-                center.NormalizeAndRotate(coord.coord, rotation);
-                var tile = grid.GetTile(center);
-                if (tile == null)
-                {
-                    return false;
-                }
-                if (!tile.IsUnblocked)
-                {
-                    Debug.Log("Not Buildable!");
-                    return false;
-                }
-                if (coord.type == CoordType.Blocking && !tile.IsPassable)
-                {
-                    Debug.Log(" 2 2 2 Not Buildable!");
-                    return false;
-                }
-            }
-            return true;
         }
 
         //public virtual SpriteData GetSpriteData(Coord center, BaseGrid grid, int rotation)
@@ -91,6 +68,30 @@ namespace HexTecGames.GridBaseSystem
         public virtual TileObject CreateObject(BaseGrid grid, Coord center, int rotation)
         {
             return new TileObject(grid, this, center, rotation);
+        }
+
+        public override bool IsValidCoord(BaseGrid grid, Coord center, int rotation = 0)
+        {
+            foreach (var coord in coords)
+            {
+                center.NormalizeAndRotate(coord.coord, rotation);
+                var tile = grid.GetTile(center);
+                if (tile == null)
+                {
+                    return false;
+                }
+                if (!tile.IsUnblocked)
+                {
+                    Debug.Log("Not Buildable!");
+                    return false;
+                }
+                if (coord.type == CoordType.Blocking && !tile.IsPassable)
+                {
+                    Debug.Log(" 2 2 2 Not Buildable!");
+                    return false;
+                }
+            }
+            return true;
         }
         //public List<PlacementCoord> GetNormalizedCoords(BaseGrid grid, Coord center, int rotation = 0)
         //{

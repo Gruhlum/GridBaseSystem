@@ -1,3 +1,4 @@
+using HexTecGames.Basics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,9 +7,10 @@ namespace HexTecGames.GridBaseSystem
 {
     public class PlacementGhost : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer sr = default;
         [SerializeField] private BaseGrid grid = default;
         [SerializeField] private TileHighlightSpawner highlightSpawner = default;
+
+        [SerializeField] private MultiSpawner ghostVisualSpawner = default;
 
         private PlacementData activeData;
         private Coord coord;
@@ -18,45 +20,72 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private Color validPlacementColor = Color.green;
         [SerializeField] private Color invalidPlacementColor = Color.red;
 
+        private Transform activeGhostT;
 
+        private bool isHiding;
+        private bool isActive;
 
         protected virtual void Reset()
         {
-            sr = GetComponent<SpriteRenderer>();
             grid = transform.GetComponentInParent<BaseGrid>();
+            if (highlightSpawner == null)
+            {
+                highlightSpawner = new TileHighlightSpawner();
+            }
+            highlightSpawner.Parent = transform;
+            highlightSpawner.Grid = grid;
         }
 
-        public void SetSprite(Sprite sprite)
-        {
-            sr.sprite = sprite;
-            //sr.color = color;
-        }
         public void Activate(PlacementData placementData, Coord center)
         {
             activeData = placementData;
-            SetSprite(placementData.Icon);
+            if (placementData.GhostPrefab != null)
+            {
+                if (activeGhostT != null)
+                {
+                    activeGhostT.gameObject.SetActive(false);
+                }
+                activeGhostT = ghostVisualSpawner.Spawn(placementData.GhostPrefab);
+            }
             rotation = 0;
             Activate(center);
         }
         public void Activate(Coord coord)
         {
+            isActive = true;
             this.coord = coord;
             transform.position = grid.CoordToWorldPoint(coord);
-            gameObject.SetActive(true);
-            if (activeData.data is TileObjectData tileObjectData)
+            if (isHiding)
             {
-                UpdatePlacementArea(tileObjectData);
+                return;
             }
+            gameObject.SetActive(true);
+            UpdatePlacementArea(activeData);
         }
         public void Deactivate()
         {
+            isActive = false;
             gameObject.SetActive(false);
+            isHiding = false;
             highlightSpawner.DeactivateAll();
         }
 
-        private void UpdateSpritePosition()
+        public void Show(bool show)
         {
-            sr.transform.localPosition = spriteOffset;
+            if (!isActive)
+            {
+                return;
+            }
+            gameObject.SetActive(show);
+            isHiding = !show;
+        }
+
+        private void UpdatePosition()
+        {
+            if (activeGhostT != null)
+            {
+                activeGhostT.localPosition = spriteOffset;
+            }
         }
 
         public void Rotate(int index)
@@ -69,23 +98,22 @@ namespace HexTecGames.GridBaseSystem
                 //SpriteData spriteData = activeData.GetSpriteData(rotation);
                 //spriteOffset = spriteData.offset;
                 //transform.eulerAngles = spriteData.rotation;
-                UpdateSpritePosition();
+                UpdatePosition();
             }
         }
         public void UpdatePlacementArea()
         {
-            if (activeData != null && activeData.data is TileObjectData tileObjData)
+            if (activeData != null)
             {
-                UpdatePlacementArea(tileObjData);
+                UpdatePlacementArea(activeData);
             }
         }
-        private void UpdatePlacementArea(TileObjectData data)
+        private void UpdatePlacementArea(PlacementData data)
         {
-            var results = data.GetNormalizedValidCoords(grid, coord, rotation);
+            var results = data.Data.GetNormalizedValidCoords(grid, coord, rotation);
 
             foreach (var result in results)
             {
-                //Debug.Log(result.ToString());//
                 highlightSpawner.SpawnHighlight(result.coord, result.valid ? validPlacementColor : invalidPlacementColor, grid);
             }
         }

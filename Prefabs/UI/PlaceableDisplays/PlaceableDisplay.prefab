@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6609872454038335356}
   - component: {fileID: 7381918739306042608}
+  - component: {fileID: -722956469371702832}
   - component: {fileID: 8452004286847037188}
   - component: {fileID: 3296184418490950224}
   - component: {fileID: 1580120774553863846}
@@ -124,6 +125,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7548024370989396870}
   m_CullTransparentMesh: 1
+--- !u!114 &-722956469371702832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7548024370989396870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfe6487676bf77147a88ffbf8f7e901a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 0}
+  displayC: {fileID: 0}
+  nameGUI: {fileID: 526152149988715033}
+  img: {fileID: 554103642776436404}
+  background: {fileID: 8452004286847037188}
+  backgroundColor: {r: 0.24528301, g: 0.21404414, b: 0.21404414, a: 1}
+  selectedColor: {r: 0.25222498, g: 0.49056602, b: 0.30264455, a: 1}
 --- !u!114 &8452004286847037188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,8 +244,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: HexTecGames.Basics.UI.Display`1[[HexTecGames.GridBaseSystem.BaseTileObjectData,
+      - m_Target: {fileID: -722956469371702832}
+        m_TargetAssemblyTypeName: HexTecGames.Basics.UI.Display`1[[HexTecGames.GridBaseSystem.PlacementData,
           HexTecGames.GridBaseSystem
         m_MethodName: OnDisplayClicked
         m_Mode: 1

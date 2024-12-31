@@ -1,3 +1,4 @@
+using HexTecGames.Basics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,9 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private TileHighlighter mouseClickHighlight = default;
 
         [SerializeField] private HighlightData hoverData;
+        [SerializeField] private bool onlyShowOnTiles = false;
+
+        private Coord lastCoord;
 
         void Reset()
         {
@@ -22,18 +26,42 @@ namespace HexTecGames.GridBaseSystem
             {
                 highlightSpawner = new TileHighlightSpawner();
             }
+            highlightSpawner.Grid = GetComponentInParent<BaseGrid>();
             highlightSpawner.Parent = transform;
         }
         private void OnEnable()
         {
             gridEventSys.OnMouseClicked += GridEventSys_OnMouseClicked;
             gridEventSys.OnMouseHoverCoordChanged += GridEventSys_OnMouseHoverCoordChanged;
+            MouseController.OnPointerOverUIChanged += MouseController_OnPointerOverUIChanged;
         }
-
+        private void OnDisable()
+        {
+            gridEventSys.OnMouseClicked -= GridEventSys_OnMouseClicked;
+            gridEventSys.OnMouseHoverCoordChanged -= GridEventSys_OnMouseHoverCoordChanged;
+            MouseController.OnPointerOverUIChanged -= MouseController_OnPointerOverUIChanged;
+        }
+        private void MouseController_OnPointerOverUIChanged(bool overUI)
+        {
+            if (overUI)
+            {
+                highlightSpawner.DeactivateAll();
+            }
+            else DisplayHighlight(lastCoord);
+        }
         private void GridEventSys_OnMouseHoverCoordChanged(Coord coord)
         {
+            lastCoord = coord;
+            DisplayHighlight(coord);
+        }
+        private void DisplayHighlight(Coord coord)
+        {
             highlightSpawner.DeactivateAll();
-            if (!coord.isValid)
+            if (onlyShowOnTiles && !coord.isValid)
+            {
+                return;
+            }
+            if (MouseController.IsPointerOverUI)
             {
                 return;
             }
@@ -41,10 +69,9 @@ namespace HexTecGames.GridBaseSystem
             mouseClickHighlight.transform.position = position;
             highlightSpawner.Spawn().Activate(position, hoverData);
         }
-
         private void GridEventSys_OnMouseClicked(Coord coord, int btn)
         {
-            if (!coord.isValid)
+            if (onlyShowOnTiles && !coord.isValid)
             {
                 return;
             }

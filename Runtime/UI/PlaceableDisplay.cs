@@ -7,22 +7,23 @@ using UnityEngine.UI;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class PlaceableDisplay<T> : Display<T> where T : PlacementData
+    public class PlaceableDisplay : Display<PlacementData>
     {
+        [Space]
         [SerializeField] private TMP_Text nameGUI = default;
         [SerializeField] private Image img = default;
         [SerializeField] private Image background = default;
 
         [SerializeField] private Color backgroundColor = Color.black;
-        [SerializeField] private Color selectedColor = Color.black;
+        [SerializeField] private Color selectedColor = Color.green;
 
         private Coroutine hotkeyCoroutine;
 
-        protected override void DrawItem(T item)
+        protected override void DrawItem(PlacementData item)
         {
             nameGUI.text = item.DisplayName;
             img.sprite = item.Icon;
-            //img.color = item.Color;
+
             if (hotkeyCoroutine != null)
             {
                 StopCoroutine(hotkeyCoroutine);

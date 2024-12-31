@@ -24,58 +24,6 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private GridEventSystem eventSystem;
 
-
-        protected readonly Dictionary<Coord, Tile> tiles = new Dictionary<Coord, Tile>();
-
-        protected readonly List<TileObject> tileObjects = new List<TileObject>();
-
-        public Coord Center
-        {
-            get
-            {
-                return center;
-            }
-            private set
-            {
-                center = value;
-            }
-        }
-        private Coord center;
-
-        public int Width
-        {
-            get
-            {
-                return width;
-            }
-            private set
-            {
-                width = value;
-            }
-        }
-        private int width;
-
-        public int Height
-        {
-            get
-            {
-                return height;
-            }
-            private set
-            {
-                height = value;
-            }
-        }
-        private int height;
-
-        public event Action<Tile> OnTileAdded;
-        public event Action<Tile> OnTileRemoved;
-        public event Action OnGridGenerated;
-
-        public event Action<TileObject> OnTileObjectAdded;
-        public event Action<TileObject> OnTileObjectRemoved;
-        public event Action<TileObject> OnTileObjectMoved;
-
         public float TileWidth
         {
             get
@@ -142,6 +90,60 @@ namespace HexTecGames.GridBaseSystem
                 return HorizontalSpacing + TileHeight;
             }
         }
+
+
+        protected readonly Dictionary<Coord, Tile> tiles = new Dictionary<Coord, Tile>();
+
+        protected readonly List<TileObject> tileObjects = new List<TileObject>();
+
+        public Coord Center
+        {
+            get
+            {
+                return center;
+            }
+            private set
+            {
+                center = value;
+            }
+        }
+        private Coord center;
+
+        public int Width
+        {
+            get
+            {
+                return width;
+            }
+            private set
+            {
+                width = value;
+            }
+        }
+        private int width;
+
+        public int Height
+        {
+            get
+            {
+                return height;
+            }
+            private set
+            {
+                height = value;
+            }
+        }
+        private int height;
+
+        public event Action<Tile> OnTileAdded;
+        public event Action<Tile> OnTileRemoved;
+        public event Action OnGridGenerated;
+
+        public event Action<TileObject> OnTileObjectAdded;
+        public event Action<TileObject> OnTileObjectRemoved;
+        public event Action<TileObject> OnTileObjectMoved;
+
+       
 
         public abstract int MaximumRotation
         {
