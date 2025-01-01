@@ -143,7 +143,7 @@ namespace HexTecGames.GridBaseSystem
         public event Action<TileObject> OnTileObjectRemoved;
         public event Action<TileObject> OnTileObjectMoved;
 
-       
+
 
         public abstract int MaximumRotation
         {
@@ -242,13 +242,24 @@ namespace HexTecGames.GridBaseSystem
         //        // else RemoveTile(coord);
         //    }
         //}
+
         public void RemoveTile(Tile tile)
         {
             RemoveTile(tile.Center);
         }
         public void RemoveTile(Coord coord)
         {
+            if (!tiles.ContainsKey(coord))
+            {
+                return;
+            }
             Tile tile = tiles[coord];
+            if (tile == null)
+            {
+                return;
+            }
+            tiles[coord] = null;
+            tile.Remove();
             tiles.Remove(coord);
             //UpdateTileNeighbours(tile);
             OnTileRemoved?.Invoke(tile);
@@ -352,7 +363,7 @@ namespace HexTecGames.GridBaseSystem
             }
             return results;
         }
-       
+
         //public T GetTileObject<T>(Coord coord) where T : TileObject
         //{
         //    if (!DoesTileExist(coord))
@@ -405,8 +416,12 @@ namespace HexTecGames.GridBaseSystem
         }
         public void RemoveTileObject(TileObject obj)
         {
-            obj.Remove();
+            if (!tileObjects.Contains(obj))
+            {
+                return;
+            }
             tileObjects.Remove(obj);
+            obj.Remove();
             OnTileObjectRemoved?.Invoke(obj);
         }
 
@@ -427,7 +442,7 @@ namespace HexTecGames.GridBaseSystem
                 }
             }
             return GetTiles(coords);
-        }       
+        }
         public Tile GetTile(Coord coord)
         {
             //if (IsCoordOutOfBounds(coord))

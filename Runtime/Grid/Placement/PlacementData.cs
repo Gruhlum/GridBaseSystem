@@ -9,6 +9,19 @@ namespace HexTecGames.GridBaseSystem
     [CreateAssetMenu(menuName = "HexTecGames/Grid/PlacementData")]
     public class PlacementData : DisplayableObject
     {
+        public Color IconColor
+        {
+            get
+            {
+                return iconColor;
+            }
+            private set
+            {
+                iconColor = value;
+            }
+        }
+        [SerializeField] private Color iconColor = Color.white;
+
         public GridObjectData Data
         {
             get

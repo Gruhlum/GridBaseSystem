@@ -118,6 +118,10 @@ namespace HexTecGames.GridBaseSystem
         public void RemoveTileObject(TileObject tileObj)
         {
             TileObjectPlacement placementData = placementDatas.Find(x => x.tileObject == tileObj);
+            if (!placementDatas.Contains(placementData))
+            {
+                return;
+            }
             placementDatas.Remove(placementData);
             CheckTileState();
             OnTileObjectRemoved?.Invoke(this, placementData);

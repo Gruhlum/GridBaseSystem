@@ -60,8 +60,8 @@ namespace HexTecGames.GridBaseSystem
         public event Action<PreBuildInfo> OnBeforeBuild;
 
         private bool isDragging;
-        private int lastMouseBtn;
         private int currentRotation;
+        private MouseInputData mouseInput = new MouseInputData();
 
         public bool AllowRemoval
         {
@@ -75,6 +75,7 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         [SerializeField] private bool allowRemoval = default;
+
 
 
         protected virtual void Reset()
@@ -96,25 +97,79 @@ namespace HexTecGames.GridBaseSystem
         private void OnEnable()
         {
             gridEventSystem.OnMouseHoverCoordChanged += GridEventSystem_OnMouseHoverCoordChanged;
-            gridEventSystem.OnMouseClicked += GridEventSystem_OnMouseClicked;
         }
         private void OnDisable()
         {
             gridEventSystem.OnMouseHoverCoordChanged -= GridEventSystem_OnMouseHoverCoordChanged;
-            gridEventSystem.OnMouseClicked -= GridEventSystem_OnMouseClicked;
         }
+
+        private void HandleMouseInput(int btn, ButtonType btnType)
+        {
+            //Left Down -> Try Build
+            //Right Down -> Try clear selected -> Try Remove
+            //Any Down -> Try Dragging
+            //Any Up -> Stop Dragging
+
+            if (btnType == ButtonType.Up)
+            {
+                isDragging = false;
+            }
+            if (btnType == ButtonType.Down)
+            {
+                isDragging = true;
+                if (btn == 0)
+                {
+                    Build(HoverCoord);
+                }
+                else if (btn == 1)
+                {
+                    if (!AllowRemoval)
+                    {
+                        return;
+                    }
+                    if (SelectedPlacementData != null)
+                    {
+                        ClearSelectedObject();
+                    }
+                    else
+                    {
+                        RemoveNext(HoverCoord);
+                    }
+                }
+            }
+        }
+
+        private void RemoveNext(Coord coord)
+        {
+            var placementDatas = grid.GetTileObject(coord);
+            if (placementDatas == null || placementDatas.Count <= 0)
+            {
+                if (grid.DoesTileExist(coord))
+                {
+                    grid.RemoveTile(coord);
+                }
+            }
+            else
+            {
+                TileObject tileObj = placementDatas[0].tileObject;
+                tileObj.Remove();
+            }
+        }
+
         protected virtual void Update()
         {
             ghost.Show(!MouseController.IsPointerOverUI);
 
-            if (Input.GetMouseButtonDown(1))
+            if (MouseController.IsPointerOverUI)
             {
-                if (SelectedPlacementData != null)
-                {
-                    ClearSelectedObject();
-                    return;
-                }
+                return;
             }
+
+            if (mouseInput.DetectMouseInput())
+            {
+                HandleMouseInput(mouseInput.button, mouseInput.type);
+            }
+
             if (Input.GetKeyDown(KeyCode.R))
             {
                 if (SelectedPlacementData == null)
@@ -131,60 +186,23 @@ namespace HexTecGames.GridBaseSystem
 
                 CheckForValidTile(gridEventSystem.MouseHoverCoord);
             }
-            if (isDragging && Input.GetMouseButtonUp(lastMouseBtn))
-            {
-                isDragging = false;
-                lastMouseBtn = -1;
-            }
         }
 
-        private void GridEventSystem_OnMouseClicked(Coord coord, int btn)
-        {
-            lastMouseBtn = btn;
-            if (btn == 0)
-            {
-                if (MouseController.IsPointerOverUI)
-                {
-                    return;
-                }
-                Build(coord);
-            }
-            else if (btn == 1)
-            {
-                //if (SelectedObject != null)
-                //{
-                //    ClearSelectedObject();
-                //}
-                //else if (AllowRemoval)
-                //{
-                //    grid.RemoveGridObject(coord);
-                //}
-            }
-            if (SelectedPlacementData != null)
-            {
-                if (SelectedPlacementData.IsDraggable)
-                {
-                    isDragging = true;
-                }
-                else isDragging = false;
-            }
-            else isDragging = true;
-        }
         private void GridEventSystem_OnMouseHoverCoordChanged(Coord coord)
         {
             if (SelectedPlacementData != null)
             {
                 CheckForValidTile(coord);
             }
-            else
+            if (isDragging)
             {
-                if (isDragging && lastMouseBtn == 1)
+                if (mouseInput.button == 0)
                 {
-                    if (SelectedPlacementData != null)
-                    {
-                        ClearSelectedObject();
-                    }
-                    //else if (allowRemoval) grid.RemoveGridObject(coord);
+                    Build(coord);
+                }
+                else if (AllowRemoval && mouseInput.button == 1)
+                {
+                    RemoveNext(coord);
                 }
             }
         }
@@ -193,11 +211,6 @@ namespace HexTecGames.GridBaseSystem
             if (SelectedPlacementData != null)
             {
                 ghost.Activate(coord);
-
-                if (isDragging && lastMouseBtn == 0)
-                {
-                    Build(coord);
-                }
             }
         }
 
@@ -211,11 +224,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 return;
             }
-            Tile tile = grid.GetTile(coord);
-            if (tile != null && SelectedPlacementData == grid.GetTile(coord).Data)
-            {
-                return;
-            }
+
             if (!IsValidCoord(coord))
             {
                 errorSound?.Play();
@@ -236,6 +245,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 SelectedPlacementData.PlacementSound.Play();
             }
+            ghost.Deactivate();
             StartCoroutine(BuildDelayed(coord));
         }
 
@@ -243,7 +253,7 @@ namespace HexTecGames.GridBaseSystem
         {
             yield return null;
             GridObject tileObject = GenerateObject(coord);
-            Debug.Log("Placing Object: " + tileObject.Name + " at: " + coord.ToString());
+            //Debug.Log("Placing Object: " + tileObject.Name + " at: " + coord.ToString());
             OnObjectPlaced?.Invoke(tileObject);
             //ghost.UpdatePlacementArea();
         }

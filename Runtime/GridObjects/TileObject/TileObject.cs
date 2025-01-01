@@ -88,6 +88,7 @@ namespace HexTecGames.GridBaseSystem
         {
             base.Remove();
             RemoveOccupyingTiles();
+            Grid.RemoveTileObject(this);
         }
         public Coord GetFacingCoord()
         {

@@ -19,10 +19,17 @@ namespace HexTecGames.GridBaseSystem
 
         private Coroutine hotkeyCoroutine;
 
+
+        void OnValidate()
+        {
+            background.color = backgroundColor;
+        }
+
         protected override void DrawItem(PlacementData item)
         {
             nameGUI.text = item.DisplayName;
             img.sprite = item.Icon;
+            img.color = item.IconColor;
 
             if (hotkeyCoroutine != null)
             {

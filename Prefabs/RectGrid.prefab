@@ -100,8 +100,8 @@ MonoBehaviour:
     grid: {fileID: 5054546634537024221}
   ghostVisualSpawner:
     parent: {fileID: 0}
-  validPlacementColor: {r: 0.7216981, g: 1, b: 0.7216981, a: 0.8627451}
-  invalidPlacementColor: {r: 1, g: 0.5896226, b: 0.5896226, a: 0.8627451}
+  validPlacementColor: {r: 0.7216981, g: 1, b: 0.7216981, a: 0.5882353}
+  invalidPlacementColor: {r: 1, g: 0.5896226, b: 0.5896226, a: 0.5882353}
 --- !u!1 &2607698556320860711
 GameObject:
   m_ObjectHideFlags: 0
