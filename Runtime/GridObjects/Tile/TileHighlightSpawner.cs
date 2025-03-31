@@ -7,7 +7,7 @@ namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
     public class TileHighlightSpawner : Spawner<TileHighlighter>
-    {       
+    {
         public BaseGrid Grid
         {
             get
@@ -19,7 +19,7 @@ namespace HexTecGames.GridBaseSystem
                 this.grid = value;
             }
         }
-        [SerializeField] private BaseGrid grid = default;
+        [SerializeField, Space] private BaseGrid grid = default;
         private Color StartColor
         {
             get

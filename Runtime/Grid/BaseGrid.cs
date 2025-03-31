@@ -271,7 +271,7 @@ namespace HexTecGames.GridBaseSystem
         public List<TileObject> GetAllTileObjects()
         {
             return new List<TileObject>(tileObjects);
-        }
+        }      
 
         //private void ResizeCoordinatesArray(int width, int height)
         //{
@@ -362,6 +362,18 @@ namespace HexTecGames.GridBaseSystem
                 if (result != null)
                 {
                     results.AddRange(result);
+                }
+            }
+            return results;
+        }
+        public List<T> GetAllTileObjects<T>() where T : TileObject
+        {
+            List<T> results = new List<T>();
+            foreach (var obj in tileObjects)
+            {
+                if (obj is T t)
+                {
+                    results.Add(t);
                 }
             }
             return results;
@@ -700,6 +712,7 @@ namespace HexTecGames.GridBaseSystem
         public abstract List<Coord> GetNeighbourCoords(Coord center);
         public abstract List<Coord> GetAdjacents(Coord center);
         public abstract List<Coord> GetBoxBetweenTwoPoints(Coord coord1, Coord coord2);
+        public abstract int GetDistance(Coord coord1, Coord coord2);
         public List<Tile> GetAdjacentTiles(Coord center)
         {
             var adjacents = GetAdjacents(center);

@@ -13,7 +13,7 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] protected BaseGrid grid = default;
         [SerializeField] protected GridEventSystem gridEventSystem = default;
         [SerializeField] protected PlacementGhost ghost = default;
-        [SerializeField] private MouseController mouseController = default;
+        //[SerializeField] private MouseController mouseController = default;
 
         //[Header("Settings")]
         //[SerializeField] private bool dropSelectedAfterBuild = default;
@@ -82,7 +82,7 @@ namespace HexTecGames.GridBaseSystem
         {
             grid = transform.GetComponentInParent<BaseGrid>();
             ghost = transform.GetComponentInChildren<PlacementGhost>();
-            mouseController = FindObjectOfType<MouseController>();
+            //mouseController = FindObjectOfType<MouseController>();
             if (grid != null)
             {
                 gridEventSystem = grid.transform.GetComponentInChildren<GridEventSystem>();

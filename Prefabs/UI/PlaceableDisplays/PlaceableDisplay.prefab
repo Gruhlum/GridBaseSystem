@@ -138,7 +138,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 0}
-  displayC: {fileID: 0}
   nameGUI: {fileID: 526152149988715033}
   img: {fileID: 554103642776436404}
   background: {fileID: 8452004286847037188}
@@ -245,9 +244,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: -722956469371702832}
-        m_TargetAssemblyTypeName: HexTecGames.Basics.UI.Display`1[[HexTecGames.GridBaseSystem.PlacementData,
+        m_TargetAssemblyTypeName: HexTecGames.Basics.UI.Display`2[[HexTecGames.GridBaseSystem.PlaceableDisplay,
           HexTecGames.GridBaseSystem
-        m_MethodName: OnDisplayClicked
+        m_MethodName: DisplayClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

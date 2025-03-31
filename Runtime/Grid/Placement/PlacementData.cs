@@ -109,7 +109,7 @@ namespace HexTecGames.GridBaseSystem
 
         protected virtual void OnValidate()
         {
-            if (string.IsNullOrEmpty(DisplayName))
+            if (string.IsNullOrEmpty(DisplayName) && Data != null)
             {
                 DisplayName = Data.name;
             }           

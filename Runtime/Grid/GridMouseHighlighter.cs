@@ -16,7 +16,7 @@ namespace HexTecGames.GridBaseSystem
 
         private Coord lastCoord;
 
-        void Reset()
+        private void Reset()
         {
             if (transform.parent != null)
             {
