@@ -24,9 +24,26 @@ namespace HexTecGames.GridBaseSystem
         {
             this.Tile = tile;
             name = tile.ToString();
-            tile.OnRemoved += Tile_OnRemoved;
+            AddEvents(tile);
             transform.position = tile.GetWorldPosition();
         }
+
+        private void AddEvents(Tile tile)
+        {
+            tile.OnRemoved += Tile_OnRemoved;
+            tile.OnColorChanged += Tile_OnColorChanged;
+        }
+        private void RemoveEvents(Tile tile)
+        {
+            tile.OnRemoved -= Tile_OnRemoved;
+            tile.OnColorChanged -= Tile_OnColorChanged;
+        }
+        private void Tile_OnColorChanged(GridObject obj, Color color)
+        {
+            SetColor(color);
+        }
+
+        public abstract void SetColor(Color color);
 
         private void Tile_OnRemoved(GridObject gridObj)
         {
@@ -35,9 +52,11 @@ namespace HexTecGames.GridBaseSystem
 
         protected virtual void Deactivate()
         {
-            Tile.OnRemoved -= Tile_OnRemoved;
+            RemoveEvents(Tile);
             gameObject.SetActive(false);
         }
+
+
 
         //private void Tile_OnColorChanged(GridObject arg1, Color color)
         //{

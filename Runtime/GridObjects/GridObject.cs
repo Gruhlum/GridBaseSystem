@@ -20,37 +20,19 @@ namespace HexTecGames.GridBaseSystem
         }
         private BaseGrid grid;
 
-        //public Sprite Sprite
-        //{
-        //    get
-        //    {
-        //        return sprite;
-        //    }
-        //    set
-        //    {
-        //        if (sprite == value)
-        //        {
-        //            return;
-        //        }
-        //        sprite = value;
-        //        OnSpriteChanged?.Invoke(this, sprite);
-        //    }
-        //}
-        //private Sprite sprite;
-
-        //public Color Color
-        //{
-        //    get
-        //    {
-        //        return color;
-        //    }
-        //    set
-        //    {
-        //        color = value;
-        //        OnColorChanged?.Invoke(this, color);
-        //    }
-        //}
-        //private Color color = Color.white;
+        public Color Color
+        {
+            get
+            {
+                return color;
+            }
+            set
+            {
+                color = value;
+                OnColorChanged?.Invoke(this, color);
+            }
+        }
+        private Color color = Color.white;
 
         public Coord Center
         {
@@ -82,6 +64,7 @@ namespace HexTecGames.GridBaseSystem
         //public event Action<GridObject, Color> OnColorChanged;
         public event Action<GridObject> OnRemoved;
         public event Action<GridObject> OnMoved;
+        public event Action<GridObject, Color> OnColorChanged;
 
         public GridObject(BaseGrid grid, GridObjectData data, Coord center)
         {

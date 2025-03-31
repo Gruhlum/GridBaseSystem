@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class PlaceableDisplay : Display<PlacementData>
+    public class PlaceableDisplay : Display<PlaceableDisplay, PlacementData>
     {
         [Space]
         [SerializeField] private TMP_Text nameGUI = default;
@@ -52,7 +52,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 if (Input.GetKeyDown(Item.Hotkey))
                 {
-                    OnDisplayClicked();
+                    DisplayClicked();
                 }
                 yield return null;
             }

@@ -30,7 +30,7 @@ namespace HexTecGames.GridBaseSystem
             base.Setup(tile);
         }
 
-        public void SetColor(Color color)
+        public override void SetColor(Color color)
         {
             SpriteRenderer.color = color;
         }

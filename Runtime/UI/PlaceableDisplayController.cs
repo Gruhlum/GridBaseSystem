@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class PlaceableDisplayController : DisplayController<PlacementData>
+    public class PlaceableDisplayController : DisplayController<PlaceableDisplay, PlacementData>
     {
         [SerializeField] private GridPlacementController tileObjPlacementController = default;
 
@@ -26,16 +26,19 @@ namespace HexTecGames.GridBaseSystem
         {
             tileObjPlacementController.OnSelectedObjectChanged -= TileObjPlacementController_OnSelectedObjectChanged;
         }
-        public override void DisplayClicked(Display<PlacementData> display)
+        protected override void Display_OnDisplayClicked(PlaceableDisplay display)
         {
-            base.DisplayClicked(display);
+            base.Display_OnDisplayClicked(display);
             tileObjPlacementController.SetSelectedObject(display.Item);
         }
         protected void TileObjPlacementController_OnSelectedObjectChanged(PlacementData data)
         {
-            foreach (var display in displaySpawner.GetActiveInstances())
+            foreach (var display in displaySpawner)
             {
-                display.SetHighlight(data == display.Item);
+                if (display.gameObject.activeSelf)
+                {
+                    display.SetHighlight(data == display.Item);
+                }                
             }
         }
     }

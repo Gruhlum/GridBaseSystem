@@ -178,9 +178,12 @@ namespace HexTecGames.GridBaseSystem
             {
                 tile.RemoveAllTileObjects();
             }
-            foreach (var tileObject in tileObjects)
+            for (int i = tileObjects.Count - 1; i >= 0; i--)
             {
-                tileObject.Remove();
+                if (tileObjects[i] != null)
+                {
+                    tileObjects[i].Remove();
+                }
             }
             tileObjects.Clear();
         }

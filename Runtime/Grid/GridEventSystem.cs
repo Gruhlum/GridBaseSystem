@@ -32,10 +32,14 @@ namespace HexTecGames.GridBaseSystem
         }
         private Coord mouseHoverCoord;
 
+        [SerializeField] private bool showDebugs = default;
+
         public event Action<Coord> OnMouseHoverCoordChanged;
         public event Action<Coord, int> OnMouseClicked;
+        public event Action<Coord, int> OnDraggingMoved;
 
-        [SerializeField] private bool showDebugs = default;
+        private bool isDragging;
+        private int lastBtn;
 
         private void Reset()
         {
@@ -58,13 +62,29 @@ namespace HexTecGames.GridBaseSystem
             //    return;
             //}
             MouseOverCheck();
+
             if (Input.GetMouseButtonDown(0))
             {
                 OnMouseClicked?.Invoke(mouseHoverCoord, 0);
+                isDragging = true;
+                lastBtn = 0;
+
             }
             else if (Input.GetMouseButtonDown(1))
             {
                 OnMouseClicked?.Invoke(mouseHoverCoord, 1);
+                isDragging = true;
+                lastBtn = 1;
+            }
+            else if (Input.GetMouseButtonDown(2))
+            {
+                OnMouseClicked?.Invoke(mouseHoverCoord, 2);
+                isDragging = true;
+                lastBtn = 2;
+            }
+            if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(2))
+            {
+                isDragging = false;
             }
         }
 
@@ -84,6 +104,10 @@ namespace HexTecGames.GridBaseSystem
             mouseHoverCoord.isValid = grid.DoesTileExist(coord);
             mouseHoverCoord.Set(coord);
             OnMouseHoverCoordChanged?.Invoke(mouseHoverCoord);
+            if (isDragging)
+            {
+                OnDraggingMoved?.Invoke(mouseHoverCoord, lastBtn);
+            }
         }
         public Vector3 MouseHoverToWorldPoint()
         {
