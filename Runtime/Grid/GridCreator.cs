@@ -1,89 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.GridBaseSystem.Shapes;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
     public class GridCreator : MonoBehaviour
     {
-        [SerializeField] private BaseGrid grid = default;
+        [SerializeField] protected BaseGrid grid = default;
 
         public bool createOnStart = true;
         [Space]
-        public int width = 20;
-        public int height = 20;
         public Coord center;
-        [Space]
-        [SerializeField] private List<TileData> allTileDatas = default;
-        [SerializeField] private List<TileObjectData> allTileObjectDatas = default;
-        [SerializeField] private SavedGridData gridToLoad = default;
+        [SerializeField] protected TileData defaultTileData = default;
+        [SerializeReference, SubclassSelector] Shape shape;
 
-        private void Start()
+
+        protected virtual void Start()
         {
             if (createOnStart)
             {
-                if (gridToLoad != null)
-                {
-                    grid.GenerateGrid(GenerateTiles(gridToLoad.SavedGrid));
-                    LoadTileObjects(gridToLoad.SavedGrid.tileObjects);
-                }
-                else grid.GenerateGrid(GenerateRect(width, height, allTileDatas[0]));
+                GenerateTiles();
             }
         }
-        private void LoadTileObjects(List<TileObjectSaveData> saveDatas)
+
+        private void GenerateTiles()
         {
-            foreach (var data in saveDatas)
+            if (shape == null)
             {
-                var result = allTileObjectDatas.Find(x => x.name == data.dataName);
-                if (result == null)
-                {
-                    Debug.Log("Could not find TileObjectData with name: " + data.dataName);
-                    continue;
-                }
-                var obj = result.CreateObject(grid, data.position, data.rotation);
-                
-                if (data.customSaveData != null)
-                {
-                    obj.LoadCustomSaveData(data.customSaveData);
-                }
-                grid.AddTileObject(obj);
+                Debug.Log("No shape selected!");
+                return;
             }
+            List<Coord> coords = shape.GetCoords(center);
+            List<Tile> tiles = GenerateTiles(coords);
+            grid.SetTiles(tiles);
         }
-        private List<Tile> GenerateRect(int width, int height, TileData tileData)
+
+        protected List<Tile> GenerateTiles(List<Coord> coords)
         {
             List<Tile> tiles = new List<Tile>();
-            int startX = -(width / 2) + center.x;
-            int startY = -(height / 2) + center.y;
-            int endX = (width / 2) + center.x;
-            int endY = (height / 2) + center.y;
-
-            if (width % 2 != 0)
+            foreach (var coord in coords)
             {
-                endX++;
-            }
-            if (height % 2 != 0)
-            {
-                endY++;
-            }
-
-            for (int x = startX; x < endX; x++)
-            {
-                for (int y = startY; y < endY; y++)
-                {
-                    tiles.Add(tileData.CreateObject(grid, new Coord(x, y)));
-                }
+                tiles.Add(defaultTileData.CreateObject(grid, coord));
             }
             return tiles;
-        }
-        private List<Tile> GenerateTiles(SavedGrid savedGrid)
-        {
-            List<Tile> results = new List<Tile>();
-            foreach (var saveData in savedGrid.tileSaveDatas)
-            {
-                TileData tileData = allTileDatas.Find(x => x.name == saveData.dataName);
-                results.Add(tileData.CreateObject(grid, saveData.position));
-            }
-            return results;
         }
     }
 }

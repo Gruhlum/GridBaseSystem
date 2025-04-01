@@ -24,31 +24,16 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private GridEventSystem eventSystem;
 
-        public float TileWidth
+        public abstract float TileWidth
         {
-            get
-            {
-                return tileWidth;
-            }
-            set
-            {
-                tileWidth = value;
-            }
+            get;
         }
-        [Header("Tile Data")][SerializeField] private float tileWidth = 1;
 
-        public float TileHeight
+
+        public abstract float TileHeight
         {
-            get
-            {
-                return tileHeight;
-            }
-            set
-            {
-                tileHeight = value;
-            }
+            get;
         }
-        [SerializeField] private float tileHeight = 1;
 
         public float VerticalSpacing
         {
@@ -76,19 +61,13 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private float horizontalSpacing;
 
-        public float TotalVerticalSpacing
+        public abstract float TotalVerticalSpacing
         {
-            get
-            {
-                return VerticalSpacing + TileWidth;
-            }
+            get;
         }
-        public float TotalHorizontalSpacing
+        public abstract float TotalHorizontalSpacing
         {
-            get
-            {
-                return HorizontalSpacing + TileHeight;
-            }
+            get;
         }
 
 
@@ -188,7 +167,7 @@ namespace HexTecGames.GridBaseSystem
             tileObjects.Clear();
         }
 
-        public virtual void GenerateGrid(List<Tile> tiles)
+        public virtual void SetTiles(List<Tile> tiles)
         {
             //SetupBounds(tiles.Max(c => c.X + 1), tiles.Max(c => c.Y) + 1);
             foreach (var tile in tiles)
@@ -271,7 +250,7 @@ namespace HexTecGames.GridBaseSystem
         public List<TileObject> GetAllTileObjects()
         {
             return new List<TileObject>(tileObjects);
-        }      
+        }
 
         //private void ResizeCoordinatesArray(int width, int height)
         //{
@@ -340,6 +319,36 @@ namespace HexTecGames.GridBaseSystem
         }
         public abstract Coord WorldPositionToCoord(Vector3 position);
 
+        public bool HasTileObject(Coord coord)
+        {
+            if (tiles.TryGetValue(coord, out Tile tile))
+            {
+                var tileObjects = tile.GetTileObject();
+                if (tileObjects == null || tileObjects.Count == 0)
+                {
+                    return false;
+                }
+                else return true;
+            }
+            return false;
+        }
+        public bool HasTileObject<T>(Coord coord) where T : TileObject
+        {
+            if (tiles.TryGetValue(coord, out Tile tile))
+            {
+                var tileObjects = tile.GetTileObject();
+                if (tileObjects == null || tileObjects.Count == 0)
+                {
+                    return false;
+                }
+                if (tileObjects.Any(x => x.tileObject is T))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// Looks for a TileObject with a specified Coord.
         /// </summary>
@@ -352,6 +361,26 @@ namespace HexTecGames.GridBaseSystem
                 return tile.GetTileObject();
             }
             else return null;
+        }
+        public List<T> GetTileObjects<T>(List<Coord> coords) where T : TileObject
+        {
+            List<T> results = new List<T>();
+            foreach (var coord in coords)
+            {
+                List<TileObjectPlacement> objPlacements = GetTileObject(coord);
+                if (objPlacements == null || objPlacements.Count <= 0)
+                {
+                    continue;
+                }
+                foreach (var objPlacement in objPlacements)
+                {
+                    if (objPlacement.tileObject is T t)
+                    {
+                        results.Add(t);
+                    }
+                }
+            }
+            return results;
         }
         public List<TileObjectPlacement> GetTileObjects(List<Coord> coords)
         {
@@ -708,7 +737,16 @@ namespace HexTecGames.GridBaseSystem
         }
         public abstract Coord GetRotatedCoord(Coord center, Coord coord, int rotation);
         public abstract List<Coord> GetArea(Coord center, int radius);
+        public List<Coord> GetArea(int radius)
+        {
+            return GetArea(Center, radius);
+        }
+
         public abstract List<Coord> GetRing(Coord center, int radius);
+        public List<Coord> GetRing(int radius)
+        {
+            return GetRing(Center, radius);
+        }
         public abstract List<Coord> GetNeighbourCoords(Coord center);
         public abstract List<Coord> GetAdjacents(Coord center);
         public abstract List<Coord> GetBoxBetweenTwoPoints(Coord coord1, Coord coord2);
