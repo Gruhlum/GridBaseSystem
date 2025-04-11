@@ -81,7 +81,7 @@ namespace HexTecGames.GridBaseSystem
             Color startCol = sr.color;
             transform.position = position;
             yield return new WaitForSeconds(startDelay);
-            yield return FadeIn(startCol, fadeOut);
+            yield return FadeIn(startCol, fadeIn);
 
             if (hasDuration == false)
             {
@@ -89,7 +89,7 @@ namespace HexTecGames.GridBaseSystem
             }
             yield return new WaitForSeconds(duration);
 
-            yield return FadeOut(startCol, fadeIn);
+            yield return FadeOut(startCol, fadeOut);
             sr.color = startCol;
             gameObject.SetActive(false);
         }

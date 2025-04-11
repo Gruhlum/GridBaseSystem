@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-	[CreateAssetMenu(menuName = "HexTecGames/ResourceType")]
+	[CreateAssetMenu(menuName = "HexTecGames/Grid/ResourceType")]
 	public class ResourceType : ScriptableObject
 	{
         public Sprite Icon

@@ -14,6 +14,10 @@ namespace HexTecGames.GridBaseSystem
             {
                 return data;
             }
+            private set
+            {
+                data = value;
+            }
         }
         private TileObjectData data;
 
@@ -61,7 +65,7 @@ namespace HexTecGames.GridBaseSystem
 
         public TileObject(BaseGrid grid, TileObjectData data, Coord center, int rotation = 0) : base(grid, data, center)
         {
-            this.data = data;
+            this.Data = data;
             //IsReplaceable = data.IsReplaceable;
             this.Rotation = rotation;
             //Sprite = data.GetSprite(center, grid, rotation);

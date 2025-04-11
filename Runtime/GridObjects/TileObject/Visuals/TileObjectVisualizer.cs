@@ -1,4 +1,5 @@
 using HexTecGames.Basics;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private TileObjectVisual defaultVisual = default;
         [SerializeField] private MultiSpawner spawner = default;
 
-        private List<TileObjectVisual> activeDisplays = new List<TileObjectVisual>();
+        private HashSet<TileObjectVisual> activeDisplays = new HashSet<TileObjectVisual>();
 
         public int SpawnIndex
         {
@@ -25,6 +26,9 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         private int spawnIndex;
+
+
+        //public event Action<TileObjectVisual> OnVisualSpawned;
 
 
         protected void Reset()
@@ -43,6 +47,19 @@ namespace HexTecGames.GridBaseSystem
         protected void OnDisable()
         {
             grid.OnTileObjectAdded -= Grid_OnTileObjectAdded;
+        }
+
+
+        public TileObjectVisual FindVisual(TileObject tileObject)
+        {
+            foreach (var display in activeDisplays)
+            {
+                if (display.TileObject == tileObject)
+                {
+                    return display;
+                }
+            }
+            return null;
         }
 
         public void RemoveDisplay(TileObjectVisual display)

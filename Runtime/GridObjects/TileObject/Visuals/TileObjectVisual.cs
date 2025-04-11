@@ -6,8 +6,6 @@ namespace HexTecGames.GridBaseSystem
 {
     public abstract class TileObjectVisual : MonoBehaviour
     {
-
-        //[SerializeField] protected TileHighlightSpawner highlightSpawner = default;
         public TileObject TileObject
         {
             get
@@ -27,11 +25,14 @@ namespace HexTecGames.GridBaseSystem
 
         public virtual void Setup(TileObject tileObject, TileObjectVisualizer visualizer, BaseGrid grid)
         {
-            UnsubscribeEvents();
+            if (TileObject != null)
+            {
+                RemoveEvents();
+            }
             this.grid = grid;
             this.visualizer = visualizer;
             this.tileObject = tileObject;
-            SubscribeToEvents();
+            AddEvents();
 
             SetPosition(tileObject);
         }
@@ -43,28 +44,25 @@ namespace HexTecGames.GridBaseSystem
             Rotate(rotation);
         }
 
-        private void TileObject_OnRemoved(GridObject obj)
+        protected virtual void TileObject_OnRemoved(GridObject obj)
         {
-            UnsubscribeEvents();
+            RemoveEvents();
+            Deactivate();
+        }
+        protected void Deactivate()
+        {
             visualizer.RemoveDisplay(this);
             gameObject.SetActive(false);
         }
-        
         protected virtual void TileObject_OnMoved(GridObject obj)
         {
             SetPosition(obj as TileObject);
         }
-        protected void SetPosition(TileObject obj)
+        protected virtual void SetPosition(TileObject obj)
         {
             transform.position = obj.GetWorldPosition();
-            //SpriteData spriteData = obj.GetSpriteData();
-            //if (spriteData != null)
-            //{
-            //    sr.transform.localPosition = spriteData.offset;
-            //    sr.transform.eulerAngles = spriteData.rotation;
-            //}
         }
-        protected virtual void SubscribeToEvents()
+        protected virtual void AddEvents()
         {
             if (tileObject != null)
             {
@@ -73,7 +71,7 @@ namespace HexTecGames.GridBaseSystem
                 tileObject.OnRotated += TileObject_OnRotated;
             }          
         }
-        protected virtual void UnsubscribeEvents()
+        protected virtual void RemoveEvents()
         {
             if (tileObject != null)
             {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-	[CreateAssetMenu(menuName = "HexTecGames/SavedGridData")]
+	[CreateAssetMenu(menuName = "HexTecGames/Grid/SavedGridData")]
 	public class SavedGridData : ScriptableObject
 	{
 		public SavedGrid SavedGrid;

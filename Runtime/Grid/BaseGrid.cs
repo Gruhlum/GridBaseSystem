@@ -362,6 +362,21 @@ namespace HexTecGames.GridBaseSystem
             }
             else return null;
         }
+        public T GetTileObject<T>(Coord coord) where T : TileObject
+        {
+            if (tiles.TryGetValue(coord, out Tile tile))
+            {
+                var results = tile.GetTileObject();
+                foreach (var result in results)
+                {
+                    if (result.tileObject is T t)
+                    {
+                        return t;
+                    }
+                }
+            }
+            return null;
+        }
         public List<T> GetTileObjects<T>(List<Coord> coords) where T : TileObject
         {
             List<T> results = new List<T>();
@@ -470,6 +485,11 @@ namespace HexTecGames.GridBaseSystem
         }
 
         public abstract Coord GetDirectionCoord(Coord coord, int direction);
+        public Coord GetDirectionCoord(Coord coord1, Coord coord2)
+        {
+            int direction = GetDirection(coord1, coord2);
+            return GetDirectionCoord(coord1, direction);
+        }
         public abstract int GetDirection(Coord center, Coord coord);
         public float DirectionToDegrees(int direction)
         {
@@ -523,6 +543,32 @@ namespace HexTecGames.GridBaseSystem
                 if (tile.Data == data)
                 {
                     results.Add(tile);
+                }
+            }
+            return results;
+        }
+
+
+        public List<Coord> GetValidCoords(List<Coord> coords)
+        {
+            List<Coord> results = new List<Coord>();
+            foreach (var coord in coords)
+            {
+                if (DoesTileExist(coord))
+                {
+                    results.Add(coord);
+                }
+            }
+            return results;
+        }
+        public List<Coord> GetEmptyCoords(List<Coord> coords)
+        {
+            List<Coord> results = new List<Coord>();
+            foreach (var coord in coords)
+            {
+                if (IsTileEmpty(coord))
+                {
+                    results.Add(coord);
                 }
             }
             return results;
