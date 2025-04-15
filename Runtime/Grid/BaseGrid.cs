@@ -531,7 +531,7 @@ namespace HexTecGames.GridBaseSystem
             }
             return results;
         }
-        public List<Tile> GetTiles()
+        public List<Tile> GetAllTiles()
         {
             return tiles.Values.ToList();
         }

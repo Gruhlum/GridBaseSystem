@@ -41,6 +41,17 @@ namespace HexTecGames.GridBaseSystem
             gridEventSys.OnMouseHoverCoordChanged -= GridEventSys_OnMouseHoverCoordChanged;
             MouseController.OnPointerOverUIChanged -= MouseController_OnPointerOverUIChanged;
         }
+
+        public void SetColor(Color color)
+        {
+            mouseClickHighlight.SetColor(color);
+            hoverData.color = color;
+            if (gameObject.activeInHierarchy)
+            {
+                DisplayHighlight(lastCoord);
+            }
+        }
+
         private void MouseController_OnPointerOverUIChanged(bool overUI)
         {
             if (overUI)

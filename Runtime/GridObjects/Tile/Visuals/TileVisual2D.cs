@@ -27,6 +27,7 @@ namespace HexTecGames.GridBaseSystem
 
         public override void Setup(Tile tile)
         {
+            SetColor(tile.Color);
             base.Setup(tile);
         }
 

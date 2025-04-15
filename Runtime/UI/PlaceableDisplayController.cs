@@ -9,9 +9,8 @@ namespace HexTecGames.GridBaseSystem
     {
         [SerializeField] private GridPlacementController tileObjPlacementController = default;
 
-        protected override void Reset()
+        protected virtual void Reset()
         {
-            base.Reset();
             tileObjPlacementController = FindObjectOfType<GridPlacementController>();
         }
         protected void Start()

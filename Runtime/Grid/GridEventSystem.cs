@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -61,6 +62,13 @@ namespace HexTecGames.GridBaseSystem
             //    OnMouseHoverCoordChanged?.Invoke(mouseHoverCoord);
             //    return;
             //}
+
+            if (MouseController.IsPointerOverUI)
+            {
+                isDragging = false;
+                return;
+            }
+
             MouseOverCheck();
 
             if (Input.GetMouseButtonDown(0))

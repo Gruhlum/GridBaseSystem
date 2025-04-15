@@ -72,7 +72,7 @@ namespace HexTecGames.GridBaseSystem
                 return;
             }
 
-            SavedGrid savedGrid = new SavedGrid(grid.GetTiles(), grid.GetAllTileObjects());
+            SavedGrid savedGrid = new SavedGrid(grid.GetAllTiles(), grid.GetAllTileObjects());
 
             switch (saveMode)
             {

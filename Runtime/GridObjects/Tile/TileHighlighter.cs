@@ -55,8 +55,12 @@ namespace HexTecGames.GridBaseSystem
         }
         public void Activate(Vector3 position, Color color)
         {
-            sr.color = color;
+            SetColor(color);
             Activate(position);
+        }
+        public void SetColor(Color color)
+        {
+            sr.color = color;
         }
         public void Deactivate()
         {
