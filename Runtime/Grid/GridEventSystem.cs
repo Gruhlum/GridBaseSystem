@@ -22,18 +22,32 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private BaseGrid grid = default;
 
-        [SerializeField] private EventSystem eventSys = default;
-
-        public Coord MouseHoverCoord
+        public Coord MouseCoord
         {
             get
             {
-                return mouseHoverCoord;
+                return mouseCoord;
             }
         }
-        private Coord mouseHoverCoord;
+        private Coord mouseCoord;
+
+        public Coord LastMouseCoord
+        {
+            get
+            {
+                return lastMouseCoord;
+            }
+            private set
+            {
+                lastMouseCoord = value;
+            }
+        }
+        private Coord lastMouseCoord;
+
 
         [SerializeField] private bool showDebugs = default;
+        [Tooltip("Should overstepped tiles be detected")]
+        [SerializeField] private bool continousDetection = true;
 
         public event Action<Coord> OnMouseHoverCoordChanged;
         public event Action<Coord, int> OnMouseClicked;
@@ -41,28 +55,26 @@ namespace HexTecGames.GridBaseSystem
 
         private bool isDragging;
         private int lastBtn;
+        private int dragDirection = -1;
 
         private void Reset()
         {
-            eventSys = FindObjectOfType<EventSystem>();
             grid = GetComponentInParent<BaseGrid>();
         }
 
         private void Start()
         {
-            mouseHoverCoord = grid.MousePositionToCoord();
-            mouseHoverCoord.isValid = true;
+            mouseCoord = grid.MousePositionToCoord();
+            mouseCoord.isValid = true;
+        }
+
+        private void DetectDirection()
+        {
+            dragDirection = grid.GetDirection(MouseCoord, lastMouseCoord);
         }
 
         private void Update()
         {
-            //if (eventSys != null && eventSys.IsPointerOverGameObject())
-            //{
-            //    mouseHoverCoord.isValid = false;
-            //    OnMouseHoverCoordChanged?.Invoke(mouseHoverCoord);
-            //    return;
-            //}
-
             if (MouseController.IsPointerOverUI)
             {
                 isDragging = false;
@@ -71,22 +83,27 @@ namespace HexTecGames.GridBaseSystem
 
             MouseOverCheck();
 
+            if (Input.GetKeyUp(KeyCode.LeftControl))
+            {
+                dragDirection = -1;
+            }
+
             if (Input.GetMouseButtonDown(0))
             {
-                OnMouseClicked?.Invoke(mouseHoverCoord, 0);
+                OnMouseClicked?.Invoke(mouseCoord, 0);
                 isDragging = true;
                 lastBtn = 0;
 
             }
             else if (Input.GetMouseButtonDown(1))
             {
-                OnMouseClicked?.Invoke(mouseHoverCoord, 1);
+                OnMouseClicked?.Invoke(mouseCoord, 1);
                 isDragging = true;
                 lastBtn = 1;
             }
             else if (Input.GetMouseButtonDown(2))
             {
-                OnMouseClicked?.Invoke(mouseHoverCoord, 2);
+                OnMouseClicked?.Invoke(mouseCoord, 2);
                 isDragging = true;
                 lastBtn = 2;
             }
@@ -99,27 +116,57 @@ namespace HexTecGames.GridBaseSystem
         private void MouseOverCheck()
         {
             Coord coord = grid.MousePositionToCoord();
-            
-            if (mouseHoverCoord == coord)
+
+            if (dragDirection >= 0)
+            {
+                coord = grid.GetClosestCoordInLine(MouseCoord, coord, dragDirection);
+            }
+
+
+            if (mouseCoord == coord)
             {
                 return;
             }
+
+            if (continousDetection)
+            {
+                if (grid.GetDistance(coord, mouseCoord) > 1)
+                {
+                    List<Coord> results = grid.GetLine(coord, mouseCoord);
+                    foreach (var result in results)
+                    {
+                        SetCurrentMouseCoord(result);
+                    }
+                }
+            }
+
             if (showDebugs)
             {
                 Debug.Log("Current Position: " + coord.ToString());
             }
-            
-            mouseHoverCoord.isValid = grid.DoesTileExist(coord);
-            mouseHoverCoord.Set(coord);
-            OnMouseHoverCoordChanged?.Invoke(mouseHoverCoord);
+
+            mouseCoord.isValid = grid.DoesTileExist(coord);
+            SetCurrentMouseCoord(coord);
+        }
+
+        private void SetCurrentMouseCoord(Coord coord)
+        {
+            LastMouseCoord = mouseCoord;
+            mouseCoord.Set(coord);
+            OnMouseHoverCoordChanged?.Invoke(mouseCoord);
             if (isDragging)
             {
-                OnDraggingMoved?.Invoke(mouseHoverCoord, lastBtn);
+                OnDraggingMoved?.Invoke(mouseCoord, lastBtn);
+                if (dragDirection < 0 && Input.GetKey(KeyCode.LeftControl))
+                {
+                    DetectDirection();
+                }
             }
         }
+
         public Vector3 MouseHoverToWorldPoint()
         {
-            return grid.CoordToWorldPoint(mouseHoverCoord);
+            return grid.CoordToWorldPoint(mouseCoord);
         }
     }
 }

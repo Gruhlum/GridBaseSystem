@@ -29,7 +29,6 @@ namespace HexTecGames.GridBaseSystem
             get;
         }
 
-
         public abstract float TileHeight
         {
             get;
@@ -123,21 +122,12 @@ namespace HexTecGames.GridBaseSystem
         public event Action<TileObject> OnTileObjectMoved;
 
 
-
         public abstract int MaximumRotation
         {
             get;
         }
 
-        void Awake()
-        {
-            //if (StartHeight > 0 && StartWidth > 0)
-            //{
-            //    SetupBounds(StartWidth, StartHeight);
-            //}
-        }
-
-        void OnDestroy()
+        protected virtual void OnDestroy()
         {
             RemoveAllTiles();
             RemoveAllTileObjects();
@@ -169,10 +159,9 @@ namespace HexTecGames.GridBaseSystem
 
         public virtual void SetTiles(List<Tile> tiles)
         {
-            //SetupBounds(tiles.Max(c => c.X + 1), tiles.Max(c => c.Y) + 1);
             foreach (var tile in tiles)
             {
-                this.tiles.Add(tile.Center, tile);
+                AddTile(tile);
             }
             OnGridGenerated?.Invoke();
         }
@@ -195,12 +184,7 @@ namespace HexTecGames.GridBaseSystem
         }
         public void AddTile(Tile tile)
         {
-            if (tiles.TryGetValue(tile.Center, out Tile otherTile))
-            {
-                RemoveTile(otherTile);
-            }
-            tiles[tile.Center] = tile;
-            //UpdateTileNeighbours(tile);
+            this.tiles.Add(tile.Center, tile);
             OnTileAdded?.Invoke(tile);
         }
         //private void UpdateTileNeighbours(Tile t)
@@ -548,7 +532,6 @@ namespace HexTecGames.GridBaseSystem
             return results;
         }
 
-
         public List<Coord> GetValidCoords(List<Coord> coords)
         {
             List<Coord> results = new List<Coord>();
@@ -689,7 +672,7 @@ namespace HexTecGames.GridBaseSystem
             }
             return true;
         }
-
+        public abstract List<Coord> GetCoordsInBox(Vector2 start, Vector2 end);
         public List<List<Coord>> GetAllConnectedCoords()
         {
             List<List<Coord>> results = new List<List<Coord>>();
@@ -795,7 +778,6 @@ namespace HexTecGames.GridBaseSystem
         }
         public abstract List<Coord> GetNeighbourCoords(Coord center);
         public abstract List<Coord> GetAdjacents(Coord center);
-        public abstract List<Coord> GetBoxBetweenTwoPoints(Coord coord1, Coord coord2);
         public abstract int GetDistance(Coord coord1, Coord coord2);
         public List<Tile> GetAdjacentTiles(Coord center)
         {
@@ -856,6 +838,10 @@ namespace HexTecGames.GridBaseSystem
             }
             return neighbours;
         }
+
+        public abstract Coord GetClosestCoordInLine(Coord start, Coord target, int dragDirection);
+        public abstract List<Coord> GetLine(Coord coord, Coord mouseCoord);
+
         //public virtual List<TileObject> GetNeighbourObjects(Coord center)
         //{
         //    var coords = GetNeighbourCoords(center);

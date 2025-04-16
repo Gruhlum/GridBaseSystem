@@ -51,7 +51,7 @@ namespace HexTecGames.GridBaseSystem
         {
             get
             {
-                return gridEventSystem.MouseHoverCoord;
+                return gridEventSystem.MouseCoord;
             }
         }
 
@@ -184,7 +184,7 @@ namespace HexTecGames.GridBaseSystem
 
                 ghost.Rotate(currentRotation);
 
-                CheckForValidTile(gridEventSystem.MouseHoverCoord);
+                CheckForValidTile(gridEventSystem.MouseCoord);
             }
         }
 

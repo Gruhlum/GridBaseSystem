@@ -32,7 +32,7 @@ namespace HexTecGames.GridBaseSystem
 
         }
 
-        private void Awake()
+        private void Start()
         {
             if (grid != null && alwaysActive)
             {
@@ -58,9 +58,9 @@ namespace HexTecGames.GridBaseSystem
         }
         private void SetupGrid()
         {
+            RespawnDisplays();
             grid.OnTileAdded += Grid_OnTileAdded;
             grid.OnGridGenerated += Grid_OnGridGenerated;
-            RespawnDisplays();
         }
         public void RespawnDisplays()
         {
