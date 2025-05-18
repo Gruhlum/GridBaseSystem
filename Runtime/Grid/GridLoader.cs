@@ -8,14 +8,12 @@ namespace HexTecGames.GridBaseSystem
     {
         [SerializeField] private BaseGrid grid = default;
         [Space]
-        [SerializeField] private List<TileData> allTileDatas = default;
-        [SerializeField] private List<TileObjectData> allTileObjectDatas = default;
-        [Space]
         [SerializeField] private SavedGridData gridToLoad = default;
+        [SerializeField] private bool loadOnStart = true;
 
         private void Start()
         {
-            if (gridToLoad != null)
+            if (gridToLoad != null && loadOnStart)
             {
                 grid.SetTiles(GenerateTiles(gridToLoad.SavedGrid));
                 LoadTileObjects(gridToLoad.SavedGrid.tileObjects);
@@ -27,27 +25,15 @@ namespace HexTecGames.GridBaseSystem
             List<Tile> results = new List<Tile>();
             foreach (var saveData in savedGrid.tileSaveDatas)
             {
-                TileData tileData = allTileDatas.Find(x => x.name == saveData.dataName);
-                results.Add(tileData.CreateObject(grid, saveData.position));
+                results.Add(saveData.tileData.CreateObject(grid, saveData.position, saveData.customSaveData));
             }
             return results;
         }
         private void LoadTileObjects(List<TileObjectSaveData> saveDatas)
         {
-            foreach (var data in saveDatas)
+            foreach (var saveData in saveDatas)
             {
-                var result = allTileObjectDatas.Find(x => x.name == data.dataName);
-                if (result == null)
-                {
-                    Debug.Log("Could not find TileObjectData with name: " + data.dataName);
-                    continue;
-                }
-                var obj = result.CreateObject(grid, data.position, data.rotation);
-
-                if (data.customSaveData != null)
-                {
-                    obj.LoadCustomSaveData(data.customSaveData);
-                }
+                var obj = saveData.tileObjectData.CreateObject(grid, saveData.position, saveData.rotation, saveData.customSaveData);
                 grid.AddTileObject(obj);
             }
         }

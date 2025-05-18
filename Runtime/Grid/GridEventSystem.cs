@@ -42,6 +42,19 @@ namespace HexTecGames.GridBaseSystem
                 lastMouseCoord = value;
             }
         }
+
+        public bool IsDragging
+        {
+            get
+            {
+                return this.isDragging;
+            }
+            private set
+            {
+                this.isDragging = value;
+            }
+        }
+
         private Coord lastMouseCoord;
 
 
@@ -77,7 +90,7 @@ namespace HexTecGames.GridBaseSystem
         {
             if (MouseController.IsPointerOverUI)
             {
-                isDragging = false;
+                IsDragging = false;
                 return;
             }
 
@@ -91,28 +104,32 @@ namespace HexTecGames.GridBaseSystem
             if (Input.GetMouseButtonDown(0))
             {
                 OnMouseClicked?.Invoke(mouseCoord, 0);
-                isDragging = true;
+                IsDragging = true;
                 lastBtn = 0;
 
             }
             else if (Input.GetMouseButtonDown(1))
             {
                 OnMouseClicked?.Invoke(mouseCoord, 1);
-                isDragging = true;
+                IsDragging = true;
                 lastBtn = 1;
             }
             else if (Input.GetMouseButtonDown(2))
             {
                 OnMouseClicked?.Invoke(mouseCoord, 2);
-                isDragging = true;
+                IsDragging = true;
                 lastBtn = 2;
             }
             if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(2))
             {
-                isDragging = false;
+                IsDragging = false;
             }
         }
-
+        private void OnApplicationFocus(bool focus)
+        {
+            IsDragging = false;
+            dragDirection = -1;
+        }
         private void MouseOverCheck()
         {
             Coord coord = grid.MousePositionToCoord();
@@ -121,7 +138,6 @@ namespace HexTecGames.GridBaseSystem
             {
                 coord = grid.GetClosestCoordInLine(MouseCoord, coord, dragDirection);
             }
-
 
             if (mouseCoord == coord)
             {
@@ -154,7 +170,7 @@ namespace HexTecGames.GridBaseSystem
             LastMouseCoord = mouseCoord;
             mouseCoord.Set(coord);
             OnMouseHoverCoordChanged?.Invoke(mouseCoord);
-            if (isDragging)
+            if (IsDragging)
             {
                 OnDraggingMoved?.Invoke(mouseCoord, lastBtn);
                 if (dragDirection < 0 && Input.GetKey(KeyCode.LeftControl))
@@ -166,7 +182,7 @@ namespace HexTecGames.GridBaseSystem
 
         public Vector3 MouseHoverToWorldPoint()
         {
-            return grid.CoordToWorldPoint(mouseCoord);
+            return grid.CoordToWorldPosition(mouseCoord);
         }
     }
 }

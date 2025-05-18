@@ -1,6 +1,7 @@
 using HexTecGames.Basics;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -39,7 +40,7 @@ namespace HexTecGames.GridBaseSystem
                 assetPath = value;
             }
         }
-        [SerializeField, DrawIf(nameof(saveMode), SaveMode.Assets)] private string assetPath = "Assets/ScriptableObjects/Grids";
+        [SerializeField, DrawIf(nameof(saveMode), SaveMode.Assets)] private string assetPath = "ScriptableObjects/Grids";
 
 
         private void Reset()
@@ -63,7 +64,7 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        [ContextMenu("SaveGrid")]
+        [ContextMenu("Save Grid")]
         public void SaveGrid()
         {
             if (!Application.isPlaying)
@@ -93,7 +94,9 @@ namespace HexTecGames.GridBaseSystem
 #if UNITY_EDITOR
             SavedGridData savedGridData = ScriptableObject.CreateInstance<SavedGridData>();
             savedGridData.SavedGrid = savedGrid;
-            AssetDatabase.CreateAsset(savedGridData, assetPath + "/" + GridName + ".asset");
+            string path = Path.Combine(Application.dataPath, assetPath);
+            Directory.CreateDirectory(path);
+            AssetDatabase.CreateAsset(savedGridData, Path.Combine("Assets", assetPath, GridName + ".asset"));
 #else
             Debug.Log("Not possible to save in Assets in a build");
 #endif

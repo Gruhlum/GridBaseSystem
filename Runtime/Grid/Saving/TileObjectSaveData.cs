@@ -8,11 +8,13 @@ namespace HexTecGames
     [System.Serializable]
     public class TileObjectSaveData : GridObjectSaveData
     {
+        public TileObjectData tileObjectData;
         public int rotation;
 
-        public TileObjectSaveData(TileObject gridObj) : base(gridObj)
+        public TileObjectSaveData(TileObject tileObject) : base(tileObject)
         {
-            rotation = gridObj.Rotation;
+            this.tileObjectData = tileObject.Data;
+            rotation = tileObject.Rotation;
         }
     }
 }

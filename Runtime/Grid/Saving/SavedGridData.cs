@@ -5,18 +5,26 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-	[CreateAssetMenu(menuName = "HexTecGames/Grid/SavedGridData")]
-	public class SavedGridData : ScriptableObject
-	{
-		public SavedGrid SavedGrid;
+    [CreateAssetMenu(menuName = "HexTecGames/Grid/SavedGridData")]
+    public class SavedGridData : ScriptableObject
+    {
+        public SavedGrid SavedGrid;
 
-		[ContextMenu("Center Tiles")]
-		public void CenterTiles()
-		{
-			SavedGrid.CenterTiles();
 #if UNITY_EDITOR
-			EditorUtility.SetDirty(this);
+        [ContextMenu("Center Tiles")]
+        public void CenterTiles()
+        {
+            SavedGrid.CenterTiles();
+            Undo.RecordObject(this, "Center Tiles");
+        }
+
+
+        [ContextMenu("Sort Objects")]
+        public void SortObjectsByPosition()
+        {
+            Undo.RecordObject(this, "Sort Objects");
+            SavedGrid.SortObjectsByPosition();
+        }
 #endif
-		}
-	}
+    }
 }

@@ -28,13 +28,21 @@ namespace HexTecGames.GridBaseSystem
             transform.position = tile.GetWorldPosition();
         }
 
-        private void AddEvents(Tile tile)
+        protected virtual void AddEvents(Tile tile)
         {
+            if (tile == null)
+            {
+                return;
+            }
             tile.OnRemoved += Tile_OnRemoved;
             tile.OnColorChanged += Tile_OnColorChanged;
         }
-        private void RemoveEvents(Tile tile)
+        protected virtual void RemoveEvents(Tile tile)
         {
+            if (tile == null)
+            {
+                return;
+            }
             tile.OnRemoved -= Tile_OnRemoved;
             tile.OnColorChanged -= Tile_OnColorChanged;
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -34,6 +35,18 @@ namespace HexTecGames.GridBaseSystem
             get;
         }
 
+        public float HorizontalSpacing
+        {
+            get
+            {
+                return horizontalSpacing;
+            }
+            set
+            {
+                horizontalSpacing = value;
+            }
+        }
+        [SerializeField] private float horizontalSpacing;
         public float VerticalSpacing
         {
             get
@@ -47,24 +60,11 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private float verticalSpacing;
 
-        public float HorizontalSpacing
-        {
-            get
-            {
-                return horizontalSpacing;
-            }
-            set
-            {
-                horizontalSpacing = value;
-            }
-        }
-        [SerializeField] private float horizontalSpacing;
-
-        public abstract float TotalVerticalSpacing
+        public abstract float TotalHorizontalSpacing
         {
             get;
         }
-        public abstract float TotalHorizontalSpacing
+        public abstract float TotalVerticalSpacing
         {
             get;
         }
@@ -278,18 +278,18 @@ namespace HexTecGames.GridBaseSystem
         /// Converts a Coord position to WorldPosition.
         /// </summary>
         /// <returns>Vector3 WorldPosition</returns>
-        public abstract Vector3 CoordToWorldPoint(Coord coord);
+        public abstract Vector3 CoordToWorldPosition(Coord coord);
 
         /// <summary>
         /// Converts a list of Coord positions to WorldPositions.
         /// </summary>
         /// <returns>List of Vector3 WorldPositions</returns>
-        public List<Vector3> CoordsToWorldPoint(List<Coord> coords)
+        public List<Vector3> CoordsToWorldPositions(List<Coord> coords)
         {
             List<Vector3> results = new List<Vector3>(coords.Count);
             foreach (var coord in coords)
             {
-                results.Add(CoordToWorldPoint(coord));
+                results.Add(CoordToWorldPosition(coord));
             }
             return results;
         }
@@ -461,19 +461,19 @@ namespace HexTecGames.GridBaseSystem
         {
             if (!tileObjects.Contains(obj))
             {
+                Debug.Log("OHOH " + obj.Name);
                 return;
             }
             tileObjects.Remove(obj);
-            obj.Remove();
             OnTileObjectRemoved?.Invoke(obj);
         }
 
-        public abstract Coord GetDirectionCoord(Coord coord, int direction);
         public Coord GetDirectionCoord(Coord coord1, Coord coord2)
         {
             int direction = GetDirection(coord1, coord2);
-            return GetDirectionCoord(coord1, direction);
+            return GetDirectionCoord(direction);
         }
+        public abstract Coord GetDirectionCoord(int direction);
         public abstract int GetDirection(Coord center, Coord coord);
         public float DirectionToDegrees(int direction)
         {
@@ -538,6 +538,18 @@ namespace HexTecGames.GridBaseSystem
             foreach (var coord in coords)
             {
                 if (DoesTileExist(coord))
+                {
+                    results.Add(coord);
+                }
+            }
+            return results;
+        }
+        public List<Coord> GetPassableCoords(List<Coord> coords)
+        {
+            List<Coord> results = new List<Coord>();
+            foreach (var coord in coords)
+            {
+                if (IsTilePassable(coord))
                 {
                     results.Add(coord);
                 }
@@ -788,7 +800,9 @@ namespace HexTecGames.GridBaseSystem
                 if (tiles.TryGetValue(adjacent, out Tile tile))
                 {
                     results.Add(tile);
+                    //Debug.Log(center + " YES: " + adjacent);
                 }
+                //else Debug.Log(center + " NOT: " + adjacent);
             }
             return results;
         }
@@ -838,9 +852,10 @@ namespace HexTecGames.GridBaseSystem
             }
             return neighbours;
         }
-
+        public abstract List<Coord> GetCorner(int direction, int radius, int thickness);
         public abstract Coord GetClosestCoordInLine(Coord start, Coord target, int dragDirection);
         public abstract List<Coord> GetLine(Coord coord, Coord mouseCoord);
+        public abstract bool IsInLine(Coord coord1, Coord coord2);
 
         //public virtual List<TileObject> GetNeighbourObjects(Coord center)
         //{

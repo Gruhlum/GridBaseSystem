@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -83,13 +84,11 @@ namespace HexTecGames.GridBaseSystem
         public Tile(BaseGrid grid, TileData tileData, Coord coord) : base(grid, tileData, coord)
         {
             this.Data = tileData;
-            //Sprite = this.Data.Icon;
         }
-        //public void UpdateSprite()
-        //{
-        //    Sprite = Data.GetSprite(Center, Grid, 0);
-        //}
-       
+        public Tile(BaseGrid grid, TileData tileData, Coord coord, CustomSaveData saveData) : this(grid, tileData, coord)
+        {
+            LoadCustomSaveData(saveData);
+        }
         private void CheckTileState()
         {
             IsPassable = true;
@@ -113,20 +112,26 @@ namespace HexTecGames.GridBaseSystem
         {
             placementDatas.Clear();
             IsPassable = true;
+            IsUnblocked = true;
         }
 
         public void RemoveTileObject(TileObject tileObj)
         {
             TileObjectPlacement placementData = placementDatas.Find(x => x.tileObject == tileObj);
-            if (!placementDatas.Contains(placementData))
+            if (placementData.tileObject == null || !placementDatas.Remove(placementData))
             {
-                return;
+                //Debug.Log("FAIL: " + tileObj.Name + " - " + Center);
+                for (int i = 0; i < placementDatas.Count; i++)
+                {
+                    //TileObjectPlacement pData = placementDatas[i];
+                    //Debug.Log(i + " - " + pData + " Target: " + tileObj.Name + " this Center: " + Center);
+                }
+                //Debug.Log("Something is wrong: " + tileObj.Name + " - " + tileObj.Center);
             }
-            placementDatas.Remove(placementData);
             CheckTileState();
             OnTileObjectRemoved?.Invoke(this, placementData);
         }
-        
+
         public void AddTileObject(TileObject tileObj, CoordType type)
         {
             var placementData = new TileObjectPlacement(tileObj, type);

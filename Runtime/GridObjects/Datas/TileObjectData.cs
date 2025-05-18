@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -7,7 +8,7 @@ namespace HexTecGames.GridBaseSystem
     [CreateAssetMenu(menuName = "HexTecGames/Grid/TileObjectData")]
     public class TileObjectData : GridObjectData
     {
-        [SerializeField] private List<PlacementCoord> coords = new List<PlacementCoord>() { new PlacementCoord() };
+        [SerializeField] public List<PlacementCoord> coords = new List<PlacementCoord>() { new PlacementCoord() };
         //[SerializeField] protected List<SpriteData> spriteDatas = new List<SpriteData>();
 
 
@@ -31,11 +32,6 @@ namespace HexTecGames.GridBaseSystem
         //        return spriteDatas.Count;
         //    }
         //}
-
-        public List<PlacementCoord> GetCoords()
-        {
-            return new List<PlacementCoord>(coords);
-        }
 
         public override List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord center, int rotation)
         {
@@ -65,9 +61,9 @@ namespace HexTecGames.GridBaseSystem
         //    return spriteDatas[rotation % spriteDatas.Count].sprite;
         //}
 
-        public virtual TileObject CreateObject(BaseGrid grid, Coord center, int rotation)
+        public virtual TileObject CreateObject(BaseGrid grid, Coord center, int rotation, CustomSaveData saveData = null)
         {
-            return new TileObject(grid, this, center, rotation);
+            return new TileObject(grid, this, center, rotation, saveData);
         }
 
         public override bool IsValidCoord(BaseGrid grid, Coord center, int rotation = 0)

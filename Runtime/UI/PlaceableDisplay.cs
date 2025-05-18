@@ -17,10 +17,8 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private Color backgroundColor = Color.black;
         [SerializeField] private Color selectedColor = Color.green;
 
-        private Coroutine hotkeyCoroutine;
 
-
-        void OnValidate()
+        private void OnValidate()
         {
             background.color = backgroundColor;
         }
@@ -30,32 +28,11 @@ namespace HexTecGames.GridBaseSystem
             nameGUI.text = item.DisplayName;
             img.sprite = item.Icon;
             img.color = item.IconColor;
-
-            if (hotkeyCoroutine != null)
-            {
-                StopCoroutine(hotkeyCoroutine);
-            }
-            if (item.Hotkey != KeyCode.None)
-            {
-                StartCoroutine(CheckForHotkey());
-            }
         }
         public override void SetHighlight(bool active)
         {
             base.SetHighlight(active);
             background.color = active ? selectedColor : backgroundColor;
-        }
-
-        private IEnumerator CheckForHotkey()
-        {
-            while (true)
-            {
-                if (Input.GetKeyDown(Item.Hotkey))
-                {
-                    DisplayClicked();
-                }
-                yield return null;
-            }
         }
     }
 }

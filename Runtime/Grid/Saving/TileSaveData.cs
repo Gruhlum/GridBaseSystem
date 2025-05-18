@@ -8,8 +8,11 @@ namespace HexTecGames
     [System.Serializable]
     public class TileSaveData : GridObjectSaveData
     {
-        public TileSaveData(Tile gridObj) : base(gridObj)
+        public TileData tileData;
+
+        public TileSaveData(Tile tile) : base(tile)
         {
+            tileData = tile.Data;
         }
     }
 }

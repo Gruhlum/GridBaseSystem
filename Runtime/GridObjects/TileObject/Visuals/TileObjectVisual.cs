@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -54,7 +55,7 @@ namespace HexTecGames.GridBaseSystem
             visualizer.RemoveDisplay(this);
             gameObject.SetActive(false);
         }
-        protected virtual void TileObject_OnMoved(GridObject obj)
+        protected virtual void TileObject_OnMoved(GridObject obj, Coord old, Coord current)
         {
             SetPosition(obj as TileObject);
         }

@@ -44,7 +44,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 DeactivateAll();
             }
-            Spawn().Activate(Grid.CoordToWorldPoint(coord));
+            Spawn().Activate(Grid.CoordToWorldPosition(coord));
         }
         public void SpawnHighlight(Coord coord, Color color, bool clear = true)
         {
@@ -52,7 +52,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 DeactivateAll();
             }
-            Spawn().Activate(Grid.CoordToWorldPoint(coord), color);
+            Spawn().Activate(Grid.CoordToWorldPosition(coord), color);
         }
         public void SpawnHighlights(List<Coord> coords, bool clear = true)
         {
@@ -60,15 +60,15 @@ namespace HexTecGames.GridBaseSystem
         }
         public void SpawnHighlights(List<Coord> coords, Color color, bool clear = true)
         {
-            SpawnHighlights(Grid.CoordsToWorldPoint(coords), color, clear);
+            SpawnHighlights(Grid.CoordsToWorldPositions(coords), color, clear);
         }
         public void SpawnHighlights(List<Coord> coords, Color color, BaseGrid grid, bool clear = true)
         {
-            SpawnHighlights(grid.CoordsToWorldPoint(coords), color, clear);
+            SpawnHighlights(grid.CoordsToWorldPositions(coords), color, clear);
         }
         public void SpawnHighlights(List<Coord> coords, BaseGrid grid, bool clear = true)
         {
-            SpawnHighlights(grid.CoordsToWorldPoint(coords), StartColor, clear);
+            SpawnHighlights(grid.CoordsToWorldPositions(coords), StartColor, clear);
         }
         public void SpawnHighlights(List<Tile> tiles, Color color, bool clear = true)
         {

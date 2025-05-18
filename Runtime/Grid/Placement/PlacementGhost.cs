@@ -54,7 +54,7 @@ namespace HexTecGames.GridBaseSystem
         {
             isActive = true;
             this.coord = coord;
-            transform.position = grid.CoordToWorldPoint(coord);
+            transform.position = grid.CoordToWorldPosition(coord);
             if (isHiding)
             {
                 return;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -51,11 +52,23 @@ namespace HexTecGames.GridBaseSystem
         {
             get
             {
-                if (baseData == null)
+                if (BaseData == null)
                 {
                     return "No Data";
                 }
-                return baseData.name;
+                return BaseData.name;
+            }
+        }
+
+        public GridObjectData BaseData
+        {
+            get
+            {
+                return this.baseData;
+            }
+            private set
+            {
+                this.baseData = value;
             }
         }
         private GridObjectData baseData;
@@ -63,17 +76,20 @@ namespace HexTecGames.GridBaseSystem
         //public event Action<GridObject, Sprite> OnSpriteChanged;
         //public event Action<GridObject, Color> OnColorChanged;
         public event Action<GridObject> OnRemoved;
-        public event Action<GridObject> OnMoved;
+        public event Action<GridObject, Coord, Coord> OnMoved;
         public event Action<GridObject, Color> OnColorChanged;
 
         public GridObject(BaseGrid grid, GridObjectData data, Coord center)
         {
             this.Grid = grid;
-            this.baseData = data;
+            this.BaseData = data;
             this.Center = center;
-            //Color = data.Color;
+            this.Color = data.Color;
         }
-
+        public GridObject(BaseGrid grid, GridObjectData data, Coord center, CustomSaveData customSaveData) : this(grid, data, center)
+        {
+            LoadCustomSaveData(customSaveData);
+        }
         public virtual void Remove()
         {
             OnRemoved?.Invoke(this);
@@ -83,17 +99,19 @@ namespace HexTecGames.GridBaseSystem
             Coord oldCenter = center;
             center = target;
             MoveGridPosition(oldCenter);
-            OnMoved?.Invoke(this);
+            OnMoved?.Invoke(this, oldCenter, center);
         }
 
         protected abstract void MoveGridPosition(Coord oldCenter);
         public Vector3 GetWorldPosition()
         {
-            return grid.CoordToWorldPoint(Center);
+            return grid.CoordToWorldPosition(Center);
         }
 
         public virtual CustomSaveData GetCustomSaveData()
-        { return null; }
+        { 
+            return null; 
+        }
 
         public virtual void LoadCustomSaveData(CustomSaveData data) 
         { }

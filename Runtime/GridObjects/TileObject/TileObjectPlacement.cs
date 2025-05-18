@@ -15,5 +15,10 @@ namespace HexTecGames.GridBaseSystem
             this.tileObject = tileObject;
             this.type = type;
         }
+
+        public override string ToString()
+        {
+            return $"{tileObject.Name} {type}";
+        }
     }
 }

@@ -47,7 +47,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 var results = grid.GetArea(grid.Center, i);
                 grid.GetValidTiles(results);
-                yield return new WaitForSeconds(1.4f / speed);
+                yield return new WaitForSeconds(1f / speed);
                 yield return DisplayResults(results);
             }
         }
@@ -56,7 +56,7 @@ namespace HexTecGames.GridBaseSystem
             foreach (var result in results)
             {
                 var highlight = highlightSpawner.Spawn();
-                StartCoroutine(highlight.ShowHighlight(grid.CoordToWorldPoint(result), 0, 0.8f / speed, 0.3f / speed, 0.3f / speed));
+                StartCoroutine(highlight.ShowHighlight(grid.CoordToWorldPosition(result), 0, 0.8f / speed, 0.3f / speed, 0.3f / speed));
                 if (oneByOne)
                 {
                     yield return new WaitForSeconds(0.1f / speed);

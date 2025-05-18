@@ -76,7 +76,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 return;
             }
-            Vector3 position = gridEventSys.Grid.CoordToWorldPoint(coord);
+            Vector3 position = gridEventSys.Grid.CoordToWorldPosition(coord);
             mouseClickHighlight.transform.position = position;
             highlightSpawner.Spawn().Activate(position, hoverData);
         }
@@ -90,7 +90,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 return;
             }
-            mouseClickHighlight.Activate(gridEventSys.Grid.CoordToWorldPoint(coord));
+            mouseClickHighlight.Activate(gridEventSys.Grid.CoordToWorldPosition(coord));
             StartCoroutine(DisableAfterMouseUp());
         }
 

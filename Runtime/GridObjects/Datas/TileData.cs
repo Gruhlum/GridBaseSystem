@@ -1,3 +1,4 @@
+using HexTecGames.Basics;
 using HexTecGames.Basics.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,9 +22,9 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private TileVisual visualPrefab;
 
-        public virtual Tile CreateObject(BaseGrid grid, Coord center)
+        public virtual Tile CreateObject(BaseGrid grid, Coord center, CustomSaveData saveData = null)
         {
-            return new Tile(grid, this, center);
+            return new Tile(grid, this, center, saveData);
         }
 
         public override bool IsValidCoord(BaseGrid grid, Coord coord, int rotation = 0)
