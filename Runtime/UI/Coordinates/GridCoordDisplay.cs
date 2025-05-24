@@ -27,12 +27,11 @@ namespace HexTecGames.GridBaseSystem
             base.Deactivate();
         }
 
-        public override void SetItem(Tile item)
+        public override void SetItem(Tile item, bool activate = true)
         {
-            base.SetItem(item);
+            base.SetItem(item, activate);
             AddEvents(item);
         }
-
         private void AddEvents(Tile tile)
         {
             if (tile == null)
