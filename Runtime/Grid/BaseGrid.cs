@@ -297,7 +297,7 @@ namespace HexTecGames.GridBaseSystem
         /// Converts the current mouse position into a Coord position.
         /// </summary>
         /// <returns>Mouse position converted to Coord</returns>
-        public virtual Coord MousePositionToCoord()
+        public Coord MousePositionToCoord()
         {
             return WorldPositionToCoord(Camera.main.GetMousePosition());
         }
