@@ -36,10 +36,12 @@ namespace HexTecGames.GridBaseSystem
         public override List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord center, int rotation)
         {
             List<BoolCoord> boolCoords = new List<BoolCoord>();
-            foreach (var coord in coords)
+           
+            foreach (var placementCoord in coords)
             {
-                center.NormalizeAndRotate(coord.coord, rotation);
-                boolCoords.Add(new BoolCoord(center, IsValidCoord(grid, center, rotation)));
+                Coord normalized = center;
+                normalized.NormalizeAndRotate(placementCoord.coord, rotation);
+                boolCoords.Add(new BoolCoord(normalized, IsTileValid(grid, normalized, placementCoord.type)));
             }
             return boolCoords;
         }
@@ -66,24 +68,33 @@ namespace HexTecGames.GridBaseSystem
             return new TileObject(grid, this, center, rotation, saveData);
         }
 
+        private bool IsTileValid(BaseGrid grid, Coord coord, CoordType coordType)
+        {
+            Tile tile = grid.GetTile(coord);
+            if (tile == null)
+            {
+                return false;
+            }
+            if (!tile.IsUnblocked)
+            {
+                return false;
+            }
+            if (coordType == CoordType.Blocking && !tile.IsPassable)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public override bool IsValidCoord(BaseGrid grid, Coord center, int rotation = 0)
         {
-            foreach (var coord in coords)
+            foreach (var placementCoord in coords)
             {
-                center.NormalizeAndRotate(coord.coord, rotation);
-                var tile = grid.GetTile(center);
-                if (tile == null)
+                Coord normalized = center;
+                normalized.NormalizeAndRotate(placementCoord.coord, rotation);
+
+                if (!IsTileValid(grid, normalized, placementCoord.type))
                 {
-                    return false;
-                }
-                if (!tile.IsUnblocked)
-                {
-                    Debug.Log("Not Buildable!");
-                    return false;
-                }
-                if (coord.type == CoordType.Blocking && !tile.IsPassable)
-                {
-                    Debug.Log(" 2 2 2 Not Buildable!");
                     return false;
                 }
             }

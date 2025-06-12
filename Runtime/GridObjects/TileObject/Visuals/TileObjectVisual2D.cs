@@ -11,14 +11,17 @@ namespace HexTecGames.GridBaseSystem
         protected void Reset()
         {
             sr = GetComponent<SpriteRenderer>();
-            if (sr == null)
-            {
-                sr = GetComponent<SpriteRenderer>();
-            }
+
             if (sr == null)
             {
                 sr = gameObject.AddComponent<SpriteRenderer>();
             }
+        }
+
+        public override void Setup(TileObject tileObject, TileObjectVisualizer visualizer, BaseGrid grid)
+        {
+            base.Setup(tileObject, visualizer, grid);
+            sr.color = tileObject.Color;
         }
 
         protected override void Rotate(int rotation)

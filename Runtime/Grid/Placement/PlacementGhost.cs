@@ -9,7 +9,7 @@ namespace HexTecGames.GridBaseSystem
     {
         [SerializeField] private BaseGrid grid = default;
         [SerializeField] private TileHighlightSpawner highlightSpawner = default;
-
+        [SerializeField] private SpriteRenderer sr = default;
         [SerializeField] private MultiSpawner ghostVisualSpawner = default;
 
         private PlacementData activeData;
@@ -39,6 +39,7 @@ namespace HexTecGames.GridBaseSystem
         public void Activate(PlacementData placementData, Coord center)
         {
             activeData = placementData;
+
             if (placementData.GhostPrefab != null)
             {
                 if (activeGhostT != null)
@@ -110,11 +111,12 @@ namespace HexTecGames.GridBaseSystem
         }
         private void UpdatePlacementArea(PlacementData data)
         {
+            highlightSpawner.DeactivateAll();
             var results = data.Data.GetNormalizedValidCoords(grid, coord, rotation);
 
             foreach (var result in results)
             {
-                highlightSpawner.SpawnHighlight(result.coord, result.valid ? validPlacementColor : invalidPlacementColor, grid);
+                highlightSpawner.SpawnHighlight(result.coord, result.valid ? validPlacementColor : invalidPlacementColor, false);
             }
         }
     }

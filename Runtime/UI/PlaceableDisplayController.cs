@@ -7,21 +7,21 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class PlaceableDisplayController : DisplayController<PlaceableDisplay, PlacementData>
+    public class PlaceableDisplayController : PreSeededDisplayController<PlaceableDisplay, PlacementData>
     {
         [SerializeField] private GridPlacementController tileObjPlacementController = default;
         [SerializeField] private HotkeyController hotkeyController = default;
 
-        protected virtual void Reset()
+        protected override void Reset()
         {
+            base.Reset();
             tileObjPlacementController = FindObjectOfType<GridPlacementController>();
         }
         protected void Start()
         {
-            DisplayItems();
-            if (displaySpawner.TotalActiveInstances() > 0)
+            if (displays.Count > 0)
             {
-                displaySpawner.First().DisplayClicked();
+                displays[0].DisplayClicked();
             }
         }
 
@@ -44,13 +44,13 @@ namespace HexTecGames.GridBaseSystem
             base.Display_OnDisplayClicked(display);
             if (tileObjPlacementController.SelectedPlacementData == display.Item)
             {
-                tileObjPlacementController.ClearSelectedObject();
+                tileObjPlacementController.ClearSelectedPlacementData();
             }
             else tileObjPlacementController.SetSelectedObject(display.Item);
         }
         protected void TileObjPlacementController_OnSelectedObjectChanged(PlacementData data)
         {
-            foreach (var display in displaySpawner)
+            foreach (var display in displays)
             {
                 if (display.gameObject.activeSelf)
                 {

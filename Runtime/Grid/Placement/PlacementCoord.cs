@@ -25,5 +25,10 @@ namespace HexTecGames.GridBaseSystem
             coord.NormalizeAndRotate(center, rotation);
             //Debug.Log("After: " + coord.ToString() + " - C: " + center.ToString());
         }
+
+        public override string ToString()
+        {
+            return coord.ToString() + " " + type.ToString();
+        }
     }
 }

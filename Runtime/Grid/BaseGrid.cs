@@ -493,10 +493,6 @@ namespace HexTecGames.GridBaseSystem
         }
         public Tile GetTile(Coord coord)
         {
-            //if (IsCoordOutOfBounds(coord))
-            //{
-            //    return null;
-            //}
             if (!DoesTileExist(coord))
             {
                 return null;

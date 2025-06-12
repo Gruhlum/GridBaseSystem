@@ -111,8 +111,8 @@ namespace HexTecGames.GridBaseSystem
         {
             if (string.IsNullOrEmpty(DisplayName) && Data != null)
             {
-                DisplayName = Data.name;
-            }           
+                DisplayName = Utility.CovertToDisplayName(Data.name);
+            }
         }
     }
 }

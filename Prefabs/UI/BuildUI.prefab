@@ -50,15 +50,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d1b63068d4380343aca75ec5cc62191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displaySpawner:
-    prefab: {fileID: -722956469371702832, guid: 237152e85a7840f438a75b84db9eb96b,
-      type: 3}
-    parent: {fileID: 6379549945899152845}
+  items: []
   displays: []
-  items:
-  - {fileID: 11400000, guid: 1954e6dcab9d0934ebca3b35e1f7e0be, type: 2}
-  - {fileID: 11400000, guid: 9c464b501eb5fde45b1d993ed20469d4, type: 2}
+  displaySpawner:
+    prefab: {fileID: -722956469371702832, guid: 237152e85a7840f438a75b84db9eb96b, type: 3}
+    parent: {fileID: 6379549945899152845}
   tileObjPlacementController: {fileID: 0}
+  hotkeyController: {fileID: 0}
 --- !u!114 &4701376611753992425
 MonoBehaviour:
   m_ObjectHideFlags: 0

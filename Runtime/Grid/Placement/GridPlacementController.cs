@@ -106,9 +106,17 @@ namespace HexTecGames.GridBaseSystem
             {
                 Build(HoverCoord);
             }
-            else if (AllowRemoval && btn == 1)
+            else if (btn == 1)
             {
-                RemoveNext(HoverCoord);
+                if (SelectedPlacementData != null)
+                {
+                    ClearSelectedPlacementData();
+                }
+                else if (AllowRemoval)
+                {
+                    RemoveNext(HoverCoord);
+                }
+                
             }
         }
 
@@ -246,7 +254,7 @@ namespace HexTecGames.GridBaseSystem
             OnObjectPlaced?.Invoke(tileObject);
             //ghost.UpdatePlacementArea();
         }
-        public void ClearSelectedObject()
+        public void ClearSelectedPlacementData()
         {
             SelectedPlacementData = null;
             ghost.Deactivate();
@@ -260,7 +268,7 @@ namespace HexTecGames.GridBaseSystem
             }
             if (data == null)
             {
-                ClearSelectedObject();
+                ClearSelectedPlacementData();
                 return;
             }
 

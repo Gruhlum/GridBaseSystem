@@ -23,6 +23,11 @@ namespace HexTecGames.GridBaseSystem
         protected virtual void Reset()
         {
             SpriteRenderer = GetComponent<SpriteRenderer>();
+
+            if (sr == null)
+            {
+                sr = gameObject.AddComponent<SpriteRenderer>();
+            }
         }
 
         public override void Setup(Tile tile)
