@@ -10,17 +10,17 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private BaseGrid grid = default;
         [SerializeField] private TileHighlightSpawner highlightSpawner = default;
         [SerializeField] private SpriteRenderer sr = default;
-        [SerializeField] private MultiSpawner ghostVisualSpawner = default;
+        [SerializeField] private MultiSpawner visualSpawner = default;
+
+        private GridObjectVisual currentPrefab;
+        private GridObjectVisual currentVisual;
 
         private PlacementData activeData;
         private Coord coord;
         private int rotation;
-        private Vector2 spriteOffset;
 
         [SerializeField] private Color validPlacementColor = Color.green;
         [SerializeField] private Color invalidPlacementColor = Color.red;
-
-        private Transform activeGhostT;
 
         private bool isHiding;
         private bool isActive;
@@ -39,14 +39,16 @@ namespace HexTecGames.GridBaseSystem
         public void Activate(PlacementData placementData, Coord center)
         {
             activeData = placementData;
-
-            if (placementData.GhostPrefab != null)
+            GridObjectVisual prefab = placementData.Data.GetVisual();
+            if (currentPrefab != prefab)
             {
-                if (activeGhostT != null)
+                if (currentVisual != null)
                 {
-                    activeGhostT.gameObject.SetActive(false);
+                    currentVisual.gameObject.SetActive(false);
                 }
-                activeGhostT = ghostVisualSpawner.Spawn(placementData.GhostPrefab);
+                currentPrefab = prefab;
+                currentVisual = visualSpawner.Spawn(prefab);
+                currentVisual.MoveToFront();
             }
             rotation = 0;
             Activate(center);
@@ -81,14 +83,6 @@ namespace HexTecGames.GridBaseSystem
             isHiding = !show;
         }
 
-        private void UpdatePosition()
-        {
-            if (activeGhostT != null)
-            {
-                activeGhostT.localPosition = spriteOffset;
-            }
-        }
-
         public void Rotate(int index)
         {
             rotation = index;
@@ -99,7 +93,7 @@ namespace HexTecGames.GridBaseSystem
                 //SpriteData spriteData = activeData.GetSpriteData(rotation);
                 //spriteOffset = spriteData.offset;
                 //transform.eulerAngles = spriteData.rotation;
-                UpdatePosition();
+                //UpdatePosition();
             }
         }
         public void UpdatePlacementArea()

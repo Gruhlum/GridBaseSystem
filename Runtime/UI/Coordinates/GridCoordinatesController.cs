@@ -107,9 +107,16 @@ namespace HexTecGames.UI
             if (IsActive)
             {
                 var results = Grid.GetAllTiles();
+                List<GridCoordDisplay> displays = new List<GridCoordDisplay>();
                 foreach (var result in results)
                 {
-                    coordSpawner.Spawn().SetItem(result);
+                    GridCoordDisplay display = coordSpawner.Spawn();
+                    displays.Add(display);
+                    display.SetItem(result, false);
+                }
+                foreach (var display in displays)
+                {
+                    display.gameObject.SetActive(true);
                 }
             }
         }

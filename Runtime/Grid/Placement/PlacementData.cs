@@ -22,7 +22,7 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private Color iconColor = Color.white;
 
-        public GridObjectData Data
+        public GridObjectDataBase Data
         {
             get
             {
@@ -33,20 +33,7 @@ namespace HexTecGames.GridBaseSystem
                 this.data = value;
             }
         }
-        [SerializeField] private GridObjectData data;
-
-        public Transform GhostPrefab
-        {
-            get
-            {
-                return ghostPrefab;
-            }
-            private set
-            {
-                ghostPrefab = value;
-            }
-        }
-        [SerializeField] private Transform ghostPrefab;
+        [SerializeField] private GridObjectDataBase data;
 
         public string DisplayName
         {

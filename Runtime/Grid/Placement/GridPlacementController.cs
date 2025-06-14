@@ -57,11 +57,10 @@ namespace HexTecGames.GridBaseSystem
         }
 
         public event Action<PlacementData> OnSelectedObjectChanged;
-        public event Action<GridObject> OnObjectPlaced;
+        public event Action<GridObjectBase> OnObjectPlaced;
         public event Action<PreBuildInfo> OnBeforeBuild;
 
         private int currentRotation;
-        private MouseInputData mouseInput = new MouseInputData();
 
         public bool AllowRemoval
         {
@@ -99,7 +98,37 @@ namespace HexTecGames.GridBaseSystem
             gridEventSystem.OnMouseHoverCoordChanged += GridEventSystem_OnMouseHoverCoordChanged;
             gridEventSystem.OnMouseClicked += GridEventSystem_OnMouseClicked;
         }
+        private void OnDisable()
+        {
+            gridEventSystem.OnMouseHoverCoordChanged -= GridEventSystem_OnMouseHoverCoordChanged;
+            gridEventSystem.OnMouseClicked -= GridEventSystem_OnMouseClicked;
+        }
+        protected virtual void Update()
+        {
+            ghost.Show(!MouseController.IsPointerOverUI);
 
+            if (MouseController.IsPointerOverUI)
+            {
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                if (SelectedPlacementData == null)
+                {
+                    return;
+                }
+                if (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift))
+                {
+                    currentRotation--;
+                }
+                else currentRotation++;
+
+                ghost.Rotate(currentRotation);
+
+                CheckForValidTile(gridEventSystem.MouseCoord);
+            }
+        }
         private void GridEventSystem_OnMouseClicked(Coord coord, int btn)
         {
             if (btn == 0)
@@ -116,14 +145,27 @@ namespace HexTecGames.GridBaseSystem
                 {
                     RemoveNext(HoverCoord);
                 }
-                
+
             }
         }
-
-        private void OnDisable()
+        private void GridEventSystem_OnMouseHoverCoordChanged(Coord coord)
         {
-            gridEventSystem.OnMouseHoverCoordChanged -= GridEventSystem_OnMouseHoverCoordChanged;
-            gridEventSystem.OnMouseClicked -= GridEventSystem_OnMouseClicked;
+            if (SelectedPlacementData != null)
+            {
+                CheckForValidTile(coord);
+            }
+            if (gridEventSystem.IsDragging)
+            {
+                if (gridEventSystem.LastMouseButton == 0)
+                {
+                    Build(coord);
+                }
+
+                else if (AllowRemoval && gridEventSystem.LastMouseButton == 1)
+                {
+                    RemoveNext(coord);
+                }
+            }
         }
 
         //private void HandleMouseInput(int btn, ButtonType btnType)
@@ -150,57 +192,6 @@ namespace HexTecGames.GridBaseSystem
             {
                 TileObject tileObj = placementDatas[0].tileObject;
                 tileObj.Remove();
-            }
-        }
-
-        protected virtual void Update()
-        {
-            ghost.Show(!MouseController.IsPointerOverUI);
-
-            if (MouseController.IsPointerOverUI)
-            {
-                return;
-            }
-
-            //if (mouseInput.DetectMouseInput())
-            //{
-            //    HandleMouseInput(mouseInput.button, mouseInput.type);
-            //}
-
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                if (SelectedPlacementData == null)
-                {
-                    return;
-                }
-                if (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift))
-                {
-                    currentRotation--;
-                }
-                else currentRotation++;
-
-                ghost.Rotate(currentRotation);
-
-                CheckForValidTile(gridEventSystem.MouseCoord);
-            }
-        }
-
-        private void GridEventSystem_OnMouseHoverCoordChanged(Coord coord)
-        {
-            if (SelectedPlacementData != null)
-            {
-                CheckForValidTile(coord);
-            }
-            if (gridEventSystem.IsDragging)
-            {
-                if (mouseInput.button == 0)
-                {
-                    Build(coord);
-                }
-                else if (AllowRemoval && mouseInput.button == 1)
-                {
-                    RemoveNext(coord);
-                }
             }
         }
         protected void CheckForValidTile(Coord coord)
@@ -249,7 +240,7 @@ namespace HexTecGames.GridBaseSystem
         private IEnumerator BuildDelayed(Coord coord)
         {
             yield return null;
-            GridObject tileObject = GenerateObject(coord);
+            GridObjectBase tileObject = GenerateObject(coord);
             //Debug.Log("Placing Object: " + tileObject.Name + " at: " + coord.ToString());
             OnObjectPlaced?.Invoke(tileObject);
             //ghost.UpdatePlacementArea();
@@ -282,11 +273,11 @@ namespace HexTecGames.GridBaseSystem
             ghost.Rotate(0);
         }
 
-        protected GridObject GenerateObject(Coord coord)
+        protected GridObjectBase GenerateObject(Coord coord)
         {
             if (SelectedPlacementData.Data is TileObjectData tileObjData)
             {
-                TileObject tileObj = tileObjData.CreateObject(grid, coord, currentRotation, null);
+                TileObject tileObj = tileObjData.CreateObject(grid, coord, currentRotation);
                 grid.AddTileObject(tileObj);
                 return tileObj;
             }

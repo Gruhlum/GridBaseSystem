@@ -25,7 +25,9 @@ namespace HexTecGames.GridBaseSystem
             List<Tile> results = new List<Tile>();
             foreach (var saveData in savedGrid.tileSaveDatas)
             {
-                results.Add(saveData.tileData.CreateObject(grid, saveData.position, saveData.customSaveData));
+                Tile result = saveData.tileData.CreateObject(grid, saveData.position);
+                result.LoadSaveData(saveData);
+                results.Add(result);
             }
             return results;
         }
@@ -33,8 +35,9 @@ namespace HexTecGames.GridBaseSystem
         {
             foreach (var saveData in saveDatas)
             {
-                var obj = saveData.tileObjectData.CreateObject(grid, saveData.position, saveData.rotation, saveData.customSaveData);
-                grid.AddTileObject(obj);
+                TileObject result = saveData.tileObjectData.CreateObject(grid, saveData.position, saveData.rotation);
+                result.LoadSaveData(saveData);
+                grid.AddTileObject(result);
             }
         }
     }

@@ -42,7 +42,7 @@ namespace HexTecGames.GridBaseSystem
                 lastMouseCoord = value;
             }
         }
-
+        private Coord lastMouseCoord;
         public bool IsDragging
         {
             get
@@ -55,19 +55,32 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        private Coord lastMouseCoord;
-
+        public int LastMouseButton
+        {
+            get
+            {
+                return this.lastMouseButton;
+            }
+            private set
+            {
+                this.lastMouseButton = value;
+            }
+        }
+        private int lastMouseButton;
 
         [SerializeField] private bool showDebugs = default;
         [Tooltip("Should overstepped tiles be detected")]
         [SerializeField] private bool continousDetection = true;
 
         public event Action<Coord> OnMouseHoverCoordChanged;
-        public event Action<Coord, int> OnMouseClicked;
-        public event Action<Coord, int> OnDraggingMoved;
+
+        public delegate void MouseEvent(Coord coord, int mouseBtn);
+
+        public event MouseEvent OnMouseClicked;
+        public event MouseEvent OnDraggingMoved;
 
         private bool isDragging;
-        private int lastBtn;
+
         private int dragDirection = -1;
 
         private void Reset()
@@ -105,20 +118,20 @@ namespace HexTecGames.GridBaseSystem
             {
                 OnMouseClicked?.Invoke(mouseCoord, 0);
                 IsDragging = true;
-                lastBtn = 0;
+                LastMouseButton = 0;
 
             }
             else if (Input.GetMouseButtonDown(1))
             {
                 OnMouseClicked?.Invoke(mouseCoord, 1);
                 IsDragging = true;
-                lastBtn = 1;
+                LastMouseButton = 1;
             }
             else if (Input.GetMouseButtonDown(2))
             {
                 OnMouseClicked?.Invoke(mouseCoord, 2);
                 IsDragging = true;
-                lastBtn = 2;
+                LastMouseButton = 2;
             }
             if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(2))
             {
@@ -172,7 +185,7 @@ namespace HexTecGames.GridBaseSystem
             OnMouseHoverCoordChanged?.Invoke(mouseCoord);
             if (IsDragging)
             {
-                OnDraggingMoved?.Invoke(mouseCoord, lastBtn);
+                OnDraggingMoved?.Invoke(mouseCoord, LastMouseButton);
                 if (dragDirection < 0 && Input.GetKey(KeyCode.LeftControl))
                 {
                     DetectDirection();

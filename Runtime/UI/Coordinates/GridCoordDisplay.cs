@@ -27,35 +27,24 @@ namespace HexTecGames.GridBaseSystem
             base.Deactivate();
         }
 
-        public override void SetItem(Tile item, bool activate = true)
+        protected override void AddEvents(Tile tile)
         {
-            base.SetItem(item, activate);
-            AddEvents(item);
-        }
-        private void AddEvents(Tile tile)
-        {
-            if (tile == null)
-            {
-                return;
-            }
+            base.AddEvents(tile);
             tile.OnRemoved += Item_OnRemoved;
             tile.OnMoved += Item_OnMoved;
         }
-        private void RemoveEvents(Tile tile)
+        protected override void RemoveEvents(Tile tile)
         {
-            if (tile == null)
-            {
-                return;
-            }
+            base.RemoveEvents(tile);
             tile.OnRemoved -= Item_OnRemoved;
             tile.OnMoved -= Item_OnMoved;
         }
-        private void Item_OnMoved(GridObject obj, Coord old, Coord current)
+        private void Item_OnMoved(Tile obj, Coord old, Coord current)
         {
             DrawItem(Item);
         }
 
-        private void Item_OnRemoved(GridObject obj)
+        private void Item_OnRemoved(Tile obj)
         {
             Deactivate();
         }
