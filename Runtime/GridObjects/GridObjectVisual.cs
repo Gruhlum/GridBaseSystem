@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class GridObjectVisual : MonoBehaviour, IGridObjectVisual
+    public abstract class GridObjectVisual : MonoBehaviour
     {
         public abstract void MoveToFront();
     }

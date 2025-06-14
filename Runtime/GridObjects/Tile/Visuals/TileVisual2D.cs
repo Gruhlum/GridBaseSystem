@@ -40,5 +40,10 @@ namespace HexTecGames.GridBaseSystem
         {
             SpriteRenderer.color = color;
         }
+
+        public override void MoveToFront()
+        {
+            SpriteRenderer.sortingOrder++;
+        }
     }
 }

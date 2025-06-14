@@ -6,21 +6,8 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-	public abstract class GridObject
+	public abstract class GridObject<T> : GridObjectBase where T : GridObject<T>
 	{
-        public BaseGrid Grid
-        {
-            get
-            {
-                return grid;
-            }
-            private set
-            {
-                grid = value;
-            }
-        }
-        private BaseGrid grid;
-
         public Color Color
         {
             get
@@ -30,23 +17,10 @@ namespace HexTecGames.GridBaseSystem
             set
             {
                 color = value;
-                OnColorChanged?.Invoke(this, color);
+                OnColorChanged?.Invoke(this as T, color);
             }
         }
         private Color color = Color.white;
-
-        public Coord Center
-        {
-            get
-            {
-                return center;
-            }
-            protected set
-            {
-                center = value;
-            }
-        }
-        private Coord center;
 
         public string Name
         {
@@ -75,45 +49,33 @@ namespace HexTecGames.GridBaseSystem
 
         //public event Action<GridObject, Sprite> OnSpriteChanged;
         //public event Action<GridObject, Color> OnColorChanged;
-        public event Action<GridObject> OnRemoved;
-        public event Action<GridObject, Coord, Coord> OnMoved;
-        public event Action<GridObject, Color> OnColorChanged;
+        public event Action<T> OnRemoved;
+        public event Action<T, Coord, Coord> OnMoved;
+        public event Action<T, Color> OnColorChanged;
 
-        public GridObject(BaseGrid grid, GridObjectData data, Coord center)
+        public GridObject(BaseGrid grid, GridObjectData data, Coord center) : base(grid, center)
         {
-            this.Grid = grid;
             this.BaseData = data;
-            this.Center = center;
             this.Color = data.Color;
-        }
-        public GridObject(BaseGrid grid, GridObjectData data, Coord center, CustomSaveData customSaveData) : this(grid, data, center)
-        {
-            LoadCustomSaveData(customSaveData);
         }
         public virtual void Remove()
         {
-            OnRemoved?.Invoke(this);
+            OnRemoved?.Invoke(this as T);
         }
         public virtual void Move(Coord target)
         {
-            Coord oldCenter = center;
-            center = target;
+            Coord oldCenter = Center;
+            Center = target;
             MoveGridPosition(oldCenter);
-            OnMoved?.Invoke(this, oldCenter, center);
+            OnMoved?.Invoke(this as T, oldCenter, Center);
         }
 
-        protected abstract void MoveGridPosition(Coord oldCenter);
-        public Vector3 GetWorldPosition()
-        {
-            return grid.CoordToWorldPosition(Center);
-        }
+        //public virtual CustomSaveData GetCustomSaveData()
+        //{ 
+        //    return null; 
+        //}
 
-        public virtual CustomSaveData GetCustomSaveData()
-        { 
-            return null; 
-        }
-
-        public virtual void LoadCustomSaveData(CustomSaveData data) 
-        { }
+        //public virtual void LoadCustomSaveData(CustomSaveData data) 
+        //{ }
     }
 }

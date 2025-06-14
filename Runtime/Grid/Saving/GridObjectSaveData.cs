@@ -9,12 +9,10 @@ namespace HexTecGames.GridBaseSystem
     public class GridObjectSaveData
     {
         public Coord position;
-        [SerializeReference, SubclassSelector] public CustomSaveData customSaveData;
 
-        public GridObjectSaveData(GridObject gridObj)
+        public GridObjectSaveData(GridObjectBase gridObj)
         {
             position = gridObj.Center;
-            customSaveData = gridObj.GetCustomSaveData();
         }
     }
 }

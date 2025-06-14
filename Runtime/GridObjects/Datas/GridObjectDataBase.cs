@@ -10,6 +10,6 @@ namespace HexTecGames.GridBaseSystem
         public abstract bool IsValidCoord(BaseGrid grid, Coord coord, int rotation = 0);
         public abstract List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord center, int rotation);
 
-        public abstract IGridObjectVisual GetVisual();
+        public abstract GridObjectVisual GetVisual();
     }
 }

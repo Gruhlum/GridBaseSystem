@@ -11,7 +11,6 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] public List<PlacementCoord> coords = new List<PlacementCoord>() { new PlacementCoord() };
         //[SerializeField] protected List<SpriteData> spriteDatas = new List<SpriteData>();
 
-
         public TileObjectVisual VisualPrefab
         {
             get
@@ -25,13 +24,6 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private TileObjectVisual visualPrefab;
 
-        //public int TotalSprites
-        //{
-        //    get
-        //    {
-        //        return spriteDatas.Count;
-        //    }
-        //}
 
         public override List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord center, int rotation)
         {
@@ -63,9 +55,9 @@ namespace HexTecGames.GridBaseSystem
         //    return spriteDatas[rotation % spriteDatas.Count].sprite;
         //}
 
-        public virtual TileObject CreateObject(BaseGrid grid, Coord center, int rotation, CustomSaveData saveData = null)
+        public virtual TileObject CreateObject(BaseGrid grid, Coord center, int rotation)
         {
-            return new TileObject(grid, this, center, rotation, saveData);
+            return new TileObject(grid, this, center, rotation);
         }
 
         private bool IsTileValid(BaseGrid grid, Coord coord, CoordType coordType)
@@ -99,6 +91,11 @@ namespace HexTecGames.GridBaseSystem
                 }
             }
             return true;
+        }
+
+        public override GridObjectVisual GetVisual()
+        {
+            return VisualPrefab;
         }
         //public List<PlacementCoord> GetNormalizedCoords(BaseGrid grid, Coord center, int rotation = 0)
         //{

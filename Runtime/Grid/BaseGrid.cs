@@ -803,7 +803,7 @@ namespace HexTecGames.GridBaseSystem
             return results;
         }
 
-        public List<T> GetNeighbourTileObjects<T>(Coord center) where T : ITileObject
+        public List<T> GetNeighbourTileObjects<T>(Coord center) where T : TileObject
         {
             List<T> results = new List<T>();
 

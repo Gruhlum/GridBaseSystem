@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class TileObject : GridObject
+    public class TileObject : GridObject<TileObject>
     {
         public TileObjectData Data
         {
@@ -73,14 +73,6 @@ namespace HexTecGames.GridBaseSystem
             SetOccupyingTiles();
         }
 
-        public TileObject(BaseGrid grid, TileObjectData data, Coord center, int rotation = 0, CustomSaveData customSaveData = null) : this(grid, data, center, rotation)
-        {
-            if (customSaveData != null)
-            {
-                LoadCustomSaveData(customSaveData);
-            }
-        }
-
         public void SetRotation(int rotation)
         {
             Rotation = rotation;
@@ -124,36 +116,9 @@ namespace HexTecGames.GridBaseSystem
                 occupyingTiles.Add(tile);
             }
         }
-        //public List<Coord> GetNormalizedCoords(Coord center, int rotation)
-        //{
-        //    return Data.GetNormalizedCoords(Grid, center, rotation);
-        //}
-        //public List<Coord> GetNormalizedCoords()
-        //{
-        //    return GetNormalizedCoords(Center, Rotation);
-        //}
-        //public List<Coord> GetAllNeighbourCoords(List<Coord> coords)
-        //{
-        //    List<Coord> neighbours = new List<Coord>();
-
-        //    foreach (var coord in coords)
-        //    {
-        //        var results = Grid.GetNeighbourCoords(coord);
-        //        foreach (var result in results)
-        //        {
-        //            if (!coords.Contains(result) && !neighbours.Contains(result))
-        //            {
-        //                neighbours.Add(result);
-        //            }
-        //        }
-        //    }
-        //    return neighbours;
-        //}
-
-        //public SpriteData GetSpriteData()
-        //{
-        //    return Data.GetSpriteData(Center, Grid, Rotation);
-        //}
+        public virtual void LoadSaveData(TileObjectSaveData saveData)
+        {
+        }
         protected override void MoveGridPosition(Coord oldCenter)
         {
             occupyingTiles[0].RemoveTileObject(this);

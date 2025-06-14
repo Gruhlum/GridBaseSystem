@@ -22,9 +22,9 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private TileVisual visualPrefab;
 
-        public virtual Tile CreateObject(BaseGrid grid, Coord center, CustomSaveData saveData = null)
+        public virtual Tile CreateObject(BaseGrid grid, Coord center)
         {
-            return new Tile(grid, this, center, saveData);
+            return new Tile(grid, this, center);
         }
 
         public override bool IsValidCoord(BaseGrid grid, Coord coord, int rotation = 0)
@@ -39,6 +39,11 @@ namespace HexTecGames.GridBaseSystem
                 return new List<BoolCoord>() { new BoolCoord(center, true) };
             }
             else return new List<BoolCoord>() { new BoolCoord(center, false) };
+        }
+
+        public override GridObjectVisual GetVisual()
+        {
+            return VisualPrefab;
         }
     }
 }

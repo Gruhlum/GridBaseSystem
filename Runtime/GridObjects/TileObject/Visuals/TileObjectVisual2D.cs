@@ -28,5 +28,10 @@ namespace HexTecGames.GridBaseSystem
         {
             gameObject.transform.rotation = Quaternion.Euler(0, 0, TileObject.DirectionToDegrees(rotation));
         }
+
+        public override void MoveToFront()
+        {
+            sr.sortingOrder++;
+        }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class TileVisual : MonoBehaviour
+    public abstract class TileVisual : GridObjectVisual
     {
         public Tile Tile
         {
@@ -46,14 +46,14 @@ namespace HexTecGames.GridBaseSystem
             tile.OnRemoved -= Tile_OnRemoved;
             tile.OnColorChanged -= Tile_OnColorChanged;
         }
-        private void Tile_OnColorChanged(GridObject obj, Color color)
+        private void Tile_OnColorChanged(Tile obj, Color color)
         {
             SetColor(color);
         }
 
         public abstract void SetColor(Color color);
 
-        private void Tile_OnRemoved(GridObject gridObj)
+        private void Tile_OnRemoved(Tile gridObj)
         {
             Deactivate();
         }

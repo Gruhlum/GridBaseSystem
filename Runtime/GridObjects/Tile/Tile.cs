@@ -7,7 +7,7 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
-    public class Tile : GridObject
+    public class Tile : GridObject<Tile>
     {
         public int X
         {
@@ -84,10 +84,6 @@ namespace HexTecGames.GridBaseSystem
         public Tile(BaseGrid grid, TileData tileData, Coord coord) : base(grid, tileData, coord)
         {
             this.Data = tileData;
-        }
-        public Tile(BaseGrid grid, TileData tileData, Coord coord, CustomSaveData saveData) : this(grid, tileData, coord)
-        {
-            LoadCustomSaveData(saveData);
         }
         private void CheckTileState()
         {
@@ -185,6 +181,11 @@ namespace HexTecGames.GridBaseSystem
         public override string ToString()
         {
             return $"({X}, {Y}) {Data.name}";
+        }
+
+        public virtual void LoadSaveData(TileSaveData saveData)
+        {
+            
         }
     }
 }

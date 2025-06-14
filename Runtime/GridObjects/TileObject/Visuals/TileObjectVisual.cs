@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class TileObjectVisual : MonoBehaviour
+    public abstract class TileObjectVisual : GridObjectVisual
     {
         public TileObject TileObject
         {
@@ -45,7 +45,7 @@ namespace HexTecGames.GridBaseSystem
             Rotate(rotation);
         }
 
-        protected virtual void TileObject_OnRemoved(GridObject obj)
+        protected virtual void TileObject_OnRemoved(TileObject obj)
         {
             RemoveEvents();
             Deactivate();
@@ -55,7 +55,7 @@ namespace HexTecGames.GridBaseSystem
             visualizer.RemoveDisplay(this);
             gameObject.SetActive(false);
         }
-        protected virtual void TileObject_OnMoved(GridObject obj, Coord old, Coord current)
+        protected virtual void TileObject_OnMoved(TileObject obj, Coord old, Coord current)
         {
             SetPosition(obj as TileObject);
         }
