@@ -802,6 +802,23 @@ namespace HexTecGames.GridBaseSystem
             }
             return results;
         }
+
+        public List<T> GetNeighbourTileObjects<T>(Coord center) where T : ITileObject
+        {
+            List<T> results = new List<T>();
+
+            List<Coord> neighbourCoords = GetNeighbourCoords(center);
+            foreach (var coord in neighbourCoords)
+            {
+                T tileObj = GetTileObject<T>(coord);
+                if (tileObj != null)
+                {
+                    results.Add(tileObj);
+                }
+            }
+
+            return results;
+        }
         public List<Tile> GetNeighbourTiles(Coord center)
         {
             List<Coord> coords = GetNeighbourCoords(center);
