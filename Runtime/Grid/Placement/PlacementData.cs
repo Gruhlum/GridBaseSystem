@@ -1,3 +1,4 @@
+using HexTecGames.Basics;
 using HexTecGames.Basics.UI;
 using HexTecGames.SoundSystem;
 using System.Collections;
@@ -9,20 +10,7 @@ namespace HexTecGames.GridBaseSystem
     [CreateAssetMenu(menuName = "HexTecGames/Grid/PlacementData")]
     public class PlacementData : DisplayableObject
     {
-        public Color IconColor
-        {
-            get
-            {
-                return iconColor;
-            }
-            private set
-            {
-                iconColor = value;
-            }
-        }
-        [SerializeField] private Color iconColor = Color.white;
-
-        public GridObjectDataBase Data
+        public GridObjectData Data
         {
             get
             {
@@ -33,8 +21,7 @@ namespace HexTecGames.GridBaseSystem
                 this.data = value;
             }
         }
-        [SerializeField] private GridObjectDataBase data;
-
+        [SerializeField] private GridObjectData data;
         public string DisplayName
         {
             get
@@ -47,6 +34,32 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         [SerializeField] private string displayName;
+        
+        public ColorType ColorType
+        {
+            get
+            {
+                return colorType;
+            }
+            set
+            {
+                colorType = value;
+            }
+        }
+        [Space, SerializeField] private ColorType colorType;
+        protected Color IconColor
+        {
+            get
+            {
+                return iconColor;
+            }
+            set
+            {
+                iconColor = value;
+            }
+        }
+        [DrawIf(nameof(colorType), ColorType.Custom), SerializeField] private Color iconColor = Color.white;
+
         public bool IsDraggable
         {
             get
@@ -58,7 +71,7 @@ namespace HexTecGames.GridBaseSystem
                 isDraggable = value;
             }
         }
-        [SerializeField] private bool isDraggable;
+        [Space, SerializeField] private bool isDraggable;
         public virtual bool IsReplaceable
         {
             get
@@ -79,7 +92,7 @@ namespace HexTecGames.GridBaseSystem
                 return placementSound;
             }
         }
-        [SerializeField] private SoundClipBase placementSound = default;
+        [Space, SerializeField] private SoundClipBase placementSound = default;
 
         public KeyCode Hotkey
         {
@@ -100,6 +113,19 @@ namespace HexTecGames.GridBaseSystem
             {
                 DisplayName = Utility.CovertToDisplayName(Data.name);
             }
+        }
+
+        public Color GetColor()
+        {
+            if (ColorType == ColorType.Custom)
+            {
+                return IconColor;
+            }
+            else if (Data != null)
+            {
+                return Data.Color;
+            }
+            return Color.white;
         }
     }
 }

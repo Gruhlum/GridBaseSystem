@@ -26,17 +26,15 @@ namespace HexTecGames.GridBaseSystem
             foreach (var saveData in savedGrid.tileSaveDatas)
             {
                 Tile result = saveData.tileData.CreateObject(grid, saveData.position);
-                result.LoadSaveData(saveData);
                 results.Add(result);
             }
             return results;
         }
-        private void LoadTileObjects(List<TileObjectSaveData> saveDatas)
+        private void LoadTileObjects(List<TileObjectSaveDataBase> saveDatas)
         {
             foreach (var saveData in saveDatas)
             {
-                TileObject result = saveData.tileObjectData.CreateObject(grid, saveData.position, saveData.rotation);
-                result.LoadSaveData(saveData);
+                TileObjectBase result = saveData.data.GenerateTileObject(grid, saveData.position, saveData.rotation);
                 grid.AddTileObject(result);
             }
         }

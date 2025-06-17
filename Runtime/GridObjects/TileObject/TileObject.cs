@@ -7,9 +7,10 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class TileObject : GridObject<TileObject>
+    public abstract class TileObject<T, D, V, S> : TileObjectBase
+        where T : TileObject<T, D, V, S> where D : TileObjectData<T, D, V, S> where V : TileObjectVisual<T, D, V, S> where S : TileObjectSaveData<T, D, V, S>
     {
-        public TileObjectData Data
+        public D Data
         {
             get
             {
@@ -20,15 +21,15 @@ namespace HexTecGames.GridBaseSystem
                 data = value;
             }
         }
-        private TileObjectData data;
+        private D data;
 
-        public int Rotation
+        public override int Rotation
         {
             get
             {
                 return rotation;
             }
-            private set
+            protected set
             {
                 if (rotation == value)
                 {
@@ -40,7 +41,7 @@ namespace HexTecGames.GridBaseSystem
                     return;
                 }
                 rotation = value;
-                OnRotated?.Invoke(this, rotation);
+                OnRotated?.Invoke(this as T, rotation);
             }
         }
         private int rotation;
@@ -60,11 +61,13 @@ namespace HexTecGames.GridBaseSystem
 
         public List<Tile> occupyingTiles = new List<Tile>();
 
-        public event Action<TileObject, int> OnRotated;
+        public event Action<T, int> OnRotated;
 
+        public event Action<T> OnRemoved;
+        public event Action<T, Coord, Coord> OnMoved;
+        public event Action<T, Color> OnColorChanged;
 
-
-        public TileObject(BaseGrid grid, TileObjectData data, Coord center, int rotation = 0) : base(grid, data, center)
+        public TileObject(D data, BaseGrid grid, Coord center, int rotation = 0) : base(data, grid, center)
         {
             this.Data = data;
             //IsReplaceable = data.IsReplaceable;
@@ -93,7 +96,7 @@ namespace HexTecGames.GridBaseSystem
         {
             RemoveOccupyingTiles();
             Grid.RemoveTileObject(this);
-            base.Remove();
+            OnRemoved?.Invoke(this as T);
         }
         public Coord GetFacingCoord()
         {
@@ -116,10 +119,14 @@ namespace HexTecGames.GridBaseSystem
                 occupyingTiles.Add(tile);
             }
         }
-        public virtual void LoadSaveData(TileObjectSaveData saveData)
+        public override void Move(Coord target)
         {
+            Coord oldCenter = Center;
+            Center = target;
+            MoveGridPosition(oldCenter);
+            OnMoved?.Invoke(this as T, oldCenter, Center);
         }
-        protected override void MoveGridPosition(Coord oldCenter)
+        protected void MoveGridPosition(Coord oldCenter)
         {
             occupyingTiles[0].RemoveTileObject(this);
             Tile tile = Grid.GetTile(Center);
@@ -169,6 +176,13 @@ namespace HexTecGames.GridBaseSystem
             //    occupyingTiles.Add(tile);
             //}
             //Debug.Log(Name + " old: " + oldCenter + " new: " + occupyingTiles[0].Center);
+        }
+
+        protected abstract S GetTileObjectSaveData();
+
+        public sealed override TileObjectSaveDataBase GetSaveData()
+        {
+            return GetTileObjectSaveData();
         }
     }
 }

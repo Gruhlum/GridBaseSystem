@@ -18,7 +18,7 @@ namespace HexTecGames.GridBaseSystem
             SetColor(normalColor);
         }
 
-        protected override void Deactivate()
+        public override void Deactivate()
         {
             Tile.OnTileObjectAdded -= Tile_OnTileObjectAdded;
             Tile.OnTileObjectRemoved -= Tile_OnTileObjectRemoved;

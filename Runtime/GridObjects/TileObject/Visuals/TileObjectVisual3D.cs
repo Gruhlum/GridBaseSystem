@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class TileObjectVisual3D : TileObjectVisual
+    public abstract class TileObjectVisual3D<T, D, V, S> : TileObjectVisual<T, D, V, S>
+       where T : TileObject<T, D, V, S> where D : TileObjectData<T, D, V, S> where V : TileObjectVisual<T, D, V, S> where S : TileObjectSaveData<T, D, V, S>
     {
         public override void MoveToFront()
         {

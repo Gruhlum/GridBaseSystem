@@ -10,9 +10,7 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private BaseGrid grid = default;
         [SerializeField] private TileHighlightSpawner highlightSpawner = default;
         [SerializeField] private SpriteRenderer sr = default;
-        [SerializeField] private MultiSpawner visualSpawner = default;
 
-        private GridObjectVisual currentPrefab;
         private GridObjectVisual currentVisual;
 
         private PlacementData activeData;
@@ -39,17 +37,17 @@ namespace HexTecGames.GridBaseSystem
         public void Activate(PlacementData placementData, Coord center)
         {
             activeData = placementData;
-            GridObjectVisual prefab = placementData.Data.GetVisual();
-            if (currentPrefab != prefab)
+            if (currentVisual != null)
             {
-                if (currentVisual != null)
-                {
-                    currentVisual.gameObject.SetActive(false);
-                }
-                currentPrefab = prefab;
-                currentVisual = visualSpawner.Spawn(prefab);
-                currentVisual.MoveToFront();
+                currentVisual.Deactivate();
             }
+
+            currentVisual = placementData.Data.CreateVisual();
+            currentVisual.transform.SetParent(transform);
+            currentVisual.SetColor(placementData.GetColor());
+            currentVisual.transform.localPosition = Vector3.zero;
+            currentVisual.MoveToFront();
+
             rotation = 0;
             Activate(center);
         }
@@ -58,6 +56,7 @@ namespace HexTecGames.GridBaseSystem
             isActive = true;
             this.coord = coord;
             transform.position = grid.CoordToWorldPosition(coord);
+
             if (isHiding)
             {
                 return;

@@ -6,13 +6,10 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
-    public class GridObjectSaveData
+    public abstract class TileBase : GridObject
     {
-        public Coord position;
-
-        public GridObjectSaveData(GridObjectBase gridObj)
+        protected TileBase(BaseGrid grid, GridObjectData data, Coord center) : base(grid, data, center)
         {
-            position = gridObj.Center;
         }
     }
 }

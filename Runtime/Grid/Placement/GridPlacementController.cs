@@ -57,7 +57,7 @@ namespace HexTecGames.GridBaseSystem
         }
 
         public event Action<PlacementData> OnSelectedObjectChanged;
-        public event Action<GridObjectBase> OnObjectPlaced;
+        public event Action<GridObject> OnObjectPlaced;
         public event Action<PreBuildInfo> OnBeforeBuild;
 
         private int currentRotation;
@@ -74,7 +74,6 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         [SerializeField] private bool allowRemoval = default;
-
 
 
         protected virtual void Reset()
@@ -181,6 +180,7 @@ namespace HexTecGames.GridBaseSystem
         private void RemoveNext(Coord coord)
         {
             var placementDatas = grid.GetTileObject(coord);
+
             if (placementDatas == null || placementDatas.Count <= 0)
             {
                 if (grid.DoesTileExist(coord))
@@ -190,7 +190,7 @@ namespace HexTecGames.GridBaseSystem
             }
             else
             {
-                TileObject tileObj = placementDatas[0].tileObject;
+                TileObjectBase tileObj = placementDatas[0].tileObject;
                 tileObj.Remove();
             }
         }
@@ -240,7 +240,7 @@ namespace HexTecGames.GridBaseSystem
         private IEnumerator BuildDelayed(Coord coord)
         {
             yield return null;
-            GridObjectBase tileObject = GenerateObject(coord);
+            GridObject tileObject = GenerateObject(coord);
             //Debug.Log("Placing Object: " + tileObject.Name + " at: " + coord.ToString());
             OnObjectPlaced?.Invoke(tileObject);
             //ghost.UpdatePlacementArea();
@@ -273,11 +273,11 @@ namespace HexTecGames.GridBaseSystem
             ghost.Rotate(0);
         }
 
-        protected GridObjectBase GenerateObject(Coord coord)
+        protected GridObject GenerateObject(Coord coord)
         {
-            if (SelectedPlacementData.Data is TileObjectData tileObjData)
+            if (SelectedPlacementData.Data is TileObjectDataBase tileObjData)
             {
-                TileObject tileObj = tileObjData.CreateObject(grid, coord, currentRotation);
+                TileObjectBase tileObj = tileObjData.GenerateTileObject(grid, coord, currentRotation);
                 grid.AddTileObject(tileObj);
                 return tileObj;
             }

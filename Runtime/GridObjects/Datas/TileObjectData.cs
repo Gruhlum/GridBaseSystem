@@ -5,13 +5,15 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    [CreateAssetMenu(menuName = "HexTecGames/Grid/TileObjectData")]
-    public class TileObjectData : GridObjectData
+    public abstract class TileObjectData<T, D, V, S> : TileObjectDataBase
+        where T : TileObject<T, D, V, S> where D : TileObjectData<T, D, V, S> where V : TileObjectVisual<T, D, V, S> where S : TileObjectSaveData<T, D, V, S>
     {
+
+
         [SerializeField] public List<PlacementCoord> coords = new List<PlacementCoord>() { new PlacementCoord() };
         //[SerializeField] protected List<SpriteData> spriteDatas = new List<SpriteData>();
 
-        public TileObjectVisual VisualPrefab
+        public V VisualPrefab
         {
             get
             {
@@ -22,13 +24,15 @@ namespace HexTecGames.GridBaseSystem
                 visualPrefab = value;
             }
         }
-        [SerializeField] private TileObjectVisual visualPrefab;
+        [SerializeField] private V visualPrefab;
+
+        private SpawnableSpawner<V> spawner = new SpawnableSpawner<V>();
 
 
         public override List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord center, int rotation)
         {
             List<BoolCoord> boolCoords = new List<BoolCoord>();
-           
+
             foreach (var placementCoord in coords)
             {
                 Coord normalized = center;
@@ -37,27 +41,11 @@ namespace HexTecGames.GridBaseSystem
             }
             return boolCoords;
         }
+        public abstract T GenerateObject(BaseGrid grid, Coord coord, int rotation);
 
-        //public virtual SpriteData GetSpriteData(Coord center, BaseGrid grid, int rotation)
-        //{
-        //    if (spriteDatas.Count <= 0)
-        //    {
-        //        return null;
-        //    }
-        //    return spriteDatas[rotation % spriteDatas.Count];
-        //}
-        //public virtual Sprite GetSprite(Coord center, BaseGrid grid, int rotation)
-        //{
-        //    if (spriteDatas.Count <= 0)
-        //    {
-        //        return null;
-        //    }
-        //    return spriteDatas[rotation % spriteDatas.Count].sprite;
-        //}
-
-        public virtual TileObject CreateObject(BaseGrid grid, Coord center, int rotation)
+        public sealed override TileObjectBase GenerateTileObject(BaseGrid grid, Coord coord, int rotation)
         {
-            return new TileObject(grid, this, center, rotation);
+            return GenerateObject(grid, coord, rotation);
         }
 
         private bool IsTileValid(BaseGrid grid, Coord coord, CoordType coordType)
@@ -77,7 +65,6 @@ namespace HexTecGames.GridBaseSystem
             }
             return true;
         }
-
         public override bool IsValidCoord(BaseGrid grid, Coord center, int rotation = 0)
         {
             foreach (var placementCoord in coords)
@@ -93,10 +80,25 @@ namespace HexTecGames.GridBaseSystem
             return true;
         }
 
-        public override GridObjectVisual GetVisual()
+        public virtual TileObjectVisualBase CreateVisual(T t, BaseGrid grid)
         {
-            return VisualPrefab;
+            if (spawner.Prefab == null)
+            {
+                spawner.Prefab = VisualPrefab;
+            }
+            V visual = spawner.Spawn();
+            SetupVisual(visual, t, grid);
+            return visual;
         }
+        public sealed override GridObjectVisual CreateVisual(GridObject obj, BaseGrid grid)
+        {
+            return CreateVisual(obj as T, grid);
+        }
+        protected virtual void SetupVisual(V visual, T tileObj, BaseGrid grid)
+        {
+            visual.Setup(tileObj, grid);
+        }
+
         //public List<PlacementCoord> GetNormalizedCoords(BaseGrid grid, Coord center, int rotation = 0)
         //{
         //    return GetNormalizedCoords(grid, center, coords, rotation);

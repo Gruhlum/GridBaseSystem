@@ -21,8 +21,14 @@ namespace HexTecGames.GridBaseSystem
         {
             if (displays.Count > 0)
             {
-                displays[0].DisplayClicked();
+                StartCoroutine(SelectDelayed(displays[0]));
             }
+        }
+
+        private IEnumerator SelectDelayed(PlaceableDisplay display)
+        {
+            yield return null;
+            display.DisplayClicked();
         }
 
         protected override void SetupDisplay(PlaceableDisplay display, PlacementData item)

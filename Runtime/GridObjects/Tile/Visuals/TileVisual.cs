@@ -51,17 +51,15 @@ namespace HexTecGames.GridBaseSystem
             SetColor(color);
         }
 
-        public abstract void SetColor(Color color);
-
         private void Tile_OnRemoved(Tile gridObj)
         {
             Deactivate();
         }
 
-        protected virtual void Deactivate()
+        public override void Deactivate()
         {
             RemoveEvents(Tile);
-            gameObject.SetActive(false);
+            base.Deactivate();
         }
 
 

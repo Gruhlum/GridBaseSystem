@@ -10,16 +10,17 @@ namespace HexTecGames.GridBaseSystem
     public class SavedGrid
     {
         public List<TileSaveData> tileSaveDatas = new List<TileSaveData>();
-        public List<TileObjectSaveData> tileObjects = new List<TileObjectSaveData>();
-        public SavedGrid(List<Tile> tiles, List<TileObject> objects)
+        [SerializeReference, SubclassSelector] public List<TileObjectSaveDataBase> tileObjects = new List<TileObjectSaveDataBase>();
+
+        public SavedGrid(List<Tile> tiles, List<TileObjectBase> tileObjects)
         {
             foreach (var tile in tiles)
             {
                 tileSaveDatas.Add(new TileSaveData(tile));
             }
-            foreach (var obj in objects)
+            foreach (var tileObj in tileObjects)
             {
-                tileObjects.Add(new TileObjectSaveData(obj));
+                this.tileObjects.Add(tileObj.GetSaveData());
             }
         }
 

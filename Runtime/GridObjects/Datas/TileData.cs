@@ -41,9 +41,9 @@ namespace HexTecGames.GridBaseSystem
             else return new List<BoolCoord>() { new BoolCoord(center, false) };
         }
 
-        public override GridObjectVisual GetVisual()
+        public override GridObjectVisual CreateVisual(GridObject obj, BaseGrid grid)
         {
-            return VisualPrefab;
+            return Instantiate(VisualPrefab);
         }
     }
 }

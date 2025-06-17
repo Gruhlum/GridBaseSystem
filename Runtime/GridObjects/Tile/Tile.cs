@@ -7,7 +7,7 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
-    public class Tile : GridObject<Tile>
+    public class Tile : TileBase
     {
         public int X
         {
@@ -75,7 +75,9 @@ namespace HexTecGames.GridBaseSystem
 
         public event Action<Tile, TileObjectPlacement> OnTileObjectAdded;
         public event Action<Tile, TileObjectPlacement> OnTileObjectRemoved;
-
+        public event Action<Tile> OnRemoved;
+        public event Action<Tile, Coord, Coord> OnMoved;
+        public event Action<Tile, Color> OnColorChanged;
 
         //public Tile(int x, int y, BaseGrid grid) : base(new Coord(x, y), grid)
         //{
@@ -111,7 +113,7 @@ namespace HexTecGames.GridBaseSystem
             IsUnblocked = true;
         }
 
-        public void RemoveTileObject(TileObject tileObj)
+        public void RemoveTileObject(TileObjectBase tileObj)
         {
             TileObjectPlacement placementData = placementDatas.Find(x => x.tileObject == tileObj);
             if (placementData.tileObject == null || !placementDatas.Remove(placementData))
@@ -128,7 +130,7 @@ namespace HexTecGames.GridBaseSystem
             OnTileObjectRemoved?.Invoke(this, placementData);
         }
 
-        public void AddTileObject(TileObject tileObj, CoordType type)
+        public void AddTileObject(TileObjectBase tileObj, CoordType type)
         {
             var placementData = new TileObjectPlacement(tileObj, type);
             placementDatas.Add(placementData);
@@ -167,15 +169,11 @@ namespace HexTecGames.GridBaseSystem
             return new List<TileObjectPlacement>(placementDatas);
         }
 
-        protected override void MoveGridPosition(Coord oldCenter)
-        {
-            throw new NotImplementedException();
-        }
 
         public override void Remove()
         {
             RemoveAllTileObjects();
-            base.Remove();
+            OnRemoved?.Invoke(this);
         }
 
         public override string ToString()
@@ -183,9 +181,14 @@ namespace HexTecGames.GridBaseSystem
             return $"({X}, {Y}) {Data.name}";
         }
 
-        public virtual void LoadSaveData(TileSaveData saveData)
+        public TileSaveData GetSaveData()
         {
-            
+            throw new NotImplementedException();
+        }
+
+        public override void Move(Coord coord)
+        {
+            throw new NotImplementedException();
         }
     }
 }

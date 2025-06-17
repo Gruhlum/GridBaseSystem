@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
@@ -5,9 +6,10 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class TileObjectVisual : GridObjectVisual
+    public abstract class TileObjectVisual<T, D, V, S> : TileObjectVisualBase, ISpawnable<V>
+        where T : TileObject<T, D, V, S> where D : TileObjectData<T, D, V, S> where V : TileObjectVisual<T, D, V, S> where S : TileObjectSaveData<T, D, V, S>
     {
-        public TileObject TileObject
+        public T TileObject
         {
             get
             {
@@ -18,68 +20,72 @@ namespace HexTecGames.GridBaseSystem
                 tileObject = value;
             }
         }
-        private TileObject tileObject;
-        protected TileObjectVisualizer visualizer;
+        private T tileObject;
 
         protected BaseGrid grid;
 
+        public event Action<V> OnDeactivated;
 
-        public virtual void Setup(TileObject tileObject, TileObjectVisualizer visualizer, BaseGrid grid)
+        protected void OnDisable()
+        {
+            OnDeactivated?.Invoke(this as V);
+        }
+
+        public virtual void Setup(T tileObject, BaseGrid grid)
         {
             if (TileObject != null)
             {
-                RemoveEvents();
+                RemoveEvents(TileObject);
             }
             this.grid = grid;
-            this.visualizer = visualizer;
             this.tileObject = tileObject;
-            AddEvents();
 
-            SetPosition(tileObject);
+            if (tileObject != null)
+            {
+                AddEvents(tileObject);
+                SetPosition(tileObject);
+            }
         }
 
         protected abstract void Rotate(int rotation);
 
-        private void TileObject_OnRotated(TileObject obj, int rotation)
+        private void TileObject_OnRotated(T obj, int rotation)
         {
             Rotate(rotation);
         }
 
-        protected virtual void TileObject_OnRemoved(TileObject obj)
+        protected virtual void TileObject_OnRemoved(T obj)
         {
-            RemoveEvents();
+            if (TileObject != null)
+            {
+                RemoveEvents(TileObject);
+            }
             Deactivate();
         }
-        protected void Deactivate()
+        protected virtual void TileObject_OnMoved(T obj, Coord old, Coord current)
         {
-            visualizer.RemoveDisplay(this);
-            gameObject.SetActive(false);
+            SetPosition(obj);
         }
-        protected virtual void TileObject_OnMoved(TileObject obj, Coord old, Coord current)
-        {
-            SetPosition(obj as TileObject);
-        }
-        protected virtual void SetPosition(TileObject obj)
+        protected virtual void SetPosition(T obj)
         {
             transform.position = obj.GetWorldPosition();
         }
-        protected virtual void AddEvents()
+        protected virtual void AddEvents(T tileObject)
         {
-            if (tileObject != null)
-            {
-                tileObject.OnRemoved += TileObject_OnRemoved;
-                tileObject.OnMoved += TileObject_OnMoved;
-                tileObject.OnRotated += TileObject_OnRotated;
-            }          
+            tileObject.OnRemoved += TileObject_OnRemoved;
+            tileObject.OnMoved += TileObject_OnMoved;
+            tileObject.OnRotated += TileObject_OnRotated;
         }
-        protected virtual void RemoveEvents()
+        protected virtual void RemoveEvents(T tileObject)
         {
-            if (tileObject != null)
-            {
-                tileObject.OnRemoved -= TileObject_OnRemoved;
-                tileObject.OnMoved -= TileObject_OnMoved;
-                tileObject.OnRotated -= TileObject_OnRotated;
-            }
+            tileObject.OnRemoved -= TileObject_OnRemoved;
+            tileObject.OnMoved -= TileObject_OnMoved;
+            tileObject.OnRotated -= TileObject_OnRotated;
+        }
+
+        public override GridObject GetTileObject()
+        {
+            return TileObject;
         }
     }
 }

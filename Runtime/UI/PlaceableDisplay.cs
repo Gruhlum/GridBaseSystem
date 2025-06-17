@@ -27,7 +27,7 @@ namespace HexTecGames.GridBaseSystem
         {
             nameGUI.text = item.DisplayName;
             img.sprite = item.Icon;
-            img.color = item.IconColor;
+            img.color = item.GetColor();
         }
         public override void SetHighlight(bool active)
         {

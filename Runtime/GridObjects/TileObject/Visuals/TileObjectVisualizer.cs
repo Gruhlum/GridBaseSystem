@@ -9,23 +9,10 @@ namespace HexTecGames.GridBaseSystem
     public class TileObjectVisualizer : MonoBehaviour
     {
         [SerializeField] private BaseGrid grid = default;
-        [SerializeField] private TileObjectVisual defaultVisual = default;
-        [SerializeField] private MultiSpawner spawner = default;
+        [SerializeField] private TileObjectVisualBase defaultVisual = default;
+        [SerializeField] private Transform visualParent = default;
 
-        private HashSet<TileObjectVisual> activeDisplays = new HashSet<TileObjectVisual>();
-
-        public int SpawnIndex
-        {
-            get
-            {
-                return spawnIndex;
-            }
-            private set
-            {
-                spawnIndex = value;
-            }
-        }
-        private int spawnIndex;
+        private HashSet<GridObjectVisual> activeDisplays = new HashSet<GridObjectVisual>();
 
 
         //public event Action<TileObjectVisual> OnVisualSpawned;
@@ -34,11 +21,6 @@ namespace HexTecGames.GridBaseSystem
         protected void Reset()
         {
             grid = GetComponentInParent<BaseGrid>();
-            if (spawner == null)
-            {
-                spawner = new MultiSpawner();
-            }
-            spawner.Parent = transform;
         }
         protected void OnEnable()
         {
@@ -50,34 +32,28 @@ namespace HexTecGames.GridBaseSystem
         }
 
 
-        public TileObjectVisual FindVisual(TileObject tileObject)
+        //public T FindVisual<T>(T tileObject) where T : TileObjectVisualBase
+        //{
+        //    foreach (var display in activeDisplays)
+        //    {
+        //        if (display is T && display.GetTileObject() == tileObject)
+        //        {
+        //            return (T)display;
+        //        }
+        //    }
+        //    return default;
+        //}
+
+        public void RemoveDisplay(TileObjectVisualBase visual)
         {
-            foreach (var display in activeDisplays)
-            {
-                if (display.TileObject == tileObject)
-                {
-                    return display;
-                }
-            }
-            return null;
+            activeDisplays.Remove(visual);
         }
 
-        public void RemoveDisplay(TileObjectVisual display)
+        private void Grid_OnTileObjectAdded(TileObjectBase tileObject)
         {
-            activeDisplays.Remove(display);
-        }
-
-        private void Grid_OnTileObjectAdded(TileObject obj)
-        {
-            TileObjectVisual visual;
-            if (obj.Data.VisualPrefab == null)
-            {
-                visual = spawner.Spawn(defaultVisual);
-            }
-            else visual = spawner.Spawn(obj.Data.VisualPrefab);
+            GridObjectVisual visual = tileObject.CreateVisual(grid);
+            visual.transform.SetParent(visualParent);
             activeDisplays.Add(visual);
-            visual.Setup(obj, this, grid);
-            SpawnIndex++;
         }
     }
 }
