@@ -5,7 +5,7 @@ using UnityEditor;
 
 namespace HexTecGames.GridBaseSystem
 {
-    [CustomEditor(typeof(GridObjectData), isFallback = true), CanEditMultipleObjects]
+    [CustomEditor(typeof(GridObjectDataBase), isFallback = true), CanEditMultipleObjects]
     public class GridObjectDataEditor : Editor
     {
     	public override void OnInspectorGUI()

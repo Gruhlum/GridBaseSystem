@@ -13,7 +13,7 @@ namespace HexTecGames.GridBaseSystem
         public bool createOnStart = true;
         [Space]
         public Coord center;
-        [SerializeField] protected TileData defaultTileData = default;
+        [SerializeField] protected GridObjectDataBase defaultTileData = default;
         [SerializeReference, SubclassSelector] Shape shape;
 
 
@@ -33,18 +33,15 @@ namespace HexTecGames.GridBaseSystem
                 return;
             }
             List<Coord> coords = shape.GetCoords(center);
-            List<Tile> tiles = GenerateTiles(coords);
-            grid.SetTiles(tiles);
+            GenerateTileObjects(coords);
         }
 
-        protected List<Tile> GenerateTiles(List<Coord> coords)
+        protected void GenerateTileObjects(List<Coord> coords)
         {
-            List<Tile> tiles = new List<Tile>();
             foreach (var coord in coords)
             {
-                tiles.Add(defaultTileData.CreateObject(grid, coord));
+                defaultTileData.CreateGridObject(grid, coord, 0);
             }
-            return tiles;
         }
     }
 }

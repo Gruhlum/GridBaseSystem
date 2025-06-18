@@ -15,27 +15,15 @@ namespace HexTecGames.GridBaseSystem
         {
             if (gridToLoad != null && loadOnStart)
             {
-                grid.SetTiles(GenerateTiles(gridToLoad.SavedGrid));
-                LoadTileObjects(gridToLoad.SavedGrid.tileObjects);
+                GenerateTiles(gridToLoad.SavedGrid);
             }
         }
 
-        private List<Tile> GenerateTiles(SavedGrid savedGrid)
+        private void GenerateTiles(SavedGrid savedGrid)
         {
-            List<Tile> results = new List<Tile>();
-            foreach (var saveData in savedGrid.tileSaveDatas)
+            foreach (var saveData in savedGrid.tileObjects)
             {
-                Tile result = saveData.tileData.CreateObject(grid, saveData.position);
-                results.Add(result);
-            }
-            return results;
-        }
-        private void LoadTileObjects(List<TileObjectSaveDataBase> saveDatas)
-        {
-            foreach (var saveData in saveDatas)
-            {
-                TileObjectBase result = saveData.data.GenerateTileObject(grid, saveData.position, saveData.rotation);
-                grid.AddTileObject(result);
+                GridObjectBase result = saveData.data.CreateGridObject(grid, saveData.position, saveData.rotation);
             }
         }
     }

@@ -6,13 +6,13 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
-    public class SimpleObject : TileObject<SimpleObject, SimpleObjectData, SimpleObjectVisual, SimpleObjectSaveData>
+    public class SimpleObject : GridObject<SimpleObject, SimpleObjectData, SimpleObjectVisual, SimpleObjectSaveData>
     {
         public SimpleObject(SimpleObjectData data, BaseGrid grid, Coord center, int rotation = 0) : base(data, grid, center, rotation)
         {
         }
 
-        protected override SimpleObjectSaveData GetTileObjectSaveData()
+        public override GridObjectSaveDataBase GetSaveData()
         {
             return new SimpleObjectSaveData(this);
         }

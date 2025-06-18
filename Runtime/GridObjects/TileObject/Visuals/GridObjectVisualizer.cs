@@ -6,13 +6,13 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class TileObjectVisualizer : MonoBehaviour
+    public class GridObjectVisualizer : MonoBehaviour
     {
         [SerializeField] private BaseGrid grid = default;
-        [SerializeField] private TileObjectVisualBase defaultVisual = default;
+        [SerializeField] private GridObjectVisualBase defaultVisual = default;
         [SerializeField] private Transform visualParent = default;
 
-        private HashSet<GridObjectVisual> activeDisplays = new HashSet<GridObjectVisual>();
+        private HashSet<GridObjectVisualBase> activeDisplays = new HashSet<GridObjectVisualBase>();
 
 
         //public event Action<TileObjectVisual> OnVisualSpawned;
@@ -24,11 +24,11 @@ namespace HexTecGames.GridBaseSystem
         }
         protected void OnEnable()
         {
-            grid.OnTileObjectAdded += Grid_OnTileObjectAdded;
+            grid.OnGridObjectAdded += Grid_OnTileObjectAdded;
         }
         protected void OnDisable()
         {
-            grid.OnTileObjectAdded -= Grid_OnTileObjectAdded;
+            grid.OnGridObjectAdded -= Grid_OnTileObjectAdded;
         }
 
 
@@ -44,14 +44,14 @@ namespace HexTecGames.GridBaseSystem
         //    return default;
         //}
 
-        public void RemoveDisplay(TileObjectVisualBase visual)
+        public void RemoveDisplay(GridObjectVisualBase visual)
         {
             activeDisplays.Remove(visual);
         }
 
-        private void Grid_OnTileObjectAdded(TileObjectBase tileObject)
+        private void Grid_OnTileObjectAdded(GridObjectBase tileObject)
         {
-            GridObjectVisual visual = tileObject.CreateVisual(grid);
+            GridObjectVisualBase visual = tileObject.CreateVisual(grid);
             visual.transform.SetParent(visualParent);
             activeDisplays.Add(visual);
         }

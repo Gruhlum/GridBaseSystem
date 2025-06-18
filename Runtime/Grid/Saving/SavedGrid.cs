@@ -9,42 +9,37 @@ namespace HexTecGames.GridBaseSystem
     [System.Serializable]
     public class SavedGrid
     {
-        public List<TileSaveData> tileSaveDatas = new List<TileSaveData>();
-        [SerializeReference, SubclassSelector] public List<TileObjectSaveDataBase> tileObjects = new List<TileObjectSaveDataBase>();
+        [SerializeReference, SubclassSelector] public List<GridObjectSaveDataBase> tileObjects = new List<GridObjectSaveDataBase>();
 
-        public SavedGrid(List<Tile> tiles, List<TileObjectBase> tileObjects)
+        public SavedGrid(IEnumerable<GridObjectBase> tiles)
         {
             foreach (var tile in tiles)
             {
-                tileSaveDatas.Add(new TileSaveData(tile));
-            }
-            foreach (var tileObj in tileObjects)
-            {
-                this.tileObjects.Add(tileObj.GetSaveData());
+                tileObjects.Add(tile.GetSaveData());
             }
         }
 
 
-        public void SortObjectsByPosition()
-        {
-            tileSaveDatas = tileSaveDatas.OrderBy(x => x.position).ToList();
-            tileObjects = tileObjects.OrderBy(x => x.position).ToList();
-        }
-        public void CenterTiles()
-        {
-            int offsetX = (tileSaveDatas.Max(coord => coord.position.x) + tileSaveDatas.Min(coord => coord.position.x)) / 2;
-            int offsetY = (tileSaveDatas.Max(coord => coord.position.y) + tileSaveDatas.Min(coord => coord.position.y)) / 2;
+        //public void SortObjectsByPosition()
+        //{
+        //    tileSaveDatas = tileSaveDatas.OrderBy(x => x.position).ToList();
+        //    tileObjects = tileObjects.OrderBy(x => x.position).ToList();
+        //}
+        //public void CenterTiles()
+        //{
+        //    int offsetX = (tileSaveDatas.Max(coord => coord.position.x) + tileSaveDatas.Min(coord => coord.position.x)) / 2;
+        //    int offsetY = (tileSaveDatas.Max(coord => coord.position.y) + tileSaveDatas.Min(coord => coord.position.y)) / 2;
 
-            if (offsetX == 0 && offsetY == 0)
-            {
-                Debug.Log("Already centered");
-                return;
-            }
+        //    if (offsetX == 0 && offsetY == 0)
+        //    {
+        //        Debug.Log("Already centered");
+        //        return;
+        //    }
 
-            foreach (var saveData in tileSaveDatas)
-            {
-                saveData.position -= new Coord(offsetX, offsetY);
-            }
-        }
+        //    foreach (var saveData in tileSaveDatas)
+        //    {
+        //        saveData.position -= new Coord(offsetX, offsetY);
+        //    }
+        //}
     }
 }

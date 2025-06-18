@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class TileObjectVisual<T, D, V, S> : TileObjectVisualBase, ISpawnable<V>
-        where T : TileObject<T, D, V, S> where D : TileObjectData<T, D, V, S> where V : TileObjectVisual<T, D, V, S> where S : TileObjectSaveData<T, D, V, S>
+    public abstract class GridObjectVisual<T, D, V, S> : GridObjectVisualBase, ISpawnable<V>
+        where T : GridObject<T, D, V, S> where D : GridObjectData<T, D, V, S> where V : GridObjectVisual<T, D, V, S> where S : GridObjectSaveData<T, D, V, S>
     {
         public T TileObject
         {
@@ -83,7 +83,7 @@ namespace HexTecGames.GridBaseSystem
             tileObject.OnRotated -= TileObject_OnRotated;
         }
 
-        public override GridObject GetTileObject()
+        public override GridObjectBase GetTileObject()
         {
             return TileObject;
         }

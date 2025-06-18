@@ -1,19 +1,19 @@
+using HexTecGames.GridBaseSystem;
 using System.Collections;
 using System.Collections.Generic;
-using HexTecGames.Basics;
 using UnityEngine;
 
-namespace HexTecGames.GridBaseSystem
+namespace HexTecGames
 {
     [System.Serializable]
-    public class GridObjectSaveData
+    public class GridObjectSaveData<T, D, V, S> : GridObjectSaveDataBase
+       where T : GridObject<T, D, V, S> where D : GridObjectData<T, D, V, S> where V : GridObjectVisual<T, D, V, S> where S : GridObjectSaveData<T, D, V, S>
     {
-        public Coord position;
-        public GridObjectData gridObjectData;
+        public D tileObjectData;
 
-        public GridObjectSaveData(GridObject gridObj)
+        public GridObjectSaveData(T tileObject) : base(tileObject)
         {
-            position = gridObj.Center;
+            this.tileObjectData = tileObject.Data;
         }
     }
 }

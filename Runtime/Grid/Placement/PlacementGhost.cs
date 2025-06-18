@@ -11,7 +11,7 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private TileHighlightSpawner highlightSpawner = default;
         [SerializeField] private SpriteRenderer sr = default;
 
-        private GridObjectVisual currentVisual;
+        private GridObjectVisualBase currentVisual;
 
         private PlacementData activeData;
         private Coord coord;
@@ -82,18 +82,12 @@ namespace HexTecGames.GridBaseSystem
             isHiding = !show;
         }
 
-        public void Rotate(int index)
+        public void UpdatePlacementArea(Coord coord, int rotation)
         {
-            rotation = index;
-
-            if (activeData != null)
-            {
-                //sr.sprite = activeData.GetSprite(coord, grid, rotation);
-                //SpriteData spriteData = activeData.GetSpriteData(rotation);
-                //spriteOffset = spriteData.offset;
-                //transform.eulerAngles = spriteData.rotation;
-                //UpdatePosition();
-            }
+            this.coord = coord;
+            this.rotation = rotation;
+            transform.position = grid.CoordToWorldPosition(coord);
+            UpdatePlacementArea();
         }
         public void UpdatePlacementArea()
         {

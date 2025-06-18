@@ -1,33 +1,63 @@
-using HexTecGames.Basics;
-using HexTecGames.Basics.UI;
-using HexTecGames.SoundSystem;
 using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class GridObjectData : ScriptableObject
+    public abstract class GridObjectData<T, D, V, S> : GridObjectDataBase
+        where T : GridObject<T, D, V, S> where D : GridObjectData<T, D, V, S> where V : GridObjectVisual<T, D, V, S> where S : GridObjectSaveData<T, D, V, S>
     {
-        public Color Color
+        public V VisualPrefab
         {
             get
             {
-                return color;
+                return visualPrefab;
             }
             private set
             {
-                color = value;
+                visualPrefab = value;
             }
         }
-        [SerializeField] private Color color = Color.white;
+        [SerializeField] private V visualPrefab;
 
-        public abstract bool IsValidCoord(BaseGrid grid, Coord coord, int rotation = 0);
-        public abstract List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord center, int rotation);
-        public  GridObjectVisual CreateVisual()
+        private SpawnableSpawner<V> spawner = new SpawnableSpawner<V>();
+
+        public virtual GridObjectVisualBase CreateVisual(T t, BaseGrid grid)
         {
-            return CreateVisual(null, null);
+            if (spawner.Prefab == null)
+            {
+                spawner.Prefab = VisualPrefab;
+            }
+            V visual = spawner.Spawn();
+            SetupVisual(visual, t, grid);
+            return visual;
         }
-        public abstract GridObjectVisual CreateVisual(GridObject obj, BaseGrid grid);
+        public sealed override GridObjectVisualBase CreateVisual(GridObjectBase obj, BaseGrid grid)
+        {
+            return CreateVisual(obj as T, grid);
+        }
+        protected virtual void SetupVisual(V visual, T tileObj, BaseGrid grid)
+        {
+            visual.Setup(tileObj, grid);
+        }
+
+        //public List<PlacementCoord> GetNormalizedCoords(BaseGrid grid, Coord center, int rotation = 0)
+        //{
+        //    return GetNormalizedCoords(grid, center, coords, rotation);
+        //}
+        //public List<PlacementCoord> GetCoords()
+        //{
+        //    return new List<PlacementCoord>(coords);
+        //}
+        //private List<PlacementCoord> GetNormalizedCoords(BaseGrid grid, Coord center, List<PlacementCoord> coords, int rotation)
+        //{
+        //    var results = center.GetNormalizedCoords(coords);
+        //    if (rotation != 0)
+        //    {
+        //        results = grid.GetRotatedCoords(center, results, rotation);
+        //    }
+        //    return results;
+        //}
     }
 }

@@ -57,7 +57,7 @@ namespace HexTecGames.GridBaseSystem
         }
 
         public event Action<PlacementData> OnSelectedObjectChanged;
-        public event Action<GridObject> OnObjectPlaced;
+        public event Action<GridObjectBase> OnObjectPlaced;
         public event Action<PreBuildInfo> OnBeforeBuild;
 
         private int currentRotation;
@@ -123,9 +123,7 @@ namespace HexTecGames.GridBaseSystem
                 }
                 else currentRotation++;
 
-                ghost.Rotate(currentRotation);
-
-                CheckForValidTile(gridEventSystem.MouseCoord);
+                ghost.UpdatePlacementArea(gridEventSystem.MouseCoord, currentRotation);
             }
         }
         private void GridEventSystem_OnMouseClicked(Coord coord, int btn)
@@ -142,7 +140,7 @@ namespace HexTecGames.GridBaseSystem
                 }
                 else if (AllowRemoval)
                 {
-                    RemoveNext(HoverCoord);
+                    //RemoveNext(HoverCoord);
                 }
 
             }
@@ -151,7 +149,7 @@ namespace HexTecGames.GridBaseSystem
         {
             if (SelectedPlacementData != null)
             {
-                CheckForValidTile(coord);
+                ghost.UpdatePlacementArea(coord, currentRotation);
             }
             if (gridEventSystem.IsDragging)
             {
@@ -162,50 +160,12 @@ namespace HexTecGames.GridBaseSystem
 
                 else if (AllowRemoval && gridEventSystem.LastMouseButton == 1)
                 {
-                    RemoveNext(coord);
+                    //RemoveNext(coord);
                 }
             }
         }
 
-        //private void HandleMouseInput(int btn, ButtonType btnType)
-        //{
-        //    //Left Down -> Try Build
-        //    //Right Down -> Try clear selected -> Try Remove
-        //    //Any Down -> Try Dragging
-        //    //Any Up -> Stop Dragging
 
-        //    
-        //}
-
-        private void RemoveNext(Coord coord)
-        {
-            var placementDatas = grid.GetTileObject(coord);
-
-            if (placementDatas == null || placementDatas.Count <= 0)
-            {
-                if (grid.DoesTileExist(coord))
-                {
-                    grid.RemoveTile(coord);
-                }
-            }
-            else
-            {
-                TileObjectBase tileObj = placementDatas[0].tileObject;
-                tileObj.Remove();
-            }
-        }
-        protected void CheckForValidTile(Coord coord)
-        {
-            if (SelectedPlacementData != null)
-            {
-                ghost.Activate(coord);
-            }
-        }
-
-        protected bool IsValidCoord(Coord coord)
-        {
-            return SelectedPlacementData.Data.IsValidCoord(grid, coord, currentRotation);
-        }
         public virtual void Build(Coord coord)
         {
             if (SelectedPlacementData == null)
@@ -213,7 +173,7 @@ namespace HexTecGames.GridBaseSystem
                 return;
             }
 
-            if (!IsValidCoord(coord))
+            if (!SelectedPlacementData.Data.IsValidPlacement(grid, coord, currentRotation))
             {
                 errorSound?.Play();
                 return;
@@ -240,7 +200,7 @@ namespace HexTecGames.GridBaseSystem
         private IEnumerator BuildDelayed(Coord coord)
         {
             yield return null;
-            GridObject tileObject = GenerateObject(coord);
+            GridObjectBase tileObject = CreateGridObject(coord);
             //Debug.Log("Placing Object: " + tileObject.Name + " at: " + coord.ToString());
             OnObjectPlaced?.Invoke(tileObject);
             //ghost.UpdatePlacementArea();
@@ -270,22 +230,15 @@ namespace HexTecGames.GridBaseSystem
         private void ResetRotation()
         {
             currentRotation = 0;
-            ghost.Rotate(0);
+            ghost.UpdatePlacementArea(gridEventSystem.MouseCoord, currentRotation);
         }
 
-        protected GridObject GenerateObject(Coord coord)
+        protected GridObjectBase CreateGridObject(Coord coord)
         {
-            if (SelectedPlacementData.Data is TileObjectDataBase tileObjData)
+            if (SelectedPlacementData.Data is GridObjectDataBase tileObjData)
             {
-                TileObjectBase tileObj = tileObjData.GenerateTileObject(grid, coord, currentRotation);
-                grid.AddTileObject(tileObj);
+                GridObjectBase tileObj = SelectedPlacementData.Data.CreateGridObject(grid, coord, currentRotation);
                 return tileObj;
-            }
-            else if (SelectedPlacementData.Data is TileData tileData)
-            {
-                Tile tile = tileData.CreateObject(grid, coord);
-                grid.AddTile(tile);
-                return tile;
             }
             return null;
         }

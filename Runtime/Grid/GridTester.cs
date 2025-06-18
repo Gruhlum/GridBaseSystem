@@ -16,53 +16,53 @@ namespace HexTecGames.GridBaseSystem
 
         [SerializeField] private float range = 10;
 
-        private void Start()
-        {
-            StartTest();
-        }
+        //private void Start()
+        //{
+        //    StartTest();
+        //}
 
-        [ContextMenu("Start Test")]
-        public void StartTest()
-        {
-            StartCoroutine(AnimateTest());
-        }
-        private IEnumerator AnimateTest()
-        {
-            yield return GetCoordByDistance();
-            yield return new WaitForSeconds(1f / speed);
-            yield return GetArea();
-        }
-        private IEnumerator GetCoordByDistance()
-        {
-            for (int i = 0; i < range; i++)
-            {
-                var results = grid.GetRing(grid.Center, i);
-                grid.GetValidTiles(results);
-                yield return DisplayResults(results);
-            }
-        }
-        private IEnumerator GetArea()
-        {
-            for (int i = 0; i < range; i++)
-            {
-                var results = grid.GetArea(grid.Center, i);
-                grid.GetValidTiles(results);
-                yield return new WaitForSeconds(1f / speed);
-                yield return DisplayResults(results);
-            }
-        }
-        private IEnumerator DisplayResults(List<Coord> results)
-        {
-            foreach (var result in results)
-            {
-                var highlight = highlightSpawner.Spawn();
-                StartCoroutine(highlight.ShowHighlight(grid.CoordToWorldPosition(result), 0, 0.8f / speed, 0.3f / speed, 0.3f / speed));
-                if (oneByOne)
-                {
-                    yield return new WaitForSeconds(0.1f / speed);
-                }
-            }
-            yield return new WaitForSeconds(0.4f / speed);
-        }
+        //[ContextMenu("Start Test")]
+        //public void StartTest()
+        //{
+        //    StartCoroutine(AnimateTest());
+        //}
+        //private IEnumerator AnimateTest()
+        //{
+        //    yield return GetCoordByDistance();
+        //    yield return new WaitForSeconds(1f / speed);
+        //    yield return GetArea();
+        //}
+        //private IEnumerator GetCoordByDistance()
+        //{
+        //    for (int i = 0; i < range; i++)
+        //    {
+        //        var results = grid.GetRing(grid.Center, i);
+        //        grid.GetValidTiles(results);
+        //        yield return DisplayResults(results);
+        //    }
+        //}
+        //private IEnumerator GetArea()
+        //{
+        //    for (int i = 0; i < range; i++)
+        //    {
+        //        var results = grid.GetArea(grid.Center, i);
+        //        grid.GetValidTiles(results);
+        //        yield return new WaitForSeconds(1f / speed);
+        //        yield return DisplayResults(results);
+        //    }
+        //}
+        //private IEnumerator DisplayResults(List<Coord> results)
+        //{
+        //    foreach (var result in results)
+        //    {
+        //        var highlight = highlightSpawner.Spawn();
+        //        StartCoroutine(highlight.ShowHighlight(grid.CoordToWorldPosition(result), 0, 0.8f / speed, 0.3f / speed, 0.3f / speed));
+        //        if (oneByOne)
+        //        {
+        //            yield return new WaitForSeconds(0.1f / speed);
+        //        }
+        //    }
+        //    yield return new WaitForSeconds(0.4f / speed);
+        //}
     }
 }

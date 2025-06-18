@@ -70,15 +70,7 @@ namespace HexTecGames.GridBaseSystem
         {
             SpawnHighlights(grid.CoordsToWorldPositions(coords), StartColor, clear);
         }
-        public void SpawnHighlights(List<Tile> tiles, Color color, bool clear = true)
-        {
-            var results = new List<Vector3>();
-            foreach (var tile in tiles)
-            {
-                results.Add(tile.GetWorldPosition());
-            }
-            SpawnHighlights(results, color, clear);
-        }
+
         public void SpawnHighlights(List<Vector3> positions, Color color, bool clear = true)
         {
             if (clear)

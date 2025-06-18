@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class TileObjectVisual2D<T, D, V, S> : TileObjectVisual<T, D, V, S>
-       where T : TileObject<T, D, V, S> where D : TileObjectData<T, D, V, S> where V : TileObjectVisual<T, D, V, S> where S : TileObjectSaveData<T, D, V, S>
+    public abstract class GridObjectVisual2D<T, D, V, S> : GridObjectVisual<T, D, V, S>
+       where T : GridObject<T, D, V, S> where D : GridObjectData<T, D, V, S> where V : GridObjectVisual2D<T, D, V, S> where S : GridObjectSaveData<T, D, V, S>
     {
         [SerializeField] protected SpriteRenderer sr = default;
 

@@ -8,7 +8,7 @@ namespace HexTecGames.UI
 {
     public class GridCoordinatesController : MonoBehaviour
     {
-        [SerializeField] private Spawner<GridCoordDisplay> coordSpawner = default;
+        [SerializeField] private Spawner<CoordDisplay> coordSpawner = default;
 
         public BaseGrid Grid
         {
@@ -33,8 +33,6 @@ namespace HexTecGames.UI
                 isActive = value;
             }
         }
-
-
 
         [SerializeField] private bool isActive;
 
@@ -75,25 +73,25 @@ namespace HexTecGames.UI
         {
             if (grid != null)
             {
-                grid.OnTileAdded += Grid_OnTileAdded;
+                grid.OnGridObjectAdded += Grid_OnTileAdded;
             }
         }
         private void RemoveEvents(BaseGrid grid)
         {
             if (grid != null)
             {
-                grid.OnTileAdded -= Grid_OnTileAdded;
+                grid.OnGridObjectAdded -= Grid_OnTileAdded;
             }
         }    
 
-        private void Grid_OnTileAdded(Tile tile)
+        private void Grid_OnTileAdded(GridObjectBase tile)
         {
             if (!IsActive)
             {
                 return;
             }
 
-            coordSpawner.Spawn().SetItem(tile);
+            coordSpawner.Spawn().Setup(tile.Center, tile.GetWorldPosition());
         }
 
         public void ToggleCoordinates()
@@ -106,13 +104,13 @@ namespace HexTecGames.UI
             coordSpawner.DeactivateAll();
             if (IsActive)
             {
-                var results = Grid.GetAllTiles();
-                List<GridCoordDisplay> displays = new List<GridCoordDisplay>();
+                IEnumerable<GridObjectBase> results = Grid.GetAllGridObjects();
+                List<CoordDisplay> displays = new List<CoordDisplay>();
                 foreach (var result in results)
                 {
-                    GridCoordDisplay display = coordSpawner.Spawn();
+                    CoordDisplay display = coordSpawner.Spawn();
                     displays.Add(display);
-                    display.SetItem(result, false);
+                    display.Setup(result.Center, grid.CoordToWorldPosition(result.Center));
                 }
                 foreach (var display in displays)
                 {

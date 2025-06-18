@@ -6,10 +6,16 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
-    public abstract class TileBase : GridObject
+    public struct CoordData
     {
-        protected TileBase(BaseGrid grid, GridObjectData data, Coord center) : base(grid, data, center)
+        public int layer;
+        public Coord coord;
+
+
+        public CoordData(int layer, Coord coord)
         {
+            this.layer = layer;
+            this.coord = coord;
         }
     }
 }

@@ -174,7 +174,7 @@ namespace HexTecGames.GridBaseSystem
                 Debug.Log("Current Position: " + coord.ToString());
             }
 
-            mouseCoord.isValid = grid.DoesTileExist(coord);
+            mouseCoord.isValid = !grid.IsEmpty(0, coord);
             SetCurrentMouseCoord(coord);
         }
 
