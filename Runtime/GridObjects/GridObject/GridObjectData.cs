@@ -29,6 +29,10 @@ namespace HexTecGames.GridBaseSystem
             {
                 spawner.Prefab = VisualPrefab;
             }
+            if (spawner.Prefab != VisualPrefab)
+            {
+                Debug.Log("Shouldn't happen! Two different classes try to use this spawner");
+            }
             V visual = spawner.Spawn();
             SetupVisual(visual, t, grid);
             return visual;

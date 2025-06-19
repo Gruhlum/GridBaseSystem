@@ -28,6 +28,7 @@ namespace HexTecGames.GridBaseSystem
 
         protected void OnDisable()
         {
+            //Debug.Log("Deactivated");
             OnDeactivated?.Invoke(this as V);
         }
 
@@ -37,6 +38,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 RemoveEvents(TileObject);
             }
+            this.name = $"{tileObject.Name}Visual {tileObject.Center}";
             this.grid = grid;
             this.tileObject = tileObject;
 

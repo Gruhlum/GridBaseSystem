@@ -22,6 +22,9 @@ namespace HexTecGames.GridBaseSystem
         public override void Setup(T tileObject, BaseGrid grid)
         {
             base.Setup(tileObject, grid);
+
+            sr.sortingOrder = tileObject.BaseData.Layer;
+
             if (tileObject != null)
             {
                 sr.color = tileObject.Color;

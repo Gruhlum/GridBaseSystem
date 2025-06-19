@@ -46,6 +46,20 @@ namespace HexTecGames.GridBaseSystem
         }
         private int rotation;
 
+        public int Layer
+        {
+            get
+            {
+                return layer;
+            }
+            private set
+            {
+                layer = value;
+            }
+        }
+        private int layer;
+
+
         public virtual bool IsReplaceable
         {
             get
@@ -67,19 +81,11 @@ namespace HexTecGames.GridBaseSystem
         public GridObject(D data, BaseGrid grid, Coord center, int rotation = 0) : base(grid, data, center)
         {
             this.Data = data;
-            //IsReplaceable = data.IsReplaceable;
+            this.Layer = data.Layer;
             this.Rotation = rotation;
-            //Sprite = data.GetSprite(center, grid, rotation);
         }
 
-        public void SetRotation(int rotation)
-        {
-            Rotation = rotation;
-        }
-        public void Rotate(int turns)
-        {
-            Rotation += turns;
-        }
+        
         public float DirectionToDegrees()
         {
             return DirectionToDegrees(Rotation);
@@ -88,20 +94,19 @@ namespace HexTecGames.GridBaseSystem
         {
             return Grid.DirectionToDegrees(rotation);
         }
-        public override void Remove()
+        public sealed override void Remove()
         {
-            base.Remove();
             OnRemoved?.Invoke(this as T);
         }
-        public Coord GetFacingCoord()
+        protected abstract void RemoveFromGrid();
+
+
+        public sealed override void Move(Coord targetCoord)
         {
-            return Grid.GetDirectionCoord(Rotation) + Center;
+            Coord lastCoord = Center;
+            Move(lastCoord, targetCoord);
+            OnMoved?.Invoke(this as T, lastCoord, targetCoord);
         }
-        
-        public override void Move(Coord oldCoord, Coord targetCoord)
-        {
-            base.Move(oldCoord, targetCoord);
-            OnMoved?.Invoke(this as T, oldCoord, targetCoord);
-        }
+        protected abstract void Move(Coord currentCoord, Coord targetCoord);
     }
 }

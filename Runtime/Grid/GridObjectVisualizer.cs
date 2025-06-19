@@ -9,8 +9,9 @@ namespace HexTecGames.GridBaseSystem
     public class GridObjectVisualizer : MonoBehaviour
     {
         [SerializeField] private BaseGrid grid = default;
-        [SerializeField] private GridObjectVisualBase defaultVisual = default;
         [SerializeField] private Transform visualParent = default;
+
+        private Dictionary<int, Transform> layerParents = new Dictionary<int, Transform>();
 
         private HashSet<GridObjectVisualBase> activeDisplays = new HashSet<GridObjectVisualBase>();
 
@@ -51,8 +52,23 @@ namespace HexTecGames.GridBaseSystem
 
         private void Grid_OnTileObjectAdded(GridObjectBase tileObject)
         {
+            //Debug.Log($"{nameof(tileObject.Name)} {tileObject.Name}");
             GridObjectVisualBase visual = tileObject.CreateVisual(grid);
-            visual.transform.SetParent(visualParent);
+
+            int layer = tileObject.BaseData.Layer;
+
+            if (layerParents.TryGetValue(layer, out Transform parent))
+            {
+                visual.transform.SetParent(parent);
+            }
+            else
+            {
+                GameObject go = new GameObject($"Layer {layer}");
+                go.transform.SetParent(visualParent);
+                visual.transform.SetParent(go.transform);
+                layerParents.Add(layer, go.transform);
+            }
+
             activeDisplays.Add(visual);
         }
     }

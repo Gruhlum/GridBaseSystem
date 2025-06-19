@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using HexTecGames.Basics;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ namespace HexTecGames.GridBaseSystem
         {
             if (!gridObjects.TryAdd(coord, gridObj))
             {
-                Debug.Log("Coord already occupied: " + coord.ToString());
+                Debug.LogError($"Coord already occupied: {coord} ({gridObjects[coord].Name}) {gridObj}");
             }
         }
         public void Remove(Coord coord, GridObjectBase gridObj)
@@ -47,9 +48,31 @@ namespace HexTecGames.GridBaseSystem
 
         public bool IsEmpty(Coord coord)
         {
-            return gridObjects.ContainsKey(coord);
+            return !gridObjects.ContainsKey(coord);
         }
 
+        public int Count()
+        {
+            return gridObjects.Count;
+        }
+        public List<Coord> GetCoords()
+        {
+            return gridObjects.Keys.ToList();
+        }
+        public List<Coord> GetEmptyCoords(List<Coord> coords)
+        {
+            List<Coord> results = new List<Coord>();
+
+            foreach (var coord in coords)
+            {
+                if (!gridObjects.ContainsKey(coord))
+                {
+                    results.Add(coord);
+                }
+            }
+
+            return results;
+        }
         public T Get<T>(Coord coord) where T : GridObjectBase
         {
             if (gridObjects.TryGetValue(coord, out GridObjectBase gridObj))
@@ -79,7 +102,6 @@ namespace HexTecGames.GridBaseSystem
             {
                 return gridObj;
             }
-            Debug.Log($"{coord} is empty!");
             return null;
         }
         public List<GridObjectBase> Get(IList<Coord> coords)

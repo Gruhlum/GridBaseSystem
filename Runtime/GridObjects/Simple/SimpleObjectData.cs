@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    [CreateAssetMenu(menuName = "HexTecGames/Grid/TileObjectData")]
-    public class SimpleObjectData : GridObjectData<SimpleObject, SimpleObjectData, SimpleObjectVisual, SimpleObjectSaveData>
+    [CreateAssetMenu(fileName = "New TileObject", menuName = "HexTecGames/Grid/TileObjectData")]
+    public class SimpleObjectData : SingleObjectData<SimpleObject, SimpleObjectData, SimpleObjectVisual, SimpleObjectSaveData>
     {
         public override GridObjectBase CreateGridObject(BaseGrid grid, Coord coord, int rotation)
         {

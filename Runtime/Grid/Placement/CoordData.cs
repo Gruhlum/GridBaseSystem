@@ -17,5 +17,10 @@ namespace HexTecGames.GridBaseSystem
             this.layer = layer;
             this.coord = coord;
         }
+
+        public override string ToString()
+        {
+            return $"C:{coord} L:({layer})";
+        }
     }
 }

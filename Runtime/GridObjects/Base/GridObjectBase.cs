@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using HexTecGames.Basics;
 using UnityEngine;
 
@@ -77,10 +78,6 @@ namespace HexTecGames.GridBaseSystem
         }
         private GridObjectDataBase baseData;
 
-        private HashSet<CoordData> coordDatas = new HashSet<CoordData>();
-
-        //public event Action<GridObject, Sprite> OnSpriteChanged;
-        //public event Action<GridObject, Color> OnColorChanged;
 
         public GridObjectBase(BaseGrid grid, GridObjectDataBase data, Coord center)
         {
@@ -95,16 +92,18 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        private void AddToGrid(BaseGrid grid)
-        {
-            coordDatas = BaseData.GetNormalizedCoordDatas(Center, Rotation);
-            grid.AddGridObject(coordDatas, this);
-        }
-        public virtual void Remove()
-        {
-            grid.RemoveGridObject(coordDatas, this);
-        }
+        protected abstract void AddToGrid(BaseGrid grid);
 
+        public abstract void Remove();
+        public abstract void Move(Coord target);
+        public void SetRotation(int rotation)
+        {
+            Rotation = rotation;
+        }
+        public void Rotate(int turns)
+        {
+            Rotation += turns;
+        }
         public GridObjectVisualBase CreateVisual(BaseGrid grid)
         {
             return BaseData.CreateVisual(this, grid);
@@ -116,29 +115,11 @@ namespace HexTecGames.GridBaseSystem
             return Grid.CoordToWorldPosition(Center);
         }
 
-        public virtual void Move(Coord oldCoord, Coord targetCoord)
+        
+
+        public override string ToString()
         {
-            HashSet<CoordData> newCoords = BaseData.GetNormalizedCoordDatas(targetCoord, Rotation);
-            HashSet<CoordData> dataToRemove = new HashSet<CoordData>(coordDatas);
-            HashSet<CoordData> dataToAdd = new HashSet<CoordData>();
-
-            foreach (var data in newCoords)
-            {
-                if (dataToRemove.Contains(data))
-                {
-                     dataToRemove.Remove(data);
-                }
-                else dataToAdd.Add(data);
-            }
-
-            foreach (var remove in dataToRemove)
-            {
-                grid.RemoveGridObject(remove, this);
-            }
-            foreach (var add in dataToAdd)
-            {
-                grid.AddGridObject(add, this);
-            }
+            return $"{Name} ({Center})";
         }
     }
 }
