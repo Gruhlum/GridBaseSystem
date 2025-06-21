@@ -84,7 +84,7 @@ namespace HexTecGames.UI
             }
         }    
 
-        private void Grid_OnTileAdded(GridObjectBase tile)
+        private void Grid_OnTileAdded(GridObject tile)
         {
             if (!IsActive)
             {
@@ -104,7 +104,7 @@ namespace HexTecGames.UI
             coordSpawner.DeactivateAll();
             if (IsActive)
             {
-                IEnumerable<GridObjectBase> results = Grid.GetAllGridObjects();
+                IEnumerable<GridObject> results = Grid.GetAllGridObjects();
                 List<CoordDisplay> displays = new List<CoordDisplay>();
                 foreach (var result in results)
                 {

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class GridObject<T, D, V, S> : GridObjectBase
+    public abstract class GridObject<T, D, V, S> : GridObject
         where T : GridObject<T, D, V, S> where D : GridObjectData<T, D, V, S> where V : GridObjectVisual<T, D, V, S> where S : GridObjectSaveData<T, D, V, S>
     {
         public D Data
@@ -46,20 +46,19 @@ namespace HexTecGames.GridBaseSystem
         }
         private int rotation;
 
-        public int Layer
+        public override Color Color
         {
             get
             {
-                return layer;
+                return base.Color;
             }
-            private set
+
+            set
             {
-                layer = value;
+                base.Color = value;
+                OnColorChanged?.Invoke(this as T, Color);
             }
         }
-        private int layer;
-
-
         public virtual bool IsReplaceable
         {
             get
@@ -75,17 +74,16 @@ namespace HexTecGames.GridBaseSystem
 
         public event Action<T, int> OnRotated;
         public event Action<T> OnRemoved;
-        public event Action<T, Coord, Coord> OnMoved;
+        public delegate void MoveEvent(T gridObj, Coord start, Coord target);
+        public event MoveEvent OnMoved;
         public event Action<T, Color> OnColorChanged;
 
         public GridObject(D data, BaseGrid grid, Coord center, int rotation = 0) : base(grid, data, center)
         {
             this.Data = data;
-            this.Layer = data.Layer;
             this.Rotation = rotation;
         }
 
-        
         public float DirectionToDegrees()
         {
             return DirectionToDegrees(Rotation);
@@ -103,9 +101,10 @@ namespace HexTecGames.GridBaseSystem
 
         public sealed override void Move(Coord targetCoord)
         {
-            Coord lastCoord = Center;
-            Move(lastCoord, targetCoord);
-            OnMoved?.Invoke(this as T, lastCoord, targetCoord);
+            Coord currentCoord = Center;
+            Center = targetCoord;
+            Move(currentCoord, targetCoord);
+            OnMoved?.Invoke(this as T, currentCoord, targetCoord);
         }
         protected abstract void Move(Coord currentCoord, Coord targetCoord);
     }

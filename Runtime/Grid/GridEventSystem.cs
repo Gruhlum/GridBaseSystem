@@ -90,8 +90,7 @@ namespace HexTecGames.GridBaseSystem
 
         private void Start()
         {
-            mouseCoord = grid.MousePositionToCoord();
-            mouseCoord.isValid = true;
+            SetCurrentMouseCoord(grid.MousePositionToCoord());
         }
 
         private void DetectDirection()

@@ -13,7 +13,7 @@ namespace HexTecGames.GridBaseSystem
 
         private Dictionary<int, Transform> layerParents = new Dictionary<int, Transform>();
 
-        private HashSet<GridObjectVisualBase> activeDisplays = new HashSet<GridObjectVisualBase>();
+        private HashSet<GridObjectVisual> activeDisplays = new HashSet<GridObjectVisual>();
 
 
         //public event Action<TileObjectVisual> OnVisualSpawned;
@@ -23,11 +23,11 @@ namespace HexTecGames.GridBaseSystem
         {
             grid = GetComponentInParent<BaseGrid>();
         }
-        protected void OnEnable()
+        protected void Awake()
         {
             grid.OnGridObjectAdded += Grid_OnTileObjectAdded;
         }
-        protected void OnDisable()
+        protected void OnDestroy()
         {
             grid.OnGridObjectAdded -= Grid_OnTileObjectAdded;
         }
@@ -45,15 +45,15 @@ namespace HexTecGames.GridBaseSystem
         //    return default;
         //}
 
-        public void RemoveDisplay(GridObjectVisualBase visual)
+        public void RemoveDisplay(GridObjectVisual visual)
         {
             activeDisplays.Remove(visual);
         }
 
-        private void Grid_OnTileObjectAdded(GridObjectBase tileObject)
+        private void Grid_OnTileObjectAdded(GridObject tileObject)
         {
             //Debug.Log($"{nameof(tileObject.Name)} {tileObject.Name}");
-            GridObjectVisualBase visual = tileObject.CreateVisual(grid);
+            GridObjectVisual visual = tileObject.CreateVisual(grid);
 
             int layer = tileObject.BaseData.Layer;
 

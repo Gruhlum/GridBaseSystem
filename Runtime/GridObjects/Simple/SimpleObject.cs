@@ -12,7 +12,7 @@ namespace HexTecGames.GridBaseSystem
         {
         }
 
-        public override GridObjectSaveDataBase GetSaveData()
+        public override GridObjectSaveData GetSaveData()
         {
             return new SimpleObjectSaveData(this);
         }

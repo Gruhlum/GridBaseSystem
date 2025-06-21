@@ -10,7 +10,7 @@ namespace HexTecGames.GridBaseSystem
     [CreateAssetMenu(menuName = "HexTecGames/Grid/PlacementData")]
     public class PlacementData : DisplayableObject
     {
-        public GridObjectDataBase Data
+        public GridObjectData Data
         {
             get
             {
@@ -21,7 +21,7 @@ namespace HexTecGames.GridBaseSystem
                 this.data = value;
             }
         }
-        [SerializeField] private GridObjectDataBase data;
+        [SerializeField] private GridObjectData data;
         public string DisplayName
         {
             get

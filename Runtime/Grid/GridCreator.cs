@@ -13,9 +13,8 @@ namespace HexTecGames.GridBaseSystem
         public bool createOnStart = true;
         [Space]
         public Coord center;
-        [SerializeField] protected GridObjectDataBase defaultTileData = default;
+        [SerializeField] protected GridObjectData defaultTileData = default;
         [SerializeReference, SubclassSelector] Shape shape;
-
 
         protected virtual void Start()
         {

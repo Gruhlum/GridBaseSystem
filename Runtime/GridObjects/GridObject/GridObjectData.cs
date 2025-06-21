@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class GridObjectData<T, D, V, S> : GridObjectDataBase
+    public abstract class GridObjectData<T, D, V, S> : GridObjectData
         where T : GridObject<T, D, V, S> where D : GridObjectData<T, D, V, S> where V : GridObjectVisual<T, D, V, S> where S : GridObjectSaveData<T, D, V, S>
     {
         public V VisualPrefab
@@ -21,23 +21,15 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private V visualPrefab;
 
-        private SpawnableSpawner<V> spawner = new SpawnableSpawner<V>();
+        private MultiSpawner spawner = new MultiSpawner();
 
-        public virtual GridObjectVisualBase CreateVisual(T t, BaseGrid grid)
+        public virtual GridObjectVisual CreateVisual(T t, BaseGrid grid)
         {
-            if (spawner.Prefab == null)
-            {
-                spawner.Prefab = VisualPrefab;
-            }
-            if (spawner.Prefab != VisualPrefab)
-            {
-                Debug.Log("Shouldn't happen! Two different classes try to use this spawner");
-            }
-            V visual = spawner.Spawn();
+            V visual = spawner.Spawn(VisualPrefab);
             SetupVisual(visual, t, grid);
             return visual;
         }
-        public sealed override GridObjectVisualBase CreateVisual(GridObjectBase obj, BaseGrid grid)
+        public sealed override GridObjectVisual CreateVisual(GridObject obj, BaseGrid grid)
         {
             return CreateVisual(obj as T, grid);
         }
@@ -45,23 +37,5 @@ namespace HexTecGames.GridBaseSystem
         {
             visual.Setup(tileObj, grid);
         }
-
-        //public List<PlacementCoord> GetNormalizedCoords(BaseGrid grid, Coord center, int rotation = 0)
-        //{
-        //    return GetNormalizedCoords(grid, center, coords, rotation);
-        //}
-        //public List<PlacementCoord> GetCoords()
-        //{
-        //    return new List<PlacementCoord>(coords);
-        //}
-        //private List<PlacementCoord> GetNormalizedCoords(BaseGrid grid, Coord center, List<PlacementCoord> coords, int rotation)
-        //{
-        //    var results = center.GetNormalizedCoords(coords);
-        //    if (rotation != 0)
-        //    {
-        //        results = grid.GetRotatedCoords(center, results, rotation);
-        //    }
-        //    return results;
-        //}
     }
 }

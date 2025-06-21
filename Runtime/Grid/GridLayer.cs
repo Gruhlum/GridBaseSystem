@@ -10,27 +10,27 @@ namespace HexTecGames.GridBaseSystem
     [System.Serializable]
     public class GridLayer
     {
-        private Dictionary<Coord, GridObjectBase> gridObjects;
+        private Dictionary<Coord, GridObject> gridObjects;
 
         public GridLayer()
         {
-            gridObjects = new Dictionary<Coord, GridObjectBase>();
+            gridObjects = new Dictionary<Coord, GridObject>();
         }
-        public GridLayer(Coord coord, GridObjectBase gridObj) : this()
+        public GridLayer(Coord coord, GridObject gridObj) : this()
         {
             Add(coord, gridObj);
         }
 
-        public void Add(Coord coord, GridObjectBase gridObj)
+        public void Add(Coord coord, GridObject gridObj)
         {
             if (!gridObjects.TryAdd(coord, gridObj))
             {
-                Debug.LogError($"Coord already occupied: {coord} ({gridObjects[coord].Name}) {gridObj}");
+                Debug.LogError($"Coord already occupied: {coord} Old: {gridObjects[coord]} New: {gridObj}");
             }
         }
-        public void Remove(Coord coord, GridObjectBase gridObj)
+        public void Remove(Coord coord, GridObject gridObj)
         {
-            if (gridObjects.TryGetValue(coord, out GridObjectBase result))
+            if (gridObjects.TryGetValue(coord, out GridObject result))
             {
                 if (result == gridObj)
                 {
@@ -40,7 +40,7 @@ namespace HexTecGames.GridBaseSystem
             }
             else Debug.Log($"Can't remove Object, {coord} is already empty!");
         }
-        public void Move(Coord oldCoord, Coord targetCoord, GridObjectBase gridObj)
+        public void Move(Coord oldCoord, Coord targetCoord, GridObject gridObj)
         {
             Remove(oldCoord, gridObj);
             Add(targetCoord, gridObj);
@@ -73,9 +73,9 @@ namespace HexTecGames.GridBaseSystem
 
             return results;
         }
-        public T Get<T>(Coord coord) where T : GridObjectBase
+        public T Get<T>(Coord coord) where T : GridObject
         {
-            if (gridObjects.TryGetValue(coord, out GridObjectBase gridObj))
+            if (gridObjects.TryGetValue(coord, out GridObject gridObj))
             {
                 if (gridObj is T t)
                 {
@@ -87,7 +87,7 @@ namespace HexTecGames.GridBaseSystem
             Debug.Log($"{coord} is empty!");
             return null;
         }
-        public List<T> Get<T>(IList<Coord> coords) where T : GridObjectBase
+        public List<T> Get<T>(IList<Coord> coords) where T : GridObject
         {
             List<T> results = new List<T>();
             foreach (var coord in coords)
@@ -96,28 +96,28 @@ namespace HexTecGames.GridBaseSystem
             }
             return results;
         }
-        public GridObjectBase Get(Coord coord)
+        public GridObject Get(Coord coord)
         {
-            if (gridObjects.TryGetValue(coord, out GridObjectBase gridObj))
+            if (gridObjects.TryGetValue(coord, out GridObject gridObj))
             {
                 return gridObj;
             }
             return null;
         }
-        public List<GridObjectBase> Get(IList<Coord> coords)
+        public List<GridObject> Get(IList<Coord> coords)
         {
-            List<GridObjectBase> results = new List<GridObjectBase>();
+            List<GridObject> results = new List<GridObject>();
             foreach (var coord in coords)
             {
                 results.Add(Get(coord));
             }
             return results;
         }
-        public IEnumerable<GridObjectBase> GetAll()
+        public IEnumerable<GridObject> GetAll()
         {
             return gridObjects.Values;
         }
-        public IEnumerable<T> GetAll<T>() where T : GridObjectBase
+        public IEnumerable<T> GetAll<T>() where T : GridObject
         {
             List<T> results = new List<T>();
             foreach (var gridObj in gridObjects.Values)

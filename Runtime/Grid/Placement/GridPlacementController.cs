@@ -57,7 +57,7 @@ namespace HexTecGames.GridBaseSystem
         }
 
         public event Action<PlacementData> OnSelectedObjectChanged;
-        public event Action<GridObjectBase> OnObjectPlaced;
+        public event Action<GridObject> OnObjectPlaced;
         public event Action<PreBuildInfo> OnBeforeBuild;
 
         private int currentRotation;
@@ -200,7 +200,7 @@ namespace HexTecGames.GridBaseSystem
         private IEnumerator BuildDelayed(Coord coord)
         {
             yield return null;
-            GridObjectBase tileObject = CreateGridObject(coord);
+            GridObject tileObject = CreateGridObject(coord);
             //Debug.Log("Placing Object: " + tileObject.Name + " at: " + coord.ToString());
             OnObjectPlaced?.Invoke(tileObject);
             //ghost.UpdatePlacementArea();
@@ -233,11 +233,11 @@ namespace HexTecGames.GridBaseSystem
             ghost.UpdatePlacementArea(gridEventSystem.MouseCoord, currentRotation);
         }
 
-        protected GridObjectBase CreateGridObject(Coord coord)
+        protected GridObject CreateGridObject(Coord coord)
         {
-            if (SelectedPlacementData.Data is GridObjectDataBase tileObjData)
+            if (SelectedPlacementData.Data is GridObjectData tileObjData)
             {
-                GridObjectBase tileObj = SelectedPlacementData.Data.CreateGridObject(grid, coord, currentRotation);
+                GridObject tileObj = SelectedPlacementData.Data.CreateGridObject(grid, coord, currentRotation);
                 return tileObj;
             }
             return null;

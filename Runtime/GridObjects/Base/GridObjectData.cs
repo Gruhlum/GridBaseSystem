@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class GridObjectDataBase : ScriptableObject
+    public abstract class GridObjectData : ScriptableObject
     {
         public Color Color
         {
@@ -31,11 +31,11 @@ namespace HexTecGames.GridBaseSystem
         public abstract HashSet<CoordData> GetNormalizedCoordDatas(Coord target, int rotation);
         public abstract List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord target, int rotation);
 
-        public abstract GridObjectBase CreateGridObject(BaseGrid grid, Coord target, int rotation);
-        public GridObjectVisualBase CreateVisual()
+        public abstract GridObject CreateGridObject(BaseGrid grid, Coord target, int rotation);
+        public GridObjectVisual CreateVisual()
         {
             return CreateVisual(null, null);
         }
-        public abstract GridObjectVisualBase CreateVisual(GridObjectBase obj, BaseGrid grid);
+        public abstract GridObjectVisual CreateVisual(GridObject obj, BaseGrid grid);
     }
 }

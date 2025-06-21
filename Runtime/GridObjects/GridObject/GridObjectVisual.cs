@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class GridObjectVisual<T, D, V, S> : GridObjectVisualBase, ISpawnable<V>
+    public abstract class GridObjectVisual<T, D, V, S> : GridObjectVisual, ISpawnable<V>
         where T : GridObject<T, D, V, S> where D : GridObjectData<T, D, V, S> where V : GridObjectVisual<T, D, V, S> where S : GridObjectSaveData<T, D, V, S>
     {
         public T TileObject
@@ -51,12 +51,12 @@ namespace HexTecGames.GridBaseSystem
 
         protected abstract void Rotate(int rotation);
 
-        private void TileObject_OnRotated(T obj, int rotation)
+        private void GridObject_OnRotated(T gridObj, int rotation)
         {
             Rotate(rotation);
         }
 
-        protected virtual void TileObject_OnRemoved(T obj)
+        protected virtual void GridObject_OnRemoved(T gridObj)
         {
             if (TileObject != null)
             {
@@ -64,28 +64,30 @@ namespace HexTecGames.GridBaseSystem
             }
             Deactivate();
         }
-        protected virtual void TileObject_OnMoved(T obj, Coord old, Coord current)
+        protected virtual void GridObject_OnMoved(T gridObj, Coord old, Coord current)
         {
-            SetPosition(obj);
-        }
-        protected virtual void SetPosition(T obj)
-        {
-            transform.position = obj.GetWorldPosition();
-        }
-        protected virtual void AddEvents(T tileObject)
-        {
-            tileObject.OnRemoved += TileObject_OnRemoved;
-            tileObject.OnMoved += TileObject_OnMoved;
-            tileObject.OnRotated += TileObject_OnRotated;
-        }
-        protected virtual void RemoveEvents(T tileObject)
-        {
-            tileObject.OnRemoved -= TileObject_OnRemoved;
-            tileObject.OnMoved -= TileObject_OnMoved;
-            tileObject.OnRotated -= TileObject_OnRotated;
+            SetPosition(gridObj);
         }
 
-        public override GridObjectBase GetTileObject()
+        protected virtual void SetPosition(T gridObj)
+        {
+            transform.position = gridObj.GetWorldPosition();
+        }
+        protected virtual void AddEvents(T gridObj)
+        {
+            gridObj.OnRemoved += GridObject_OnRemoved;
+            gridObj.OnMoved += GridObject_OnMoved;
+            gridObj.OnRotated += GridObject_OnRotated;
+        }
+
+        protected virtual void RemoveEvents(T gridObj)
+        {
+            gridObj.OnRemoved -= GridObject_OnRemoved;
+            gridObj.OnMoved -= GridObject_OnMoved;
+            gridObj.OnRotated -= GridObject_OnRotated;
+        }
+
+        public override GridObject GetTileObject()
         {
             return TileObject;
         }

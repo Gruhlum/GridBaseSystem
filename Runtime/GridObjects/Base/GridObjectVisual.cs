@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class GridObjectVisualBase : MonoBehaviour
+    public abstract class GridObjectVisual : MonoBehaviour
     {
-        public abstract GridObjectBase GetTileObject();
+        public abstract GridObject GetTileObject();
         public virtual void Deactivate()
         {
             gameObject.SetActive(false);

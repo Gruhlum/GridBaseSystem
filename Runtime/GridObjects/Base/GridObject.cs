@@ -7,7 +7,7 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
-    public abstract class GridObjectBase
+    public abstract class GridObject
     {
         public BaseGrid Grid
         {
@@ -34,6 +34,18 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         private Coord center;
+        public int Layer
+        {
+            get
+            {
+                return layer;
+            }
+            private set
+            {
+                layer = value;
+            }
+        }
+        private int layer;
 
         public virtual Color Color
         {
@@ -65,7 +77,7 @@ namespace HexTecGames.GridBaseSystem
             protected set;
         }
 
-        public GridObjectDataBase BaseData
+        public GridObjectData BaseData
         {
             get
             {
@@ -76,15 +88,16 @@ namespace HexTecGames.GridBaseSystem
                 this.baseData = value;
             }
         }
-        private GridObjectDataBase baseData;
+        private GridObjectData baseData;
 
 
-        public GridObjectBase(BaseGrid grid, GridObjectDataBase data, Coord center)
+        public GridObject(BaseGrid grid, GridObjectData data, Coord center)
         {
             this.BaseData = data;
             this.Color = data.Color;
             this.Grid = grid;
             this.Center = center;
+            this.Layer = data.Layer;
 
             if (grid != null)
             {
@@ -104,12 +117,12 @@ namespace HexTecGames.GridBaseSystem
         {
             Rotation += turns;
         }
-        public GridObjectVisualBase CreateVisual(BaseGrid grid)
+        public GridObjectVisual CreateVisual(BaseGrid grid)
         {
             return BaseData.CreateVisual(this, grid);
         }
 
-        public abstract GridObjectSaveDataBase GetSaveData();
+        public abstract GridObjectSaveData GetSaveData();
         public Vector3 GetWorldPosition()
         {
             return Grid.CoordToWorldPosition(Center);

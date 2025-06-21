@@ -23,7 +23,7 @@ namespace HexTecGames.GridBaseSystem
         {
             foreach (var saveData in savedGrid.tileObjects)
             {
-                GridObjectBase result = saveData.data.CreateGridObject(grid, saveData.position, saveData.rotation);
+                GridObject result = saveData.data.CreateGridObject(grid, saveData.position, saveData.rotation);
             }
         }
     }

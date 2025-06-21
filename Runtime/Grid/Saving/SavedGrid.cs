@@ -9,9 +9,9 @@ namespace HexTecGames.GridBaseSystem
     [System.Serializable]
     public class SavedGrid
     {
-        [SerializeReference, SubclassSelector] public List<GridObjectSaveDataBase> tileObjects = new List<GridObjectSaveDataBase>();
+        [SerializeReference, SubclassSelector] public List<GridObjectSaveData> tileObjects = new List<GridObjectSaveData>();
 
-        public SavedGrid(IEnumerable<GridObjectBase> tiles)
+        public SavedGrid(IEnumerable<GridObject> tiles)
         {
             foreach (var tile in tiles)
             {

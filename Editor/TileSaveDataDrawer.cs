@@ -7,7 +7,7 @@ using UnityEditor.UIElements;
 
 namespace HexTecGames.GridBaseSystem
 {
-	[CustomPropertyDrawer(typeof(GridObjectSaveDataBase))]
+	[CustomPropertyDrawer(typeof(GridObjectSaveData))]
 	public class GridObjectSaveDataDrawer : PropertyDrawer
 	{
         public override VisualElement CreatePropertyGUI(SerializedProperty property)

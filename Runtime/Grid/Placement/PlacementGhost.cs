@@ -11,7 +11,7 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private TileHighlightSpawner highlightSpawner = default;
         [SerializeField] private SpriteRenderer sr = default;
 
-        private GridObjectVisualBase currentVisual;
+        private GridObjectVisual currentVisual;
 
         private PlacementData activeData;
         private Coord coord;

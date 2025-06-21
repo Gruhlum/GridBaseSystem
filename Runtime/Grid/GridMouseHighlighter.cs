@@ -82,6 +82,7 @@ namespace HexTecGames.GridBaseSystem
         }
         private void GridEventSys_OnMouseClicked(Coord coord, int btn)
         {
+
             if (MouseController.IsPointerOverUI)
             {
                 return;

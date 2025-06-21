@@ -19,15 +19,15 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        public override void Setup(T tileObject, BaseGrid grid)
+        public override void Setup(T gridObj, BaseGrid grid)
         {
-            base.Setup(tileObject, grid);
+            base.Setup(gridObj, grid);
 
-            sr.sortingOrder = tileObject.BaseData.Layer;
+            sr.sortingOrder = gridObj.BaseData.Layer;
 
-            if (tileObject != null)
+            if (gridObj != null)
             {
-                sr.color = tileObject.Color;
+                sr.color = gridObj.Color;
             }
         }
         public override void SetColor(Color color)
@@ -39,6 +39,21 @@ namespace HexTecGames.GridBaseSystem
             gameObject.transform.rotation = Quaternion.Euler(0, 0, TileObject.DirectionToDegrees(rotation));
         }
 
+        protected override void AddEvents(T gridObj)
+        {
+            base.AddEvents(gridObj);
+            gridObj.OnColorChanged += GridObject_OnColorChanged;
+        }
+
+        protected override void RemoveEvents(T gridObj)
+        {
+            base.RemoveEvents(gridObj);
+            gridObj.OnColorChanged -= GridObject_OnColorChanged;
+        }
+        private void GridObject_OnColorChanged(T gridObj, Color color)
+        {
+            SetColor(color);
+        }
         public override void MoveToFront()
         {
             sr.sortingOrder++;

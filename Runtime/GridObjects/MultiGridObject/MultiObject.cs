@@ -38,8 +38,6 @@ namespace HexTecGames.GridBaseSystem
                 }
                 else dataToAdd.Add(data);
             }
-
-            Center = targetCoord;
             coordDatas = newCoords;
             Grid.MoveGridObject(dataToRemove, dataToAdd, this);
         }
