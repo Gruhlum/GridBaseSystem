@@ -27,11 +27,11 @@ namespace HexTecGames.GridBaseSystem
         {
             grid.OnGridObjectAdded += Grid_OnTileObjectAdded;
         }
+
         protected void OnDestroy()
         {
             grid.OnGridObjectAdded -= Grid_OnTileObjectAdded;
         }
-
 
         //public T FindVisual<T>(T tileObject) where T : TileObjectVisualBase
         //{
@@ -70,6 +70,11 @@ namespace HexTecGames.GridBaseSystem
             }
 
             activeDisplays.Add(visual);
+        }
+
+        public GridObjectVisual FindVisual(GridObject gridObj)
+        {
+            throw new NotImplementedException();
         }
     }
 }

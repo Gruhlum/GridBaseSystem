@@ -61,7 +61,7 @@ namespace HexTecGames.GridBaseSystem
         public event Action<PreBuildInfo> OnBeforeBuild;
 
         private int currentRotation;
-
+        private int currentRemovalIndex;
         public bool AllowRemoval
         {
             get
@@ -80,7 +80,7 @@ namespace HexTecGames.GridBaseSystem
         {
             grid = transform.GetComponentInParent<BaseGrid>();
             ghost = transform.GetComponentInChildren<PlacementGhost>();
-            //mouseController = FindObjectOfType<MouseController>();
+
             if (grid != null)
             {
                 gridEventSystem = grid.transform.GetComponentInChildren<GridEventSystem>();
@@ -140,9 +140,8 @@ namespace HexTecGames.GridBaseSystem
                 }
                 else if (AllowRemoval)
                 {
-                    //RemoveNext(HoverCoord);
+                   RemoveNext(HoverCoord);
                 }
-
             }
         }
         private void GridEventSystem_OnMouseHoverCoordChanged(Coord coord)
@@ -160,11 +159,28 @@ namespace HexTecGames.GridBaseSystem
 
                 else if (AllowRemoval && gridEventSystem.LastMouseButton == 1)
                 {
-                    //RemoveNext(coord);
+                    RemoveNext(currentRemovalIndex, coord);
                 }
             }
         }
 
+        private void RemoveNext(int layer, Coord coord)
+        {
+            var result = grid.GetGridObject(layer, coord);
+            if (result != null)
+            {
+                result.Remove();
+            }
+        }
+        private void RemoveNext(Coord coord)
+        {
+            var result = grid.GetGridObject(coord);
+            if (result != null)
+            {
+                currentRemovalIndex = result.Layer;
+                result.Remove();
+            }
+        }
 
         public virtual void Build(Coord coord)
         {
@@ -193,7 +209,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 SelectedPlacementData.PlacementSound.Play();
             }
-            ghost.Deactivate();
+
             StartCoroutine(BuildDelayed(coord));
         }
 

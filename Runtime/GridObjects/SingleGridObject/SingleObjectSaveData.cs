@@ -8,7 +8,7 @@ namespace HexTecGames.GridBaseSystem
     public abstract class SingleObjectSaveData<T, D, V, S> : GridObjectSaveData<T, D, V, S>
         where T : SingleObject<T, D, V, S> where D : SingleObjectData<T, D, V, S> where V : SingleObjectVisual<T, D, V, S> where S : SingleObjectSaveData<T, D, V, S>
     {
-        protected SingleObjectSaveData(T tileObject) : base(tileObject)
+        protected SingleObjectSaveData(T gridObject) : base(gridObject)
         {
         }
     }

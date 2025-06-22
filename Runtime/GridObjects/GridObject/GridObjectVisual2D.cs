@@ -9,7 +9,7 @@ namespace HexTecGames.GridBaseSystem
     {
         [SerializeField] protected SpriteRenderer sr = default;
 
-        protected void Reset()
+        protected virtual void Reset()
         {
             sr = GetComponent<SpriteRenderer>();
 
@@ -19,16 +19,16 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        public override void Setup(T gridObj, BaseGrid grid)
+        public override void Setup(GridObject gridObj, BaseGrid grid)
         {
             base.Setup(gridObj, grid);
-
-            sr.sortingOrder = gridObj.BaseData.Layer;
 
             if (gridObj != null)
             {
                 sr.color = gridObj.Color;
+                sr.sortingOrder = gridObj.BaseData.Layer;
             }
+            else sr.sortingOrder = 5000;
         }
         public override void SetColor(Color color)
         {
@@ -36,7 +36,7 @@ namespace HexTecGames.GridBaseSystem
         }
         protected override void Rotate(int rotation)
         {
-            gameObject.transform.rotation = Quaternion.Euler(0, 0, TileObject.DirectionToDegrees(rotation));
+            gameObject.transform.rotation = Quaternion.Euler(0, 0, GridObject.DirectionToDegrees(rotation));
         }
 
         protected override void AddEvents(T gridObj)

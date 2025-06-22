@@ -51,7 +51,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 Coord normalized = target + coordData.coord;
                 normalized.Rotate(coordData.coord, rotation);
-                if (grid.IsEmpty(coordData.layer, coordData.coord))
+                if (grid.IsEmpty(coordData.layer, normalized))
                 {
                     boolCoords.Add(new BoolCoord(normalized, true));
                 }

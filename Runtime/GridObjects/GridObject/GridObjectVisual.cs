@@ -9,43 +9,26 @@ namespace HexTecGames.GridBaseSystem
     public abstract class GridObjectVisual<T, D, V, S> : GridObjectVisual, ISpawnable<V>
         where T : GridObject<T, D, V, S> where D : GridObjectData<T, D, V, S> where V : GridObjectVisual<T, D, V, S> where S : GridObjectSaveData<T, D, V, S>
     {
-        public T TileObject
-        {
-            get
-            {
-                return tileObject;
-            }
-            private set
-            {
-                tileObject = value;
-            }
-        }
-        private T tileObject;
 
-        protected BaseGrid grid;
+        public new event Action<V> OnDeactivated;
 
-        public event Action<V> OnDeactivated;
-
-        protected void OnDisable()
+        protected virtual void OnDisable()
         {
             //Debug.Log("Deactivated");
             OnDeactivated?.Invoke(this as V);
         }
 
-        public virtual void Setup(T tileObject, BaseGrid grid)
+        public override void Setup(GridObject gridObject, BaseGrid grid)
         {
-            if (TileObject != null)
+            if (GridObject != null)
             {
-                RemoveEvents(TileObject);
+                RemoveEvents(GridObject as T);
             }
-            this.name = $"{tileObject.Name}Visual {tileObject.Center}";
-            this.grid = grid;
-            this.tileObject = tileObject;
-
-            if (tileObject != null)
+            base.Setup(gridObject, grid);
+            if (gridObject != null)
             {
-                AddEvents(tileObject);
-                SetPosition(tileObject);
+                AddEvents(gridObject as T);
+                SetPosition(gridObject as T);
             }
         }
 
@@ -58,9 +41,9 @@ namespace HexTecGames.GridBaseSystem
 
         protected virtual void GridObject_OnRemoved(T gridObj)
         {
-            if (TileObject != null)
+            if (gridObj != null)
             {
-                RemoveEvents(TileObject);
+                RemoveEvents(gridObj);
             }
             Deactivate();
         }
@@ -89,7 +72,7 @@ namespace HexTecGames.GridBaseSystem
 
         public override GridObject GetTileObject()
         {
-            return TileObject;
+            return GridObject;
         }
     }
 }

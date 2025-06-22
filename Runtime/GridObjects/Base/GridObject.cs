@@ -71,11 +71,27 @@ namespace HexTecGames.GridBaseSystem
                 return BaseData.name;
             }
         }
-        public abstract int Rotation
+        public virtual int Rotation
         {
-            get;
-            protected set;
+            get
+            {
+                return rotation;
+            }
+            protected set
+            {
+                if (rotation == value)
+                {
+                    return;
+                }
+                value = value.WrapDirection(Grid.MaximumRotation);
+                if (rotation == value)
+                {
+                    return;
+                }
+                rotation = value;
+            }
         }
+        private int rotation;
 
         public GridObjectData BaseData
         {
@@ -116,6 +132,14 @@ namespace HexTecGames.GridBaseSystem
         public void Rotate(int turns)
         {
             Rotation += turns;
+        }
+        public float DirectionToDegrees()
+        {
+            return DirectionToDegrees(Rotation);
+        }
+        public float DirectionToDegrees(int rotation)
+        {
+            return Grid.DirectionToDegrees(rotation);
         }
         public GridObjectVisual CreateVisual(BaseGrid grid)
         {

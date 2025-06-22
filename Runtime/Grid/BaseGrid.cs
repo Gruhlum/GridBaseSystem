@@ -108,7 +108,7 @@ namespace HexTecGames.GridBaseSystem
         private int height;
 
 
-        protected readonly Dictionary<int, GridLayer> allObjects = new Dictionary<int, GridLayer>();
+        protected readonly Dictionary<int, GridLayer> gridLayers = new Dictionary<int, GridLayer>();
 
         public event Action<GridObject> OnGridObjectAdded;
         public event Action<GridObject> OnGridObjectRemoved;
@@ -126,7 +126,7 @@ namespace HexTecGames.GridBaseSystem
         }
 
 
-        public void AddGridObject(IEnumerable<CoordData> coordDatas, GridObject gridObj)
+        internal void AddGridObject(IEnumerable<CoordData> coordDatas, GridObject gridObj)
         {
             //Debug.Log($"Adding: {gridObj} coord: {coordDatas.First()}");
 
@@ -136,12 +136,12 @@ namespace HexTecGames.GridBaseSystem
             }
             OnGridObjectAdded?.Invoke(gridObj);
         }
-        public void AddGridObject(CoordData coordData, GridObject gridObj)
+        internal void AddGridObject(CoordData coordData, GridObject gridObj)
         {
             AddGridObjectCoords(coordData.layer, coordData.coord, gridObj);
             OnGridObjectAdded?.Invoke(gridObj);
         }
-        public void AddGridObject(int layerIndex, Coord coord, GridObject gridObj)
+        internal void AddGridObject(int layerIndex, Coord coord, GridObject gridObj)
         {
             AddGridObjectCoords(layerIndex, coord, gridObj);
             OnGridObjectAdded?.Invoke(gridObj);
@@ -150,17 +150,17 @@ namespace HexTecGames.GridBaseSystem
         {
             //Debug.Log($"Adding: Layer: {layerIndex} obj: {gridObj}");
 
-            if (allObjects.TryGetValue(layerIndex, out GridLayer layer))
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
             {
                 layer.Add(coord, gridObj);
             }
             else
             {
-                allObjects.Add(layerIndex, new GridLayer(coord, gridObj));
+                gridLayers.Add(layerIndex, new GridLayer(coord, gridObj));
             }
         }
 
-        public void RemoveGridObject(IEnumerable<CoordData> coordDatas, GridObject gridObj)
+        internal void RemoveGridObject(IEnumerable<CoordData> coordDatas, GridObject gridObj)
         {
             foreach (var data in coordDatas)
             {
@@ -168,93 +168,28 @@ namespace HexTecGames.GridBaseSystem
             }
             OnGridObjectRemoved?.Invoke(gridObj);
         }
-        public void RemoveGridObject(CoordData coordData, GridObject gridObj)
+        internal void RemoveGridObject(CoordData coordData, GridObject gridObj)
         {
             RemoveGridObjectCoords(coordData.layer, coordData.coord, gridObj);
             OnGridObjectRemoved?.Invoke(gridObj);
         }
-        public void RemoveGridObject(int layerIndex, Coord coord, GridObject gridObj)
+        internal void RemoveGridObject(int layerIndex, Coord coord, GridObject gridObj)
         {
             RemoveGridObjectCoords(layerIndex, coord, gridObj);
             OnGridObjectRemoved?.Invoke(gridObj);
         }
-
         private void RemoveGridObjectCoords(int layerIndex, Coord coord, GridObject gridObj)
         {
-            if (allObjects.TryGetValue(layerIndex, out GridLayer layer))
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
             {
                 layer.Remove(coord, gridObj);
             }
         }
 
-        public T GetGridObject<T>(int layerIndex, Coord coord) where T : GridObject
-        {
-            if (allObjects.TryGetValue(layerIndex, out GridLayer layer))
-            {
-                return layer.Get<T>(coord);
-            }
-            Debug.Log($"Layer {layerIndex} does not exist!");
-            return null;
-        }
-        public GridObject GetGridObject(int layerIndex, Coord coord)
-        {
-            if (allObjects.TryGetValue(layerIndex, out GridLayer layer))
-            {
-                return layer.Get(coord);
-            }
-            Debug.Log($"Layer {layerIndex} does not exist!");
-            return null;
-        }
-
-        public List<T> GetGridObjects<T>(int layerIndex, List<Coord> coords) where T : GridObject
-        {
-            if (allObjects.TryGetValue(layerIndex, out GridLayer layer))
-            {
-                return layer.Get<T>(coords);
-            }
-            return null;
-        }   
-        public List<GridObject> GetGridObjects(int layerIndex, List<Coord> coords)
-        {
-            List<GridObject> results = new List<GridObject>();
-            if (allObjects.TryGetValue(layerIndex, out GridLayer layer))
-            {
-                return layer.Get(coords);
-            }
-            return null;
-        }
-
-        public IEnumerable<T> GetAllGridObjects<T>(int layerIndex) where T : GridObject
-        {
-            if (allObjects.TryGetValue(layerIndex, out GridLayer layer))
-            {
-                return layer.GetAll<T>();
-            }
-            return null;
-        }
-        public IEnumerable<GridObject> GetAllGridObjects(int layerIndex)
-        {
-            List<GridObject> allGridObjects = new List<GridObject>();
-            if (allObjects.TryGetValue(layerIndex, out GridLayer layer))
-            {
-                return layer.GetAll();
-            }
-            else return null;
-        }
-        public List<GridObject> GetAllGridObjects()
-        {
-            List<GridObject> allGridObjects = new List<GridObject>();
-            foreach (var item in allObjects.Values)
-            {
-                allGridObjects.AddRange(item.GetAll());
-            }
-            return allGridObjects;
-        }
-
-        public void MoveGridObject(IEnumerable<CoordData> oldDatas, IEnumerable<CoordData> newDatas, GridObject gridObj)
+        internal void MoveGridObject(IEnumerable<CoordData> oldDatas, IEnumerable<CoordData> newDatas, GridObject gridObj)
         {
             //Debug.Log($"Moving {gridObj} from {oldDatas.First()} to {newDatas.First()}");
-            
+
             foreach (var remove in oldDatas)
             {
                 RemoveGridObjectCoords(remove.layer, remove.coord, gridObj);
@@ -265,9 +200,9 @@ namespace HexTecGames.GridBaseSystem
             }
             OnGridObjectMoved?.Invoke(gridObj);
         }
-        public void MoveGridObject(int layerIndex, Coord oldCoord, Coord targetCoord, GridObject gridObj)
+        internal void MoveGridObject(int layerIndex, Coord oldCoord, Coord targetCoord, GridObject gridObj)
         {
-            if (allObjects.TryGetValue(layerIndex, out GridLayer layer))
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
             {
                 layer.Move(oldCoord, targetCoord, gridObj);
             }
@@ -275,9 +210,112 @@ namespace HexTecGames.GridBaseSystem
             OnGridObjectMoved?.Invoke(gridObj);
         }
 
+
+        public bool HasTileObject<T>(int layerIndex, Coord coord) where T : GridObject
+        {
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
+            {
+                return layer.HasObject<T>(coord);
+            }
+            return false;
+        }
+
+        public GridObject GetGridObject(Coord coord)
+        {
+            GridObject result = null;
+            int topLayer = -1;
+            foreach (var layer in gridLayers)
+            {
+                if (layer.Key >= topLayer)
+                {
+                    var currentItem = layer.Value.Get(coord);
+                    if (currentItem != null)
+                    {
+                        result = currentItem;
+                        topLayer = layer.Key;
+                    }
+                }
+            }
+            return result;
+        }
+        public T GetGridObject<T>(int layerIndex, Coord coord) where T : GridObject
+        {
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
+            {
+                return layer.Get<T>(coord);
+            }
+            Debug.Log($"Layer {layerIndex} does not exist!");
+            return null;
+        }
+        public GridObject GetGridObject(int layerIndex, Coord coord)
+        {
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
+            {
+                return layer.Get(coord);
+            }
+            Debug.Log($"Layer {layerIndex} does not exist!");
+            return null;
+        }
+
+        public List<T> GetGridObjects<T>(int layerIndex, List<Coord> coords) where T : GridObject
+        {
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
+            {
+                return layer.Get<T>(coords);
+            }
+            return null;
+        }   
+        public List<GridObject> GetGridObjects(int layerIndex, List<Coord> coords)
+        {
+            List<GridObject> results = new List<GridObject>();
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
+            {
+                return layer.Get(coords);
+            }
+            return null;
+        }
+
+        public IEnumerable<T> GetAllGridObjects<T>(int layerIndex) where T : GridObject
+        {
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
+            {
+                return layer.GetAll<T>();
+            }
+            return null;
+        }
+        public IEnumerable<GridObject> GetAllGridObjects(int layerIndex)
+        {
+            List<GridObject> allGridObjects = new List<GridObject>();
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
+            {
+                return layer.GetAll();
+            }
+            else return null;
+        }
+        public List<GridObject> GetAllGridObjects()
+        {
+            List<GridObject> allGridObjects = new List<GridObject>();
+            foreach (var layer in gridLayers.Values)
+            {
+                allGridObjects.AddRange(layer.GetAll());
+            }
+            return allGridObjects;
+        }
+
+        public List<GridObject> GetNeighbourGridObjects(int layerIndex, Coord coord)
+        {
+            var neighbourCoords = GetAdjacents(coord);
+            return GetGridObjects(layerIndex, neighbourCoords);
+        }
+        public List<T> GetNeighbourGridObjects<T>(int layerIndex, Coord coord) where T : GridObject
+        {
+            var neighbourCoords = GetAdjacents(coord);
+            return GetGridObjects<T>(layerIndex, neighbourCoords);
+        }
+
         public bool IsEmpty(int layerIndex, Coord coord)
         {
-            if (allObjects.TryGetValue(layerIndex, out GridLayer layer))
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
             {
                 return layer.IsEmpty(coord);
             }
@@ -373,24 +411,31 @@ namespace HexTecGames.GridBaseSystem
         public abstract bool IsInLine(Coord coord1, Coord coord2);
         public abstract int GetDistance(Coord coord1, Coord coord2);
 
-        public List<Coord> GetCoords(int layerIndex)
+        public List<Coord> GetAllCoords(int layerIndex)
         {
-            if (allObjects.TryGetValue(layerIndex, out GridLayer layer))
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
             {
                 return layer.GetCoords();
             }
             return null;
         }
-        public List<Coord> GetEmptyCoords(int layerIndex)
+        public List<Coord> GetAllEmptyCoords(int layerIndex)
         {
-            if (allObjects.TryGetValue(layerIndex, out GridLayer layer))
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
             {
-                var previousLayer = GetCoords(layerIndex - 1);
+                var previousLayer = GetAllCoords(layerIndex - 1);
                 return layer.GetEmptyCoords(previousLayer);
             }
             return null;
         }
-
+        public List<Coord> GetEmptyCoords(int layerIndex, List<Coord> coords)
+        {
+            if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
+            {
+                return layer.GetEmptyCoords(coords);
+            }
+            return null;
+        }
         //public virtual List<TileObject> GetNeighbourObjects(Coord center)
         //{
         //    var coords = GetNeighbourCoords(center);

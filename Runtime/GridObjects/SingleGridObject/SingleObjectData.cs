@@ -37,7 +37,7 @@ namespace HexTecGames.GridBaseSystem
 
             Coord normalized = center.coord + target;
             normalized.Rotate(center.coord, rotation);
-            boolCoords.Add(new BoolCoord(normalized, grid.IsEmpty(center.layer, center.coord)));
+            boolCoords.Add(new BoolCoord(normalized, grid.IsEmpty(center.layer, normalized)));
             return boolCoords;
         }
     }

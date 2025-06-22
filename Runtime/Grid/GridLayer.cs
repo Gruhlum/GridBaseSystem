@@ -45,7 +45,14 @@ namespace HexTecGames.GridBaseSystem
             Remove(oldCoord, gridObj);
             Add(targetCoord, gridObj);
         }
-
+        public bool HasObject<T>(Coord coord) where T : GridObject
+        {
+            if (gridObjects.TryGetValue(coord, out GridObject gridObj))
+            {
+                return gridObj is T;
+            }
+            else return false;
+        }
         public bool IsEmpty(Coord coord)
         {
             return !gridObjects.ContainsKey(coord);
@@ -115,14 +122,22 @@ namespace HexTecGames.GridBaseSystem
         }
         public IEnumerable<GridObject> GetAll()
         {
-            return gridObjects.Values;
+            HashSet<GridObject> results = new HashSet<GridObject>();
+            foreach (var gridObj in gridObjects.Values)
+            {
+                if (!results.Contains(gridObj))
+                {
+                    results.Add(gridObj);
+                }
+            }
+            return results;
         }
         public IEnumerable<T> GetAll<T>() where T : GridObject
         {
-            List<T> results = new List<T>();
+            HashSet<T> results = new HashSet<T>();
             foreach (var gridObj in gridObjects.Values)
             {
-                if (gridObj is T t)
+                if (!results.Contains(gridObj) && gridObj is T t)
                 {
                     results.Add(t);
                 }

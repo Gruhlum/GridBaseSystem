@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using HexTecGames.Basics;
 using HexTecGames.GridBaseSystem;
 using UnityEngine;
@@ -101,22 +102,22 @@ namespace HexTecGames.UI
         public void SetCoordinates(bool active)
         {
             IsActive = active;
-            coordSpawner.DeactivateAll();
+            
             if (IsActive)
             {
-                IEnumerable<GridObject> results = Grid.GetAllGridObjects();
-                List<CoordDisplay> displays = new List<CoordDisplay>();
-                foreach (var result in results)
+                List<GridObject> results = Grid.GetAllGridObjects();
+                List<CoordDisplay> displays = coordSpawner.DeactivateAllAndSpawn(results.Count(), false);
+
+                for (int i = 0; i < displays.Count; i++)
                 {
-                    CoordDisplay display = coordSpawner.Spawn();
-                    displays.Add(display);
-                    display.Setup(result.Center, grid.CoordToWorldPosition(result.Center));
+                    displays[i].Setup(results[i].Center, grid.CoordToWorldPosition(results[i].Center));
                 }
                 foreach (var display in displays)
                 {
                     display.gameObject.SetActive(true);
                 }
             }
+            else coordSpawner.DeactivateAll();
         }
     }
 }

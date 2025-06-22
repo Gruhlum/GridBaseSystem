@@ -98,6 +98,10 @@ namespace HexTecGames.GridBaseSystem
         }
         private void UpdatePlacementArea(PlacementData data)
         {
+            if (!gameObject.activeInHierarchy)
+            {
+                return;
+            }
             highlightSpawner.DeactivateAll();
             var results = data.Data.GetNormalizedValidCoords(grid, coord, rotation);
 

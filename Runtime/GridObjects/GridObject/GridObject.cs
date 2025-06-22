@@ -27,25 +27,14 @@ namespace HexTecGames.GridBaseSystem
         {
             get
             {
-                return rotation;
+                return base.Rotation;
             }
             protected set
             {
-                if (rotation == value)
-                {
-                    return;
-                }
-                value = value.WrapDirection(Grid.MaximumRotation);
-                if (rotation == value)
-                {
-                    return;
-                }
-                rotation = value;
-                OnRotated?.Invoke(this as T, rotation);
+                base.Rotation = value;
+                OnRotated?.Invoke(this as T, Rotation);
             }
         }
-        private int rotation;
-
         public override Color Color
         {
             get
@@ -84,16 +73,10 @@ namespace HexTecGames.GridBaseSystem
             this.Rotation = rotation;
         }
 
-        public float DirectionToDegrees()
-        {
-            return DirectionToDegrees(Rotation);
-        }
-        public float DirectionToDegrees(int rotation)
-        {
-            return Grid.DirectionToDegrees(rotation);
-        }
+
         public sealed override void Remove()
         {
+            RemoveFromGrid();
             OnRemoved?.Invoke(this as T);
         }
         protected abstract void RemoveFromGrid();
