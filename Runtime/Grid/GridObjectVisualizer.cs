@@ -33,18 +33,6 @@ namespace HexTecGames.GridBaseSystem
             grid.OnGridObjectAdded -= Grid_OnTileObjectAdded;
         }
 
-        //public T FindVisual<T>(T tileObject) where T : TileObjectVisualBase
-        //{
-        //    foreach (var display in activeDisplays)
-        //    {
-        //        if (display is T && display.GetTileObject() == tileObject)
-        //        {
-        //            return (T)display;
-        //        }
-        //    }
-        //    return default;
-        //}
-
         public void RemoveDisplay(GridObjectVisual visual)
         {
             activeDisplays.Remove(visual);

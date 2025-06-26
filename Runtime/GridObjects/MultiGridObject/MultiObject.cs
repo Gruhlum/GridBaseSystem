@@ -12,8 +12,8 @@ namespace HexTecGames.GridBaseSystem
     {
         private HashSet<CoordData> coordDatas = new HashSet<CoordData>();
 
-        protected MultiObject(D data, BaseGrid grid, Coord center, int rotation = 0, GridObjectSaveData saveData = null)
-            : base(data, grid, center, rotation, saveData)
+        protected MultiObject(D data, Coord center, int rotation = 0, GridObjectSaveData saveData = null)
+            : base(data, center, rotation, saveData)
         {
         }
 
@@ -21,7 +21,7 @@ namespace HexTecGames.GridBaseSystem
         {
             Grid.RemoveGridObject(coordDatas, this);
         }
-        protected override void AddToGrid(BaseGrid grid)
+        protected override void AddObjectToGrid(BaseGrid grid)
         {
             coordDatas = BaseData.GetNormalizedCoordDatas(Center, Rotation);
             grid.AddGridObject(coordDatas, this);

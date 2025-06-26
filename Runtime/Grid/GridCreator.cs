@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
@@ -18,6 +19,8 @@ namespace HexTecGames.GridBaseSystem
         [Space]
         [SerializeReference, SubclassSelector] Shape shape;
 
+
+        public event Action<BaseGrid> OnCreated;
 
 
         private void OnValidate()
@@ -41,18 +44,25 @@ namespace HexTecGames.GridBaseSystem
         {
             if (shape == null)
             {
-                Debug.Log("No shape selected!");
+                Debug.LogError("No shape selected!");
                 return;
             }
             List<Coord> coords = shape.GetCoords(center);
             GenerateTileObjects(coords);
+            OnCreated?.Invoke(grid);
         }
 
         protected void GenerateTileObjects(List<Coord> coords)
         {
+            if (defaultData == null)
+            {
+                Debug.LogError("No DefaultData!");
+                return;
+            }
+
             if (defaultData is not IGridObjectCreator creator)
             {
-                Debug.Log($"{defaultData} needs to inherit from {nameof(IGridObjectCreator)}!");
+                Debug.LogError($"{defaultData} needs to inherit from {nameof(IGridObjectCreator)}!");
                 return;
             }
 

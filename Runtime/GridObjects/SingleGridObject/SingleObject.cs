@@ -9,8 +9,8 @@ namespace HexTecGames.GridBaseSystem
     public abstract class SingleObject<T, D, V> : GridObject<T, D, V>
         where T : SingleObject<T, D, V> where D : SingleObjectData<T, D, V> where V : SingleObjectVisual<T, D, V>
     {
-        protected SingleObject(D data, BaseGrid grid, Coord center, int rotation = 0, GridObjectSaveData saveData = null) 
-            : base(data, grid, center, rotation, saveData)
+        protected SingleObject(D data, Coord center, int rotation = 0, GridObjectSaveData saveData = null) 
+            : base(data, center, rotation, saveData)
         {
         }
 
@@ -18,7 +18,7 @@ namespace HexTecGames.GridBaseSystem
         {
             Grid.RemoveGridObject(Layer, Center, this);
         }
-        protected override void AddToGrid(BaseGrid grid)
+        protected override void AddObjectToGrid(BaseGrid grid)
         {
             grid.AddGridObject(Layer, Center, this);
         }

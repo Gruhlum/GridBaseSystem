@@ -72,8 +72,7 @@ namespace HexTecGames.GridBaseSystem
         public event GridObjectEvent OnRemoved;
         public event GridObjectEvent OnSaveDataLoaded;
 
-        public GridObject(D data, BaseGrid grid, Coord center, int rotation = 0, GridObjectSaveData saveData = null) 
-            : base(grid, data, center, saveData)
+        public GridObject(D data, Coord center, int rotation = 0, GridObjectSaveData saveData = null) : base(data, center, saveData)
         {
             this.Data = data;
             this.Rotation = rotation;

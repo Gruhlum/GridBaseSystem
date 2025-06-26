@@ -10,7 +10,9 @@ namespace HexTecGames.GridBaseSystem
     {
         public GridObject CreateGridObject(BaseGrid grid, Coord coord, int rotation, GridObjectSaveData saveData = null)
         {
-            return new SimpleObject(this, grid, coord, rotation, saveData);
+            SimpleObject obj = new SimpleObject(this, coord, rotation, saveData);
+            obj.AddToGrid(grid);
+            return obj;
         }
     }
 }

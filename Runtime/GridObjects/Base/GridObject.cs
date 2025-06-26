@@ -107,11 +107,10 @@ namespace HexTecGames.GridBaseSystem
         private GridObjectData baseData;
 
 
-        public GridObject(BaseGrid grid, GridObjectData data, Coord center, GridObjectSaveData saveData = null)
+        public GridObject(GridObjectData data, Coord center, GridObjectSaveData saveData = null)
         {
             this.BaseData = data;
             this.Color = data.Color;
-            this.Grid = grid;
             this.Center = center;
             this.Layer = data.Layer;
 
@@ -119,12 +118,13 @@ namespace HexTecGames.GridBaseSystem
             {
                 LoadSaveData(saveData);
             }
-            if (grid != null)
-            {
-                AddToGrid(grid);
-            }
         }
-        protected abstract void AddToGrid(BaseGrid grid);
+        public void AddToGrid(BaseGrid grid)
+        {
+            this.Grid = grid;
+            AddObjectToGrid(grid);
+        }
+        protected abstract void AddObjectToGrid(BaseGrid grid);
 
         public abstract void Remove();
         public abstract void Move(Coord target);

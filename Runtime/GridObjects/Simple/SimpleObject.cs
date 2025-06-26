@@ -8,8 +8,8 @@ namespace HexTecGames.GridBaseSystem
     [System.Serializable]
     public class SimpleObject : SingleObject<SimpleObject, SimpleObjectData, SimpleObjectVisual>
     {
-        public SimpleObject(SimpleObjectData data, BaseGrid grid, Coord center, int rotation = 0, GridObjectSaveData saveData = null) 
-            : base(data, grid, center, rotation, saveData)
+        public SimpleObject(SimpleObjectData data, Coord center, int rotation = 0, GridObjectSaveData saveData = null) 
+            : base(data, center, rotation, saveData)
         {
         }
 

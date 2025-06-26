@@ -114,8 +114,6 @@ namespace HexTecGames.GridBaseSystem
         public event Action<GridObject> OnGridObjectRemoved;
         public event Action<GridObject> OnGridObjectMoved;
 
-        public event Action OnGridGenerated;
-
         public abstract int MaximumRotation
         {
             get;
@@ -244,7 +242,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 return layer.Get<T>(coord);
             }
-            Debug.Log($"Layer {layerIndex} does not exist!");
+            //Debug.Log($"Layer {layerIndex} is empty!");
             return default;
         }
         public GridObject GetGridObject(int layerIndex, Coord coord)
@@ -253,7 +251,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 return layer.Get(coord);
             }
-            Debug.Log($"Layer {layerIndex} does not exist!");
+            //Debug.Log($"Layer {layerIndex} is empty!");
             return null;
         }
 
