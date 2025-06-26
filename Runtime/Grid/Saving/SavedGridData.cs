@@ -10,21 +10,21 @@ namespace HexTecGames.GridBaseSystem
     {
         public SavedGrid SavedGrid;
 
-        //#if UNITY_EDITOR
-        //        [ContextMenu("Center Tiles")]
-        //        public void CenterTiles()
-        //        {
-        //            SavedGrid.CenterTiles();
-        //            Undo.RecordObject(this, "Center Tiles");
-        //        }
+        #if UNITY_EDITOR
+                [ContextMenu("Center Tiles")]
+                public void CenterTiles()
+                {
+                    SavedGrid.CenterTiles();
+                    Undo.RecordObject(this, "Center Tiles");
+                }
 
 
-        //        [ContextMenu("Sort Objects")]
-        //        public void SortObjectsByPosition()
-        //        {
-        //            Undo.RecordObject(this, "Sort Objects");
-        //            SavedGrid.SortObjectsByPosition();
-        //        }
-        //#endif
+                [ContextMenu("Sort Objects")]
+                public void SortObjectsByPosition()
+                {
+                    Undo.RecordObject(this, "Sort Objects");
+                    SavedGrid.SortObjectsByTypeAndPosition();
+                }
+        #endif
     }
 }

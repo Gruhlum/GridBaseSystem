@@ -34,7 +34,6 @@ namespace HexTecGames.UI
                 isActive = value;
             }
         }
-
         [SerializeField] private bool isActive;
 
         [SerializeField] private KeyCode toggleKeyCode = KeyCode.LeftAlt;
@@ -102,7 +101,7 @@ namespace HexTecGames.UI
         public void SetCoordinates(bool active)
         {
             IsActive = active;
-            
+            Debug.Log(IsActive);
             if (IsActive)
             {
                 List<GridObject> results = Grid.GetAllGridObjects();

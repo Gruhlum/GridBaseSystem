@@ -6,8 +6,8 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
-    public abstract class MultiObjectData<T, D, V, S> : GridObjectData<T, D, V, S>
-        where T : MultiObject<T, D, V, S> where D : MultiObjectData<T, D, V, S> where V : MultiObjectVisual<T, D, V, S> where S : MultiObjectSaveData<T, D, V, S>
+    public abstract class MultiObjectData<T, D, V> : GridObjectData<T, D, V>
+        where T : MultiObject<T, D, V> where D : MultiObjectData<T, D, V> where V : MultiObjectVisual<T, D, V>
     {
         [SerializeField] public List<CoordData> coordDatas = new List<CoordData>() { new CoordData(0, Coord.zero) };
 

@@ -107,7 +107,7 @@ namespace HexTecGames.GridBaseSystem
         private GridObjectData baseData;
 
 
-        public GridObject(BaseGrid grid, GridObjectData data, Coord center)
+        public GridObject(BaseGrid grid, GridObjectData data, Coord center, GridObjectSaveData saveData = null)
         {
             this.BaseData = data;
             this.Color = data.Color;
@@ -115,12 +115,15 @@ namespace HexTecGames.GridBaseSystem
             this.Center = center;
             this.Layer = data.Layer;
 
+            if (saveData != null)
+            {
+                LoadSaveData(saveData);
+            }
             if (grid != null)
             {
                 AddToGrid(grid);
             }
         }
-
         protected abstract void AddToGrid(BaseGrid grid);
 
         public abstract void Remove();
@@ -146,6 +149,7 @@ namespace HexTecGames.GridBaseSystem
             return BaseData.CreateVisual(this, grid);
         }
 
+        public virtual void LoadSaveData(GridObjectSaveData saveData) { }
         public abstract GridObjectSaveData GetSaveData();
         public Vector3 GetWorldPosition()
         {

@@ -20,26 +20,25 @@ namespace HexTecGames.GridBaseSystem
         }
 
 
-        //public void SortObjectsByPosition()
-        //{
-        //    tileSaveDatas = tileSaveDatas.OrderBy(x => x.position).ToList();
-        //    tileObjects = tileObjects.OrderBy(x => x.position).ToList();
-        //}
-        //public void CenterTiles()
-        //{
-        //    int offsetX = (tileSaveDatas.Max(coord => coord.position.x) + tileSaveDatas.Min(coord => coord.position.x)) / 2;
-        //    int offsetY = (tileSaveDatas.Max(coord => coord.position.y) + tileSaveDatas.Min(coord => coord.position.y)) / 2;
+        public void SortObjectsByTypeAndPosition()
+        {
+            tileObjects = tileObjects.OrderBy(x => x.GetType().Name).ThenBy(x => x.position).ToList();
+        }
+        public void CenterTiles()
+        {
+            int offsetX = (tileObjects.Max(coord => coord.position.x) + tileObjects.Min(coord => coord.position.x)) / 2;
+            int offsetY = (tileObjects.Max(coord => coord.position.y) + tileObjects.Min(coord => coord.position.y)) / 2;
 
-        //    if (offsetX == 0 && offsetY == 0)
-        //    {
-        //        Debug.Log("Already centered");
-        //        return;
-        //    }
+            if (offsetX == 0 && offsetY == 0)
+            {
+                Debug.Log("Already centered");
+                return;
+            }
 
-        //    foreach (var saveData in tileSaveDatas)
-        //    {
-        //        saveData.position -= new Coord(offsetX, offsetY);
-        //    }
-        //}
+            foreach (var saveData in tileObjects)
+            {
+                saveData.position -= new Coord(offsetX, offsetY);
+            }
+        }
     }
 }

@@ -126,7 +126,7 @@ namespace HexTecGames.GridBaseSystem
         }
 
 
-        internal void AddGridObject(IEnumerable<CoordData> coordDatas, GridObject gridObj)
+        internal void AddGridObject(ICollection<CoordData> coordDatas, GridObject gridObj)
         {
             //Debug.Log($"Adding: {gridObj} coord: {coordDatas.First()}");
 
@@ -160,7 +160,7 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        internal void RemoveGridObject(IEnumerable<CoordData> coordDatas, GridObject gridObj)
+        internal void RemoveGridObject(ICollection<CoordData> coordDatas, GridObject gridObj)
         {
             foreach (var data in coordDatas)
             {
@@ -186,7 +186,7 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        internal void MoveGridObject(IEnumerable<CoordData> oldDatas, IEnumerable<CoordData> newDatas, GridObject gridObj)
+        internal void MoveGridObject(ICollection<CoordData> oldDatas, ICollection<CoordData> newDatas, GridObject gridObj)
         {
             //Debug.Log($"Moving {gridObj} from {oldDatas.First()} to {newDatas.First()}");
 
@@ -211,7 +211,7 @@ namespace HexTecGames.GridBaseSystem
         }
 
 
-        public bool HasTileObject<T>(int layerIndex, Coord coord) where T : GridObject
+        public bool HasTileObject<T>(int layerIndex, Coord coord)
         {
             if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
             {
@@ -238,14 +238,14 @@ namespace HexTecGames.GridBaseSystem
             }
             return result;
         }
-        public T GetGridObject<T>(int layerIndex, Coord coord) where T : GridObject
+        public T GetGridObject<T>(int layerIndex, Coord coord)
         {
             if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
             {
                 return layer.Get<T>(coord);
             }
             Debug.Log($"Layer {layerIndex} does not exist!");
-            return null;
+            return default;
         }
         public GridObject GetGridObject(int layerIndex, Coord coord)
         {
@@ -257,7 +257,7 @@ namespace HexTecGames.GridBaseSystem
             return null;
         }
 
-        public List<T> GetGridObjects<T>(int layerIndex, List<Coord> coords) where T : GridObject
+        public List<T> GetGridObjects<T>(int layerIndex, ICollection<Coord> coords)
         {
             if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
             {
@@ -265,7 +265,7 @@ namespace HexTecGames.GridBaseSystem
             }
             return null;
         }   
-        public List<GridObject> GetGridObjects(int layerIndex, List<Coord> coords)
+        public List<GridObject> GetGridObjects(int layerIndex, ICollection<Coord> coords)
         {
             List<GridObject> results = new List<GridObject>();
             if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
@@ -275,7 +275,7 @@ namespace HexTecGames.GridBaseSystem
             return null;
         }
 
-        public IEnumerable<T> GetAllGridObjects<T>(int layerIndex) where T : GridObject
+        public IEnumerable<T> GetAllGridObjects<T>(int layerIndex)
         {
             if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
             {
@@ -307,7 +307,7 @@ namespace HexTecGames.GridBaseSystem
             var neighbourCoords = GetAdjacents(coord);
             return GetGridObjects(layerIndex, neighbourCoords);
         }
-        public List<T> GetNeighbourGridObjects<T>(int layerIndex, Coord coord) where T : GridObject
+        public List<T> GetNeighbourGridObjects<T>(int layerIndex, Coord coord)
         {
             var neighbourCoords = GetAdjacents(coord);
             return GetGridObjects<T>(layerIndex, neighbourCoords);
@@ -332,7 +332,7 @@ namespace HexTecGames.GridBaseSystem
         /// Converts a list of Coord positions to WorldPositions.
         /// </summary>
         /// <returns>List of Vector3 WorldPositions</returns>
-        public List<Vector3> CoordsToWorldPositions(List<Coord> coords)
+        public List<Vector3> CoordsToWorldPositions(ICollection<Coord> coords)
         {
             List<Vector3> results = new List<Vector3>(coords.Count);
             foreach (var coord in coords)
@@ -366,7 +366,7 @@ namespace HexTecGames.GridBaseSystem
        
 
         public abstract List<Coord> GetCoordsInBox(Vector2 start, Vector2 end);
-        public List<Coord> GetRotatedCoords(Coord center, List<Coord> coords, int rotation)
+        public List<Coord> GetRotatedCoords(Coord center, ICollection<Coord> coords, int rotation)
         {
             List<Coord> results = new List<Coord>();
             foreach (var coord in coords)
@@ -388,7 +388,7 @@ namespace HexTecGames.GridBaseSystem
         }
         public abstract List<Coord> GetNeighbourCoords(Coord center);
         public abstract List<Coord> GetAdjacents(Coord center);
-        public List<Coord> GetNeighbourCoords(List<Coord> coords)
+        public List<Coord> GetNeighbourCoords(ICollection<Coord> coords)
         {
             List<Coord> neighbours = new List<Coord>();
 
@@ -428,7 +428,7 @@ namespace HexTecGames.GridBaseSystem
             }
             return null;
         }
-        public List<Coord> GetEmptyCoords(int layerIndex, List<Coord> coords)
+        public List<Coord> GetEmptyCoords(int layerIndex, ICollection<Coord> coords)
         {
             if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
             {

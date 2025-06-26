@@ -18,5 +18,15 @@ namespace HexTecGames.GridBaseSystem
             this.rotation = gridObj.Rotation;
             this.data = gridObj.BaseData;
         }
+
+        public GridObject CreateGridObject(BaseGrid grid)
+        {
+            if (data is not IGridObjectCreator creator)
+            {
+                Debug.Log($"{data} needs to inherit from {nameof(IGridObjectCreator)}!");
+                return null;
+            }
+            return creator.CreateGridObject(grid, position, rotation, this);
+        }
     }
 }

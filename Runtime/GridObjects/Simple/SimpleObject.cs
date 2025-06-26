@@ -6,9 +6,10 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
-    public class SimpleObject : SingleObject<SimpleObject, SimpleObjectData, SimpleObjectVisual, SimpleObjectSaveData>
+    public class SimpleObject : SingleObject<SimpleObject, SimpleObjectData, SimpleObjectVisual>
     {
-        public SimpleObject(SimpleObjectData data, BaseGrid grid, Coord center, int rotation = 0) : base(data, grid, center, rotation)
+        public SimpleObject(SimpleObjectData data, BaseGrid grid, Coord center, int rotation = 0, GridObjectSaveData saveData = null) 
+            : base(data, grid, center, rotation, saveData)
         {
         }
 

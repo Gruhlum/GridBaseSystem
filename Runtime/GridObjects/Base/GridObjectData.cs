@@ -31,7 +31,7 @@ namespace HexTecGames.GridBaseSystem
         public abstract HashSet<CoordData> GetNormalizedCoordDatas(Coord target, int rotation);
         public abstract List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord target, int rotation);
 
-        public abstract GridObject CreateGridObject(BaseGrid grid, Coord target, int rotation);
+        //public abstract GridObject CreateGridObject(BaseGrid grid, Coord target, int rotation, GridObjectSaveData saveData = null);
         public GridObjectVisual CreateVisual()
         {
             return CreateVisual(null, null);

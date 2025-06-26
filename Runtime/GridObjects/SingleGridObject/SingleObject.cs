@@ -6,10 +6,11 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
-    public abstract class SingleObject<T, D, V, S> : GridObject<T, D, V, S>
-        where T : SingleObject<T, D, V, S> where D : SingleObjectData<T, D, V, S> where V : SingleObjectVisual<T, D, V, S> where S : SingleObjectSaveData<T, D, V, S>
+    public abstract class SingleObject<T, D, V> : GridObject<T, D, V>
+        where T : SingleObject<T, D, V> where D : SingleObjectData<T, D, V> where V : SingleObjectVisual<T, D, V>
     {
-        protected SingleObject(D data, BaseGrid grid, Coord center, int rotation = 0) : base(data, grid, center, rotation)
+        protected SingleObject(D data, BaseGrid grid, Coord center, int rotation = 0, GridObjectSaveData saveData = null) 
+            : base(data, grid, center, rotation, saveData)
         {
         }
 

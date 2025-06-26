@@ -7,8 +7,8 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class GridObject<T, D, V, S> : GridObject
-        where T : GridObject<T, D, V, S> where D : GridObjectData<T, D, V, S> where V : GridObjectVisual<T, D, V, S> where S : GridObjectSaveData<T, D, V, S>
+    public abstract class GridObject<T, D, V> : GridObject
+        where T : GridObject<T, D, V> where D : GridObjectData<T, D, V> where V : GridObjectVisual<T, D, V>
     {
         public D Data
         {
@@ -61,13 +61,19 @@ namespace HexTecGames.GridBaseSystem
         }
         private bool isReplaceable;
 
-        public event Action<T, int> OnRotated;
-        public event Action<T> OnRemoved;
         public delegate void MoveEvent(T gridObj, Coord start, Coord target);
-        public event MoveEvent OnMoved;
-        public event Action<T, Color> OnColorChanged;
+        public delegate void RotationEvent(T gridObj, int rotation);
+        public delegate void ColorEvent(T gridObj, Color color);
+        public delegate void GridObjectEvent(T gridObj);
 
-        public GridObject(D data, BaseGrid grid, Coord center, int rotation = 0) : base(grid, data, center)
+        public event RotationEvent OnRotated;
+        public event MoveEvent OnMoved;
+        public event ColorEvent OnColorChanged;
+        public event GridObjectEvent OnRemoved;
+        public event GridObjectEvent OnSaveDataLoaded;
+
+        public GridObject(D data, BaseGrid grid, Coord center, int rotation = 0, GridObjectSaveData saveData = null) 
+            : base(grid, data, center, saveData)
         {
             this.Data = data;
             this.Rotation = rotation;
@@ -80,8 +86,11 @@ namespace HexTecGames.GridBaseSystem
             OnRemoved?.Invoke(this as T);
         }
         protected abstract void RemoveFromGrid();
-
-
+        public override void LoadSaveData(GridObjectSaveData saveData)
+        {
+            base.LoadSaveData(saveData);
+            OnSaveDataLoaded?.Invoke(this as T);
+        }
         public sealed override void Move(Coord targetCoord)
         {
             Coord currentCoord = Center;

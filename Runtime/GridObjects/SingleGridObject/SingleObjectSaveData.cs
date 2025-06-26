@@ -5,8 +5,8 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
-    public abstract class SingleObjectSaveData<T, D, V, S> : GridObjectSaveData<T, D, V, S>
-        where T : SingleObject<T, D, V, S> where D : SingleObjectData<T, D, V, S> where V : SingleObjectVisual<T, D, V, S> where S : SingleObjectSaveData<T, D, V, S>
+    public abstract class SingleObjectSaveData<T, D, V> : GridObjectSaveData<T, D, V>
+        where T : SingleObject<T, D, V> where D : SingleObjectData<T, D, V> where V : SingleObjectVisual<T, D, V> 
     {
         protected SingleObjectSaveData(T gridObject) : base(gridObject)
         {

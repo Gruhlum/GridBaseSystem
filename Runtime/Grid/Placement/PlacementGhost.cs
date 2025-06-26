@@ -44,7 +44,7 @@ namespace HexTecGames.GridBaseSystem
 
             currentVisual = placementData.Data.CreateVisual();
             currentVisual.transform.SetParent(transform);
-            currentVisual.SetColor(placementData.GetColor());
+            currentVisual.SetColor(placementData.GetColor().GetColorWithAlpha(0.5f));
             currentVisual.transform.localPosition = Vector3.zero;
             currentVisual.MoveToFront();
 

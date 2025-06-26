@@ -6,11 +6,11 @@ using UnityEngine;
 namespace HexTecGames.GridBaseSystem
 {
     [CreateAssetMenu(fileName = "New TileObject", menuName = "HexTecGames/Grid/TileObjectData")]
-    public class SimpleObjectData : SingleObjectData<SimpleObject, SimpleObjectData, SimpleObjectVisual, SimpleObjectSaveData>
+    public class SimpleObjectData : SingleObjectData<SimpleObject, SimpleObjectData, SimpleObjectVisual>, IGridObjectCreator
     {
-        public override GridObject CreateGridObject(BaseGrid grid, Coord coord, int rotation)
+        public GridObject CreateGridObject(BaseGrid grid, Coord coord, int rotation, GridObjectSaveData saveData = null)
         {
-            return new SimpleObject(this, grid, coord, rotation);
+            return new SimpleObject(this, grid, coord, rotation, saveData);
         }
     }
 }

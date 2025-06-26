@@ -140,7 +140,7 @@ namespace HexTecGames.GridBaseSystem
                 }
                 else if (AllowRemoval)
                 {
-                   RemoveNext(HoverCoord);
+                    RemoveNext(HoverCoord);
                 }
             }
         }
@@ -251,12 +251,17 @@ namespace HexTecGames.GridBaseSystem
 
         protected GridObject CreateGridObject(Coord coord)
         {
-            if (SelectedPlacementData.Data is GridObjectData tileObjData)
+            if (SelectedPlacementData.Data is IGridObjectCreator creator)
             {
-                GridObject tileObj = SelectedPlacementData.Data.CreateGridObject(grid, coord, currentRotation);
+                GridObject tileObj = creator.CreateGridObject(grid, coord, currentRotation);
                 return tileObj;
             }
-            return null;
+            else
+            {
+                Debug.Log($"{SelectedPlacementData.Data} needs to inherit from {nameof(IGridObjectCreator)}!");
+
+                return null;
+            }
         }
     }
 }

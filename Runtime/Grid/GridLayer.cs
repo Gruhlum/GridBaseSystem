@@ -45,7 +45,7 @@ namespace HexTecGames.GridBaseSystem
             Remove(oldCoord, gridObj);
             Add(targetCoord, gridObj);
         }
-        public bool HasObject<T>(Coord coord) where T : GridObject
+        public bool HasObject<T>(Coord coord)
         {
             if (gridObjects.TryGetValue(coord, out GridObject gridObj))
             {
@@ -66,7 +66,7 @@ namespace HexTecGames.GridBaseSystem
         {
             return gridObjects.Keys.ToList();
         }
-        public List<Coord> GetEmptyCoords(List<Coord> coords)
+        public List<Coord> GetEmptyCoords(ICollection<Coord> coords)
         {
             List<Coord> results = new List<Coord>();
 
@@ -80,7 +80,7 @@ namespace HexTecGames.GridBaseSystem
 
             return results;
         }
-        public T Get<T>(Coord coord) where T : GridObject
+        public T Get<T>(Coord coord)
         {
             if (gridObjects.TryGetValue(coord, out GridObject gridObj))
             {
@@ -88,18 +88,22 @@ namespace HexTecGames.GridBaseSystem
                 {
                     return t;
                 }
-                Debug.Log($"{gridObj} is not of type {nameof(T)}!");
-                return null;
+                //Debug.Log($"Coord: {coord} Obj: {gridObj} is not of type {nameof(T)}!");
+                return default;
             }
-            Debug.Log($"{coord} is empty!");
-            return null;
+            //Debug.Log($"{coord} is empty!");
+            return default;
         }
-        public List<T> Get<T>(IList<Coord> coords) where T : GridObject
+        public List<T> Get<T>(ICollection<Coord> coords)
         {
             List<T> results = new List<T>();
             foreach (var coord in coords)
             {
-                results.Add(Get<T>(coord));
+                var result = Get<T>(coord);
+                if (result != null)
+                {
+                    results.Add(result);
+                }
             }
             return results;
         }
@@ -111,16 +115,20 @@ namespace HexTecGames.GridBaseSystem
             }
             return null;
         }
-        public List<GridObject> Get(IList<Coord> coords)
+        public List<GridObject> Get(ICollection<Coord> coords)
         {
             List<GridObject> results = new List<GridObject>();
             foreach (var coord in coords)
             {
-                results.Add(Get(coord));
+                var result = Get(coord);
+                if (result != null)
+                {
+                    results.Add(result);
+                }
             }
             return results;
         }
-        public IEnumerable<GridObject> GetAll()
+        public HashSet<GridObject> GetAll()
         {
             HashSet<GridObject> results = new HashSet<GridObject>();
             foreach (var gridObj in gridObjects.Values)
@@ -132,17 +140,19 @@ namespace HexTecGames.GridBaseSystem
             }
             return results;
         }
-        public IEnumerable<T> GetAll<T>() where T : GridObject
+        public HashSet<T> GetAll<T>()
         {
-            HashSet<T> results = new HashSet<T>();
+            HashSet<GridObject> results = new HashSet<GridObject>();
+            HashSet<T> ts = new HashSet<T>();
             foreach (var gridObj in gridObjects.Values)
             {
                 if (!results.Contains(gridObj) && gridObj is T t)
                 {
-                    results.Add(t);
+                    results.Add(gridObj);
+                    ts.Add(t);
                 }
             }
-            return results;
+            return ts;
         }
     }
 }
