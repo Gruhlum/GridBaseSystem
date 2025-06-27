@@ -11,6 +11,8 @@ namespace HexTecGames.GridBaseSystem
     {
         [SerializeField] private GridPlacementController tileObjPlacementController = default;
         [SerializeField] private HotkeyController hotkeyController = default;
+        [Space]
+        [SerializeField] private bool autoSelectOnStart = default;
 
         protected override void Reset()
         {
@@ -19,7 +21,7 @@ namespace HexTecGames.GridBaseSystem
         }
         protected void Start()
         {
-            if (displays.Count > 0)
+            if (autoSelectOnStart && displays.Count > 0)
             {
                 StartCoroutine(SelectDelayed(displays[0]));
             }

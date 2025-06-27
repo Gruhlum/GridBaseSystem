@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,9 @@ namespace HexTecGames.GridBaseSystem
         [Space]
         [SerializeField] private SavedGridData gridToLoad = default;
         [SerializeField] private bool loadOnStart = true;
+
+
+        public event Action<BaseGrid> OnGridLoaded;
 
         private void Start()
         {
@@ -25,6 +29,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 GridObject result = saveData.CreateGridObject(grid);
             }
+            OnGridLoaded?.Invoke(grid);
         }
     }
 }
