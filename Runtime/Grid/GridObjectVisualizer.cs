@@ -62,7 +62,14 @@ namespace HexTecGames.GridBaseSystem
 
         public GridObjectVisual FindVisual(GridObject gridObj)
         {
-            throw new NotImplementedException();
+            foreach (var display in activeDisplays)
+            {
+                if (display.GridObject == gridObj)
+                {
+                    return display;
+                }
+            }
+            return null;
         }
     }
 }
