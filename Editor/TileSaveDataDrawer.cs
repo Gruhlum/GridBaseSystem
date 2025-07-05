@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
-using UnityEngine.UIElements;
 using UnityEditor.UIElements;
+using UnityEngine.UIElements;
 
 namespace HexTecGames.GridBaseSystem
 {
-	[CustomPropertyDrawer(typeof(GridObjectSaveData))]
-	public class GridObjectSaveDataDrawer : PropertyDrawer
-	{
+    [CustomPropertyDrawer(typeof(GridObjectSaveData))]
+    public class GridObjectSaveDataDrawer : PropertyDrawer
+    {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             VisualElement root = new VisualElement();

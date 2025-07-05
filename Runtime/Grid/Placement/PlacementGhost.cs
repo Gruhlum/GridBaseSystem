@@ -1,6 +1,5 @@
-using HexTecGames.Basics;
-using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -26,10 +25,7 @@ namespace HexTecGames.GridBaseSystem
         protected virtual void Reset()
         {
             grid = transform.GetComponentInParent<BaseGrid>();
-            if (highlightSpawner == null)
-            {
-                highlightSpawner = new TileHighlightSpawner();
-            }
+            highlightSpawner ??= new TileHighlightSpawner();
             highlightSpawner.Parent = transform;
             highlightSpawner.Grid = grid;
         }
@@ -103,9 +99,9 @@ namespace HexTecGames.GridBaseSystem
                 return;
             }
             highlightSpawner.DeactivateAll();
-            var results = data.Data.GetNormalizedValidCoords(grid, coord, rotation);
+            List<BoolCoord> results = data.Data.GetNormalizedValidCoords(grid, coord, rotation);
 
-            foreach (var result in results)
+            foreach (BoolCoord result in results)
             {
                 highlightSpawner.SpawnHighlight(result.coord, result.valid ? validPlacementColor : invalidPlacementColor, false);
             }

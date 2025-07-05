@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
-using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
@@ -27,8 +25,10 @@ namespace HexTecGames.GridBaseSystem
         }
         public override HashSet<CoordData> GetNormalizedCoordDatas(Coord target, int rotation)
         {
-            HashSet<CoordData> results = new HashSet<CoordData>();
-            results.Add(new CoordData(center.layer, (center.coord + target)));
+            HashSet<CoordData> results = new HashSet<CoordData>
+            {
+                new CoordData(center.layer, center.coord + target)
+            };
             return results;
         }
         public override List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord target, int rotation)

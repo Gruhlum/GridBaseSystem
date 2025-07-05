@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
 using UnityEngine;
@@ -21,7 +20,7 @@ namespace HexTecGames.GridBaseSystem
 
         public override bool IsValidPlacement(BaseGrid grid, Coord target, int rotation)
         {
-            foreach (var coordData in coordDatas)
+            foreach (CoordData coordData in coordDatas)
             {
                 Coord normalized = coordData.coord + target;
                 normalized.Rotate(coordData.coord, rotation);
@@ -37,9 +36,9 @@ namespace HexTecGames.GridBaseSystem
         {
             HashSet<CoordData> results = new HashSet<CoordData>();
 
-            foreach (var coordData in coordDatas)
+            foreach (CoordData coordData in coordDatas)
             {
-                results.Add(new CoordData(coordData.layer, (coordData.coord + target)));
+                results.Add(new CoordData(coordData.layer, coordData.coord + target));
             }
             return results;
         }
@@ -47,7 +46,7 @@ namespace HexTecGames.GridBaseSystem
         {
             List<BoolCoord> boolCoords = new List<BoolCoord>();
 
-            foreach (var coordData in coordDatas)
+            foreach (CoordData coordData in coordDatas)
             {
                 Coord normalized = target + coordData.coord;
                 normalized.Rotate(coordData.coord, rotation);

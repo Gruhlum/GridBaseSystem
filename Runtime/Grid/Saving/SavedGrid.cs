@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HexTecGames.Basics;
@@ -13,7 +12,7 @@ namespace HexTecGames.GridBaseSystem
 
         public SavedGrid(IEnumerable<GridObject> tiles)
         {
-            foreach (var tile in tiles)
+            foreach (GridObject tile in tiles)
             {
                 tileObjects.Add(tile.GetSaveData());
             }
@@ -35,7 +34,7 @@ namespace HexTecGames.GridBaseSystem
                 return;
             }
 
-            foreach (var saveData in tileObjects)
+            foreach (GridObjectSaveData saveData in tileObjects)
             {
                 saveData.position -= new Coord(offsetX, offsetY);
             }

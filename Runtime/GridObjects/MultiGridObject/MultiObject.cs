@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HexTecGames.Basics;
-using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
@@ -32,7 +30,7 @@ namespace HexTecGames.GridBaseSystem
             HashSet<CoordData> dataToRemove = new HashSet<CoordData>(coordDatas);
             HashSet<CoordData> dataToAdd = new HashSet<CoordData>();
 
-            foreach (var data in newCoords)
+            foreach (CoordData data in newCoords)
             {
                 if (dataToRemove.Contains(data))
                 {
@@ -51,10 +49,10 @@ namespace HexTecGames.GridBaseSystem
             // Get neighbours of each coordData
             // Add them to a list if they are not a coordData or already in the list
 
-            foreach (var coordData in coordDatas)
+            foreach (CoordData coordData in coordDatas)
             {
-                var neighbours = Grid.GetNeighbourCoords(coordData.coord);
-                foreach (var neighbour in neighbours)
+                List<Coord> neighbours = Grid.GetNeighbourCoords(coordData.coord);
+                foreach (Coord neighbour in neighbours)
                 {
                     if (results.Contains(neighbour))
                     {

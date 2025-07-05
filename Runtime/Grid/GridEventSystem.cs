@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace HexTecGames.GridBaseSystem
 {
@@ -161,7 +159,7 @@ namespace HexTecGames.GridBaseSystem
                 if (grid.GetDistance(coord, mouseCoord) > 1)
                 {
                     List<Coord> results = grid.GetLine(coord, mouseCoord);
-                    foreach (var result in results)
+                    foreach (Coord result in results)
                     {
                         SetCurrentMouseCoord(result);
                     }

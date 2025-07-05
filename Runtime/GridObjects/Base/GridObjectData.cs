@@ -1,8 +1,5 @@
-using HexTecGames.Basics;
-using HexTecGames.Basics.UI;
-using HexTecGames.SoundSystem;
-using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem

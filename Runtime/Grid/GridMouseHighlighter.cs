@@ -1,6 +1,5 @@
-using HexTecGames.Basics;
 using System.Collections;
-using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -22,10 +21,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 gridEventSys = transform.parent.GetComponentInChildren<GridEventSystem>();
             }
-            if (highlightSpawner == null)
-            {
-                highlightSpawner = new TileHighlightSpawner();
-            }
+            highlightSpawner ??= new TileHighlightSpawner();
             highlightSpawner.Grid = GetComponentInParent<BaseGrid>();
             highlightSpawner.Parent = transform;
         }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,7 +23,7 @@ namespace HexTecGames
 
         public void PrintBlockReasons()
         {
-            foreach (var reason in blockReasons)
+            foreach (string reason in blockReasons)
             {
                 Debug.Log(reason);
             }

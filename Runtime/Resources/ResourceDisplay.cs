@@ -1,17 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace HexTecGames.GridBaseSystem
 {
-	public class ResourceDisplay : MonoBehaviour
-	{
+    public class ResourceDisplay : MonoBehaviour
+    {
         [SerializeField] private TMP_Text textGUI = default;
         [SerializeField] private Image img = default;
 
-        void Reset()
+        private void Reset()
         {
             textGUI = GetComponentInChildren<TMP_Text>();
             img = GetComponentInChildren<Image>();

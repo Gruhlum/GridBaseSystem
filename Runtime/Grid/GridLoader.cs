@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -25,7 +23,7 @@ namespace HexTecGames.GridBaseSystem
 
         private void GenerateTiles(SavedGrid savedGrid)
         {
-            foreach (var saveData in savedGrid.tileObjects)
+            foreach (GridObjectSaveData saveData in savedGrid.tileObjects)
             {
                 GridObject result = saveData.CreateGridObject(grid);
             }

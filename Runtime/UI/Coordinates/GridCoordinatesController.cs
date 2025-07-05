@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HexTecGames.Basics;
@@ -82,7 +81,7 @@ namespace HexTecGames.UI
             {
                 grid.OnGridObjectAdded -= Grid_OnTileAdded;
             }
-        }    
+        }
 
         private void Grid_OnTileAdded(GridObject tile)
         {
@@ -111,7 +110,7 @@ namespace HexTecGames.UI
                 {
                     displays[i].Setup(results[i].Center, grid.CoordToWorldPosition(results[i].Center));
                 }
-                foreach (var display in displays)
+                foreach (CoordDisplay display in displays)
                 {
                     display.gameObject.SetActive(true);
                 }

@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-	[CreateAssetMenu(menuName = "HexTecGames/Grid/ResourceType")]
-	public class ResourceType : ScriptableObject
-	{
+    [CreateAssetMenu(menuName = "HexTecGames/Grid/ResourceType")]
+    public class ResourceType : ScriptableObject
+    {
         public Sprite Icon
         {
             get

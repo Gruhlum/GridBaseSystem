@@ -1,7 +1,5 @@
-using HexTecGames.Basics;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
+using HexTecGames.Basics;
 using UnityEditor;
 using UnityEngine;
 
@@ -52,7 +50,7 @@ namespace HexTecGames.GridBaseSystem
         {
             Application.quitting += Application_quitting;
         }
-        void OnDisable()
+        private void OnDisable()
         {
             Application.quitting -= Application_quitting;
         }

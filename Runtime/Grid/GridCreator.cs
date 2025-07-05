@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
 using HexTecGames.GridBaseSystem.Shapes;
@@ -17,7 +16,7 @@ namespace HexTecGames.GridBaseSystem
         [Space]
         [SerializeField] protected GridObjectData defaultData = default;
         [Space]
-        [SerializeReference, SubclassSelector] Shape shape;
+        [SerializeReference, SubclassSelector] private Shape shape;
 
 
         public event Action<BaseGrid> OnCreated;
@@ -66,7 +65,7 @@ namespace HexTecGames.GridBaseSystem
                 return;
             }
 
-            foreach (var coord in coords)
+            foreach (Coord coord in coords)
             {
                 creator.CreateGridObject(grid, coord, 0);
             }

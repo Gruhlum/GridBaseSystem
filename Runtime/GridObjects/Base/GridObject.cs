@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using HexTecGames.Basics;
 using UnityEngine;
 
@@ -156,7 +153,7 @@ namespace HexTecGames.GridBaseSystem
             return Grid.CoordToWorldPosition(Center);
         }
 
-        
+
 
         public override string ToString()
         {

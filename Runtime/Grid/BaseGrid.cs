@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using HexTecGames.Basics;
 using UnityEngine;
 
@@ -128,7 +126,7 @@ namespace HexTecGames.GridBaseSystem
         {
             //Debug.Log($"Adding: {gridObj} coord: {coordDatas.First()}");
 
-            foreach (var data in coordDatas)
+            foreach (CoordData data in coordDatas)
             {
                 AddGridObjectCoords(data.layer, data.coord, gridObj);
             }
@@ -160,7 +158,7 @@ namespace HexTecGames.GridBaseSystem
 
         internal void RemoveGridObject(ICollection<CoordData> coordDatas, GridObject gridObj)
         {
-            foreach (var data in coordDatas)
+            foreach (CoordData data in coordDatas)
             {
                 RemoveGridObjectCoords(data.layer, data.coord, gridObj);
             }
@@ -188,11 +186,11 @@ namespace HexTecGames.GridBaseSystem
         {
             //Debug.Log($"Moving {gridObj} from {oldDatas.First()} to {newDatas.First()}");
 
-            foreach (var remove in oldDatas)
+            foreach (CoordData remove in oldDatas)
             {
                 RemoveGridObjectCoords(remove.layer, remove.coord, gridObj);
             }
-            foreach (var add in newDatas)
+            foreach (CoordData add in newDatas)
             {
                 AddGridObjectCoords(add.layer, add.coord, gridObj);
             }
@@ -222,11 +220,11 @@ namespace HexTecGames.GridBaseSystem
         {
             GridObject result = null;
             int topLayer = -1;
-            foreach (var layer in gridLayers)
+            foreach (KeyValuePair<int, GridLayer> layer in gridLayers)
             {
                 if (layer.Key >= topLayer)
                 {
-                    var currentItem = layer.Value.Get(coord);
+                    GridObject currentItem = layer.Value.Get(coord);
                     if (currentItem != null)
                     {
                         result = currentItem;
@@ -262,7 +260,7 @@ namespace HexTecGames.GridBaseSystem
                 return layer.Get<T>(coords);
             }
             return null;
-        }   
+        }
         public List<GridObject> GetGridObjects(int layerIndex, ICollection<Coord> coords)
         {
             List<GridObject> results = new List<GridObject>();
@@ -293,7 +291,7 @@ namespace HexTecGames.GridBaseSystem
         public List<GridObject> GetAllGridObjects()
         {
             List<GridObject> allGridObjects = new List<GridObject>();
-            foreach (var layer in gridLayers.Values)
+            foreach (GridLayer layer in gridLayers.Values)
             {
                 allGridObjects.AddRange(layer.GetAll());
             }
@@ -302,12 +300,12 @@ namespace HexTecGames.GridBaseSystem
 
         public List<GridObject> GetNeighbourGridObjects(int layerIndex, Coord coord)
         {
-            var neighbourCoords = GetAdjacents(coord);
+            List<Coord> neighbourCoords = GetAdjacents(coord);
             return GetGridObjects(layerIndex, neighbourCoords);
         }
         public List<T> GetNeighbourGridObjects<T>(int layerIndex, Coord coord)
         {
-            var neighbourCoords = GetAdjacents(coord);
+            List<Coord> neighbourCoords = GetAdjacents(coord);
             return GetGridObjects<T>(layerIndex, neighbourCoords);
         }
 
@@ -333,7 +331,7 @@ namespace HexTecGames.GridBaseSystem
         public List<Vector3> CoordsToWorldPositions(ICollection<Coord> coords)
         {
             List<Vector3> results = new List<Vector3>(coords.Count);
-            foreach (var coord in coords)
+            foreach (Coord coord in coords)
             {
                 results.Add(CoordToWorldPosition(coord));
             }
@@ -361,13 +359,13 @@ namespace HexTecGames.GridBaseSystem
             return direction * (-360f / MaximumRotation);
         }
         public abstract Coord GetDirectionFromInput(Vector2 input);
-       
+
 
         public abstract List<Coord> GetCoordsInBox(Vector2 start, Vector2 end);
         public List<Coord> GetRotatedCoords(Coord center, ICollection<Coord> coords, int rotation)
         {
             List<Coord> results = new List<Coord>();
-            foreach (var coord in coords)
+            foreach (Coord coord in coords)
             {
                 results.Add(GetRotatedCoord(center, coord, rotation));
             }
@@ -390,10 +388,10 @@ namespace HexTecGames.GridBaseSystem
         {
             List<Coord> neighbours = new List<Coord>();
 
-            foreach (var coord in coords)
+            foreach (Coord coord in coords)
             {
-                var results = GetNeighbourCoords(coord);
-                foreach (var result in results)
+                List<Coord> results = GetNeighbourCoords(coord);
+                foreach (Coord result in results)
                 {
                     if (!coords.Contains(result) && !neighbours.Contains(result))
                     {
@@ -421,7 +419,7 @@ namespace HexTecGames.GridBaseSystem
         {
             if (gridLayers.TryGetValue(layerIndex, out GridLayer layer))
             {
-                var previousLayer = GetAllCoords(layerIndex - 1);
+                List<Coord> previousLayer = GetAllCoords(layerIndex - 1);
                 return layer.GetEmptyCoords(previousLayer);
             }
             return null;

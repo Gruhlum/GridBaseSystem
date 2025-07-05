@@ -1,6 +1,6 @@
-using HexTecGames.Basics;
 using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -30,7 +30,7 @@ namespace HexTecGames.GridBaseSystem
 
         public override void DeactivateAll()
         {
-            foreach (var behaviour in items)
+            foreach (TileHighlighter behaviour in items)
             {
                 if (behaviour != null)
                 {
@@ -77,7 +77,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 DeactivateAll();
             }
-            foreach (var position in positions)
+            foreach (Vector3 position in positions)
             {
                 Spawn().Activate(position, color);
             }
@@ -89,7 +89,7 @@ namespace HexTecGames.GridBaseSystem
 
         public IEnumerator SpawnHighlightsCoroutine(List<Vector3> positions, float delay = 0)
         {
-            foreach (var pos in positions)
+            foreach (Vector3 pos in positions)
             {
                 yield return new WaitForSeconds(delay);
                 Spawn().Activate(pos);
@@ -97,7 +97,7 @@ namespace HexTecGames.GridBaseSystem
         }
         public IEnumerator SpawnHighlightsCoroutine(List<Vector3> positions, Color col, float delay = 0)
         {
-            foreach (var pos in positions)
+            foreach (Vector3 pos in positions)
             {
                 yield return new WaitForSeconds(delay);
                 Spawn().Activate(pos, col);
@@ -105,7 +105,7 @@ namespace HexTecGames.GridBaseSystem
         }
         public IEnumerator SpawnHighlightsCoroutine(List<List<Vector3>> positions, float delay = 0)
         {
-            foreach (var pos in positions)
+            foreach (List<Vector3> pos in positions)
             {
                 yield return SpawnHighlightsCoroutine(pos, new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 0.5f), delay);
             }

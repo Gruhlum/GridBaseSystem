@@ -1,10 +1,7 @@
-using HexTecGames.Basics;
-using HexTecGames.HotkeySystem;
-using HexTecGames.SoundSystem;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using HexTecGames.Basics;
+using HexTecGames.SoundSystem;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -85,10 +82,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 gridEventSystem = grid.transform.GetComponentInChildren<GridEventSystem>();
             }
-            if (highlightSpawner == null)
-            {
-                highlightSpawner = new TileHighlightSpawner();
-            }
+            highlightSpawner ??= new TileHighlightSpawner();
             highlightSpawner.Grid = grid;
         }
 
@@ -166,7 +160,7 @@ namespace HexTecGames.GridBaseSystem
 
         private void RemoveNext(int layer, Coord coord)
         {
-            var result = grid.GetGridObject(layer, coord);
+            GridObject result = grid.GetGridObject(layer, coord);
             if (result != null)
             {
                 result.Remove();
@@ -174,7 +168,7 @@ namespace HexTecGames.GridBaseSystem
         }
         private void RemoveNext(Coord coord)
         {
-            var result = grid.GetGridObject(coord);
+            GridObject result = grid.GetGridObject(coord);
             if (result != null)
             {
                 currentRemovalIndex = result.Layer;

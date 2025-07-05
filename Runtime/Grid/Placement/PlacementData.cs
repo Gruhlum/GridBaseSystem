@@ -1,8 +1,6 @@
 using HexTecGames.Basics;
 using HexTecGames.Basics.UI;
 using HexTecGames.SoundSystem;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -34,7 +32,7 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         [SerializeField] private string displayName;
-        
+
         public ColorType ColorType
         {
             get

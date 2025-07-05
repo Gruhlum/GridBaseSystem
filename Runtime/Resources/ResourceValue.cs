@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-	[System.Serializable]
-	public class ResourceValue
-	{
+    [System.Serializable]
+    public class ResourceValue
+    {
         public ResourceType Data
         {
             get
@@ -27,7 +25,7 @@ namespace HexTecGames.GridBaseSystem
                 return value;
             }
             set
-            {              
+            {
                 this.value = value;
             }
         }

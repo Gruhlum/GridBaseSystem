@@ -1,8 +1,6 @@
+using System.Collections;
 using HexTecGames.Basics.UI;
 using HexTecGames.HotkeySystem;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -58,7 +56,7 @@ namespace HexTecGames.GridBaseSystem
         }
         protected void TileObjPlacementController_OnSelectedObjectChanged(PlacementData data)
         {
-            foreach (var display in displays)
+            foreach (PlaceableDisplay display in displays)
             {
                 if (display.gameObject.activeSelf)
                 {

@@ -1,6 +1,3 @@
-using HexTecGames.Basics;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -62,7 +59,7 @@ namespace HexTecGames.GridBaseSystem
 
         public GridObjectVisual FindVisual(GridObject gridObj)
         {
-            foreach (var display in activeDisplays)
+            foreach (GridObjectVisual display in activeDisplays)
             {
                 if (display.GridObject == gridObj)
                 {

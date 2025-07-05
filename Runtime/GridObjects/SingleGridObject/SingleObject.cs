@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using HexTecGames.Basics;
-using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
@@ -9,7 +6,7 @@ namespace HexTecGames.GridBaseSystem
     public abstract class SingleObject<T, D, V> : GridObject<T, D, V>
         where T : SingleObject<T, D, V> where D : SingleObjectData<T, D, V> where V : SingleObjectVisual<T, D, V>
     {
-        protected SingleObject(D data, Coord center, int rotation = 0, GridObjectSaveData saveData = null) 
+        protected SingleObject(D data, Coord center, int rotation = 0, GridObjectSaveData saveData = null)
             : base(data, center, rotation, saveData)
         {
         }

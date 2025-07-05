@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HexTecGames.Basics;
@@ -70,7 +68,7 @@ namespace HexTecGames.GridBaseSystem
         {
             List<Coord> results = new List<Coord>();
 
-            foreach (var coord in coords)
+            foreach (Coord coord in coords)
             {
                 if (!gridObjects.ContainsKey(coord))
                 {
@@ -97,9 +95,9 @@ namespace HexTecGames.GridBaseSystem
         public List<T> Get<T>(ICollection<Coord> coords)
         {
             List<T> results = new List<T>();
-            foreach (var coord in coords)
+            foreach (Coord coord in coords)
             {
-                var result = Get<T>(coord);
+                T result = Get<T>(coord);
                 if (result != null)
                 {
                     results.Add(result);
@@ -118,9 +116,9 @@ namespace HexTecGames.GridBaseSystem
         public List<GridObject> Get(ICollection<Coord> coords)
         {
             List<GridObject> results = new List<GridObject>();
-            foreach (var coord in coords)
+            foreach (Coord coord in coords)
             {
-                var result = Get(coord);
+                GridObject result = Get(coord);
                 if (result != null)
                 {
                     results.Add(result);
@@ -131,7 +129,7 @@ namespace HexTecGames.GridBaseSystem
         public HashSet<GridObject> GetAll()
         {
             HashSet<GridObject> results = new HashSet<GridObject>();
-            foreach (var gridObj in gridObjects.Values)
+            foreach (GridObject gridObj in gridObjects.Values)
             {
                 if (!results.Contains(gridObj))
                 {
@@ -144,7 +142,7 @@ namespace HexTecGames.GridBaseSystem
         {
             HashSet<GridObject> results = new HashSet<GridObject>();
             HashSet<T> ts = new HashSet<T>();
-            foreach (var gridObj in gridObjects.Values)
+            foreach (GridObject gridObj in gridObjects.Values)
             {
                 if (!results.Contains(gridObj) && gridObj is T t)
                 {
