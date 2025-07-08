@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace HexTecGames.GridBaseSystem
+namespace HexTecGames.GridBaseSystem.Editor
 {
     [CustomPropertyDrawer(typeof(GridObjectSaveData))]
     public class GridObjectSaveDataDrawer : PropertyDrawer

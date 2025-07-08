@@ -8,7 +8,7 @@ namespace HexTecGames.GridBaseSystem
     public abstract class MultiObject<T, D, V> : GridObject<T, D, V>
         where T : MultiObject<T, D, V> where D : MultiObjectData<T, D, V> where V : MultiObjectVisual<T, D, V>
     {
-        private HashSet<CoordData> coordDatas = new HashSet<CoordData>();
+        private Dictionary<int, HashSet<Coord>> coordDatas = new Dictionary<int, HashSet<Coord>>();
 
         protected MultiObject(D data, Coord center, int rotation = 0, GridObjectSaveData saveData = null)
             : base(data, center, rotation, saveData)
@@ -26,20 +26,20 @@ namespace HexTecGames.GridBaseSystem
         }
         protected override void Move(Coord currentCoord, Coord targetCoord)
         {
-            HashSet<CoordData> newCoords = BaseData.GetNormalizedCoordDatas(targetCoord, Rotation);
-            HashSet<CoordData> dataToRemove = new HashSet<CoordData>(coordDatas);
-            HashSet<CoordData> dataToAdd = new HashSet<CoordData>();
+            //Dictionary<int, HashSet<Coord>> newCoords = BaseData.GetNormalizedCoordDatas(targetCoord, Rotation);
+            //HashSet<Coord> dataToRemove = new HashSet<Coord>(coordDatas);
+            //HashSet<Coord> dataToAdd = new HashSet<Coord>();
 
-            foreach (CoordData data in newCoords)
-            {
-                if (dataToRemove.Contains(data))
-                {
-                    dataToRemove.Remove(data);
-                }
-                else dataToAdd.Add(data);
-            }
-            coordDatas = newCoords;
-            Grid.MoveGridObject(dataToRemove, dataToAdd, this);
+            //foreach (var data in newCoords)
+            //{
+            //    if (dataToRemove.Contains(data))
+            //    {
+            //        dataToRemove.Remove(data);
+            //    }
+            //    else dataToAdd.Add(data);
+            //}
+            //coordDatas = newCoords;
+            //Grid.MoveGridObject(dataToRemove, dataToAdd, this);
         }
 
         public HashSet<Coord> GetNeighbourCoords()
@@ -49,20 +49,23 @@ namespace HexTecGames.GridBaseSystem
             // Get neighbours of each coordData
             // Add them to a list if they are not a coordData or already in the list
 
-            foreach (CoordData coordData in coordDatas)
+            foreach (var coordData in coordDatas)
             {
-                List<Coord> neighbours = Grid.GetNeighbourCoords(coordData.coord);
-                foreach (Coord neighbour in neighbours)
+                foreach (var coord in coordData.Value)
                 {
-                    if (results.Contains(neighbour))
+                    List<Coord> neighbours = Grid.GetNeighbourCoords(coord);
+                    foreach (Coord neighbour in neighbours)
                     {
-                        continue;
+                        if (results.Contains(neighbour))
+                        {
+                            continue;
+                        }
+                        if (coordDatas[coordData.Key].Any(x => x == neighbour))
+                        {
+                            continue;
+                        }
+                        results.Add(neighbour);
                     }
-                    if (coordDatas.Any(x => x.coord == neighbour))
-                    {
-                        continue;
-                    }
-                    results.Add(neighbour);
                 }
             }
             return results;

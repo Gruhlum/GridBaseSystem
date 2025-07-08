@@ -18,12 +18,24 @@ namespace HexTecGames.GridBaseSystem
         {
             Add(coord, gridObj);
         }
+        public GridLayer(IEnumerable<Coord> coords, GridObject gridObj) : this()
+        {
+            Add(coords, gridObj);
+        }
+
 
         public void Add(Coord coord, GridObject gridObj)
         {
             if (!gridObjects.TryAdd(coord, gridObj))
             {
                 Debug.LogError($"Coord already occupied: {coord} Old: {gridObjects[coord]} New: {gridObj}");
+            }
+        }
+        public void Add(IEnumerable<Coord> coords, GridObject gridObj)
+        {
+            foreach (var coord in coords)
+            {
+                Add(coord, gridObj);
             }
         }
         public void Remove(Coord coord, GridObject gridObj)
@@ -38,11 +50,19 @@ namespace HexTecGames.GridBaseSystem
             }
             else Debug.Log($"Can't remove Object, {coord} is already empty!");
         }
+        public void Remove(IEnumerable<Coord> coords, GridObject gridObj)
+        {
+            foreach (var coord in coords)
+            {
+                Remove(coord, gridObj);
+            }
+        }
         public void Move(Coord oldCoord, Coord targetCoord, GridObject gridObj)
         {
             Remove(oldCoord, gridObj);
             Add(targetCoord, gridObj);
         }
+
         public bool HasObject<T>(Coord coord)
         {
             if (gridObjects.TryGetValue(coord, out GridObject gridObj))
@@ -64,7 +84,7 @@ namespace HexTecGames.GridBaseSystem
         {
             return gridObjects.Keys.ToList();
         }
-        public List<Coord> GetEmptyCoords(ICollection<Coord> coords)
+        public List<Coord> GetEmptyCoords(IEnumerable<Coord> coords)
         {
             List<Coord> results = new List<Coord>();
 
@@ -92,7 +112,7 @@ namespace HexTecGames.GridBaseSystem
             //Debug.Log($"{coord} is empty!");
             return default;
         }
-        public List<T> Get<T>(ICollection<Coord> coords)
+        public List<T> Get<T>(IEnumerable<Coord> coords)
         {
             List<T> results = new List<T>();
             foreach (Coord coord in coords)
@@ -113,7 +133,7 @@ namespace HexTecGames.GridBaseSystem
             }
             return null;
         }
-        public List<GridObject> Get(ICollection<Coord> coords)
+        public List<GridObject> Get(IEnumerable<Coord> coords)
         {
             List<GridObject> results = new List<GridObject>();
             foreach (Coord coord in coords)
