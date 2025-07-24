@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using HexTecGames.Basics;
 using UnityEngine;
 
-namespace HexTecGames.GridBaseSystem
+namespace HexTecGames.GridBaseSystem.Generics
 {
     [System.Serializable]
     public abstract class SingleObjectData<T, D, V> : GridObjectData<T, D, V>

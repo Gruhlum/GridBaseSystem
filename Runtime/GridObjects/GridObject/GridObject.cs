@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public abstract class GridObject<T, D, V> : GridObject
-        where T : GridObject<T, D, V> where D : GridObjectData<T, D, V> where V : GridObjectVisual<T, D, V>
+    public abstract class GridObject<T, D, V> : GridObject where T : GridObject<T, D, V> where D : GridObjectData<T, D, V> where V : GridObjectVisual<T, D, V>
     {
         public D Data
         {

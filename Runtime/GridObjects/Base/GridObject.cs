@@ -153,8 +153,6 @@ namespace HexTecGames.GridBaseSystem
             return Grid.CoordToWorldPosition(Center);
         }
 
-
-
         public override string ToString()
         {
             return $"{Name} ({Center})";

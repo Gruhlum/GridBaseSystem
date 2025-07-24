@@ -1,4 +1,4 @@
-namespace HexTecGames.GridBaseSystem
+namespace HexTecGames.GridBaseSystem.Generics
 {
     [System.Serializable]
     public abstract class SingleObjectSaveData<T, D, V> : GridObjectSaveData<T, D, V>

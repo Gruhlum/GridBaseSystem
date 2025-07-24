@@ -1,3 +1,6 @@
+
+using HexTecGames.GridBaseSystem.Generics;
+
 namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]

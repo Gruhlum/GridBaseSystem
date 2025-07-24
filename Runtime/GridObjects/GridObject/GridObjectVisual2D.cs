@@ -6,6 +6,7 @@ namespace HexTecGames.GridBaseSystem
        where T : GridObject<T, D, V> where D : GridObjectData<T, D, V> where V : GridObjectVisual2D<T, D, V>
     {
         [SerializeField] protected SpriteRenderer sr = default;
+        [SerializeField] private bool useDataColor = true;
 
         protected virtual void Reset()
         {
@@ -23,7 +24,10 @@ namespace HexTecGames.GridBaseSystem
 
             if (gridObj != null)
             {
-                sr.color = gridObj.Color;
+                if (useDataColor)
+                {
+                    sr.color = gridObj.Color;
+                }
                 sr.sortingOrder = gridObj.BaseData.Layer;
             }
             else sr.sortingOrder = 5000;

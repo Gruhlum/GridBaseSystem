@@ -148,6 +148,10 @@ namespace HexTecGames.GridBaseSystem
             AddGridObjectCoords(layerIndex, coord, gridObj);
             OnGridObjectAdded?.Invoke(gridObj);
         }
+        internal void AddGridObject(GridObject gridObj)
+        {
+            OnGridObjectAdded?.Invoke(gridObj);
+        }
         private void AddGridObjectCoords(int layerIndex, Coord coord, GridObject gridObj)
         {
             //Debug.Log($"Adding: Layer: {layerIndex} obj: {gridObj}");
@@ -173,6 +177,10 @@ namespace HexTecGames.GridBaseSystem
         internal void RemoveGridObject(int layerIndex, IEnumerable<Coord> coords, GridObject gridObj)
         {
             RemoveGridObjectCoords(layerIndex, coords, gridObj);
+            OnGridObjectRemoved?.Invoke(gridObj);
+        }
+        internal void RemoveGridObject(GridObject gridObj)
+        {
             OnGridObjectRemoved?.Invoke(gridObj);
         }
         internal void RemoveGridObjectCoords(int layerIndex, IEnumerable<Coord> coords, GridObject gridObj)
@@ -218,7 +226,10 @@ namespace HexTecGames.GridBaseSystem
             //Debug.Log(layerIndex + " - " + oldCoord.ToString() + " - " + targetCoord.ToString());
             OnGridObjectMoved?.Invoke(gridObj);
         }
-
+        internal void MoveGridObject(GridObject gridObj)
+        {
+            OnGridObjectMoved?.Invoke(gridObj);
+        }
 
         public bool HasTileObject<T>(int layerIndex, Coord coord)
         {
