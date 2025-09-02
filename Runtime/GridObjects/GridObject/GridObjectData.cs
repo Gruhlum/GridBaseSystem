@@ -23,7 +23,7 @@ namespace HexTecGames.GridBaseSystem
 
         public virtual GridObjectVisual CreateVisual(T t, BaseGrid grid)
         {
-            V visual = spawner.Spawn(VisualPrefab);
+            V visual = spawner.Spawn(VisualPrefab, false);
             SetupVisual(visual, t, grid);
             return visual;
         }

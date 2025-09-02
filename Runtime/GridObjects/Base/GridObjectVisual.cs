@@ -22,7 +22,14 @@ namespace HexTecGames.GridBaseSystem
 
         public event Action<GridObjectVisual> OnDeactivated;
 
-        public virtual void Setup(GridObject gridObject, BaseGrid grid)
+        public void Setup(GridObject gridObject, BaseGrid grid)
+        {
+            OnSetup(gridObject, grid);
+            gameObject.SetActive(true);
+            AfterSetup();
+        }
+        protected virtual void AfterSetup() { }
+        protected virtual void OnSetup(GridObject gridObject, BaseGrid grid)
         {
             if (grid != null)
             {

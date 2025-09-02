@@ -28,7 +28,7 @@ namespace HexTecGames.GridBaseSystem
             OnDeactivated?.Invoke(this as V);
         }
 
-        public override void Setup(GridObject gridObject, BaseGrid grid)
+        protected override void OnSetup(GridObject gridObject, BaseGrid grid)
         {
             if (GridObject != null)
             {
@@ -36,7 +36,7 @@ namespace HexTecGames.GridBaseSystem
             }
 
             this.GridObject = gridObject as T;
-            base.Setup(gridObject, grid);
+            base.OnSetup(gridObject, grid);
 
             if (GridObject != null)
             {

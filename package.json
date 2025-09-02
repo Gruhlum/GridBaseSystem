@@ -1,6 +1,6 @@
 {
   "name": "com.hextecgames.gridbasesystem",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "displayName": "GridBaseSystem",
   "description": "Base package for grid systems",
   "unity": "2022.1",
@@ -10,5 +10,6 @@
   },
   "author": {
     "name": "HexTecGames"
-  }
+  },
+  "hideInEditor": false
 }
