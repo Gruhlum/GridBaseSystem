@@ -19,17 +19,10 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private V visualPrefab;
 
-        private MultiSpawner spawner = new MultiSpawner();
 
-        public virtual GridObjectVisual CreateVisual(T t, BaseGrid grid)
+        public override GridObjectVisual GetVisualPrefab()
         {
-            V visual = spawner.Spawn(VisualPrefab, false);
-            SetupVisual(visual, t, grid);
-            return visual;
-        }
-        public sealed override GridObjectVisual CreateVisual(GridObject obj, BaseGrid grid)
-        {
-            return CreateVisual(obj as T, grid);
+            return VisualPrefab;
         }
         protected virtual void SetupVisual(V visual, T tileObj, BaseGrid grid)
         {

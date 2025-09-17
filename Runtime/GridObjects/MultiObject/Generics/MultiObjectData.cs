@@ -55,28 +55,6 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-
-        public override bool IsValidPlacement(BaseGrid grid, Coord target, int rotation)
-        {
-            if (coordDatas == null)
-            {
-                LoadDictionary();
-            }
-            foreach (var coordData in coordDatas)
-            {
-                foreach (var coord in coordData.Value)
-                {
-                    Coord normalized = coord + target;
-                    normalized.Rotate(coord, rotation);
-                    if (!grid.IsEmpty(coordData.Key, normalized))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
         public bool HasCoordData(int layer, int x, int y)
         {
             if (coordDatas == null)
@@ -91,46 +69,63 @@ namespace HexTecGames.GridBaseSystem
             else return false;
         }
 
-        public override Dictionary<int, HashSet<Coord>> GetNormalizedCoordDatas(Coord target, int rotation)
+        private void ForEachNormalizedCoord(Coord target, int rotation, Action<int, Coord> action)
         {
             if (coordDatas == null)
             {
                 LoadDictionary();
             }
-            Dictionary<int, HashSet<Coord>> results = new Dictionary<int, HashSet<Coord>>();
-
-            foreach (var coordData in coordDatas)
-            {
-                HashSet<Coord> newHashSet = new HashSet<Coord>();
-                foreach (var coord in coordData.Value)
-                {
-                    newHashSet.Add(coord + target);
-                }
-                results.Add(coordData.Key, newHashSet);
-            }
-            return results;
-        }
-        public override List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord target, int rotation)
-        {
-            if (coordDatas == null)
-            {
-                LoadDictionary();
-            }
-            List<BoolCoord> boolCoords = new List<BoolCoord>();
 
             foreach (var coordData in coordDatas)
             {
                 foreach (var coord in coordData.Value)
                 {
                     Coord normalized = target + coord;
-                    normalized.Rotate(coord, rotation);
-                    if (grid.IsEmpty(coordData.Key, normalized))
-                    {
-                        boolCoords.Add(new BoolCoord(normalized, true));
-                    }
-                    else boolCoords.Add(new BoolCoord(normalized, false));
+                    normalized.Rotate(target, rotation);
+                    action(coordData.Key, normalized);
                 }
             }
+        }
+        public override bool IsValidPlacement(BaseGrid grid, Coord target, int rotation)
+        {
+            bool isValid = true;
+
+            ForEachNormalizedCoord(target, rotation, (layer, normalized) =>
+            {
+                if (!grid.IsEmpty(layer, normalized))
+                {
+                    isValid = false;
+                }
+            });
+
+            return isValid;
+        }
+        public override Dictionary<int, HashSet<Coord>> GetNormalizedCoordDatas(Coord target, int rotation)
+        {
+            Dictionary<int, HashSet<Coord>> results = new Dictionary<int, HashSet<Coord>>();
+
+            ForEachNormalizedCoord(target, rotation, (layer, normalized) =>
+            {
+                if (!results.TryGetValue(layer, out var set))
+                {
+                    set = new HashSet<Coord>();
+                    results[layer] = set;
+                }
+                set.Add(normalized);
+            });
+
+            return results;
+        }
+        public override List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord target, int rotation)
+        {
+            List<BoolCoord> boolCoords = new List<BoolCoord>();
+
+            ForEachNormalizedCoord(target, rotation, (layer, normalized) =>
+            {
+                bool isValid = grid.IsEmpty(layer, normalized);
+                boolCoords.Add(new BoolCoord(normalized, isValid));
+            });
+
             return boolCoords;
         }
     }

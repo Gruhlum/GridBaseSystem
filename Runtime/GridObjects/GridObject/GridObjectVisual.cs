@@ -1,5 +1,6 @@
 using System;
 using HexTecGames.Basics;
+using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
@@ -28,15 +29,25 @@ namespace HexTecGames.GridBaseSystem
             OnDeactivated?.Invoke(this as V);
         }
 
-        protected override void OnSetup(GridObject gridObject, BaseGrid grid)
+        protected sealed override void OnSetup(GridObject gridObject, BaseGrid grid)
         {
             if (GridObject != null)
             {
                 RemoveEvents(GridObject);
             }
 
-            this.GridObject = gridObject as T;
             base.OnSetup(gridObject, grid);
+
+            if (gridObject is T t)
+            {
+                this.GridObject = t;
+                OnSetup(t, grid);
+            }
+            else
+            {
+                Debug.Log("Wrong Type!");
+                return;
+            }
 
             if (GridObject != null)
             {
@@ -45,7 +56,9 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        protected abstract void Rotate(int rotation);
+        protected virtual void OnSetup(T gridObj, BaseGrid grid)
+        {
+        }
 
         private void GridObject_OnRotated(T gridObj, int rotation)
         {

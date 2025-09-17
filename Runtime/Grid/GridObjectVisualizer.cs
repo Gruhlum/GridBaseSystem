@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
@@ -12,6 +13,7 @@ namespace HexTecGames.GridBaseSystem
 
         private HashSet<GridObjectVisual> activeDisplays = new HashSet<GridObjectVisual>();
 
+        private MultiSpawner spawner = new MultiSpawner();
 
         //public event Action<TileObjectVisual> OnVisualSpawned;
 
@@ -28,6 +30,8 @@ namespace HexTecGames.GridBaseSystem
         protected void OnDestroy()
         {
             grid.OnGridObjectAdded -= Grid_OnTileObjectAdded;
+            activeDisplays.Clear();
+            layerParents.Clear();
         }
 
         public void RemoveDisplay(GridObjectVisual visual)
@@ -35,12 +39,19 @@ namespace HexTecGames.GridBaseSystem
             activeDisplays.Remove(visual);
         }
 
-        private void Grid_OnTileObjectAdded(GridObject tileObject)
+        private void Grid_OnTileObjectAdded(GridObject gridObject)
         {
             //Debug.Log($"{nameof(tileObject.Name)} {tileObject.Name}");
-            GridObjectVisual visual = tileObject.CreateVisual(grid);
+            var prefab = gridObject.BaseData.GetVisualPrefab();
+            if (prefab == null)
+            {
+                Debug.Log("Prefab is null!");
+                return;
+            }
+            GridObjectVisual visual = spawner.Spawn(prefab);
+            visual.Setup(gridObject, grid);
 
-            int layer = tileObject.BaseData.Layer;
+            int layer = gridObject.BaseData.Layer;
 
             if (layerParents.TryGetValue(layer, out Transform parent))
             {

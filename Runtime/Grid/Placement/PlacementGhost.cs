@@ -8,7 +8,6 @@ namespace HexTecGames.GridBaseSystem
     {
         [SerializeField] private BaseGrid grid = default;
         [SerializeField] private TileHighlightSpawner highlightSpawner = default;
-        [SerializeField] private SpriteRenderer sr = default;
 
         private GridObjectVisual currentVisual;
 
@@ -25,12 +24,15 @@ namespace HexTecGames.GridBaseSystem
         protected virtual void Reset()
         {
             grid = transform.GetComponentInParent<BaseGrid>();
-            highlightSpawner ??= new TileHighlightSpawner();
+            if (highlightSpawner == null)
+            {
+                highlightSpawner = new TileHighlightSpawner();
+            }
             highlightSpawner.Parent = transform;
             highlightSpawner.Grid = grid;
         }
 
-        public void Activate(PlacementData placementData, Coord center)
+        public void Activate(PlacementData placementData, GridObjectVisual visual, Coord center)
         {
             activeData = placementData;
             if (currentVisual != null)
@@ -38,7 +40,7 @@ namespace HexTecGames.GridBaseSystem
                 currentVisual.Deactivate();
             }
 
-            currentVisual = placementData.Data.CreateVisual();
+            currentVisual = visual;
             currentVisual.transform.SetParent(transform);
             currentVisual.SetColor(placementData.GetColor().GetColorWithAlpha(0.5f));
             currentVisual.transform.localPosition = Vector3.zero;
@@ -81,8 +83,10 @@ namespace HexTecGames.GridBaseSystem
         public void UpdatePlacementArea(Coord coord, int rotation)
         {
             this.coord = coord;
+            rotation = rotation % currentVisual.TotalRotations;
             this.rotation = rotation;
             transform.position = grid.CoordToWorldPosition(coord);
+            currentVisual.Rotate(rotation);
             UpdatePlacementArea();
         }
         public void UpdatePlacementArea()
@@ -92,14 +96,14 @@ namespace HexTecGames.GridBaseSystem
                 UpdatePlacementArea(activeData);
             }
         }
-        private void UpdatePlacementArea(PlacementData data)
+        private void UpdatePlacementArea(PlacementData placementData)
         {
             if (!gameObject.activeInHierarchy)
             {
                 return;
             }
             highlightSpawner.DeactivateAll();
-            List<BoolCoord> results = data.Data.GetNormalizedValidCoords(grid, coord, rotation);
+            List<BoolCoord> results = placementData.Data.GetNormalizedValidCoords(grid, coord, rotation);
 
             foreach (BoolCoord result in results)
             {

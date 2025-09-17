@@ -5,6 +5,8 @@ namespace HexTecGames.GridBaseSystem
 {
     public abstract class GridObjectVisual : MonoBehaviour
     {
+        public abstract int TotalRotations { get; }
+
         public GridObject GridObject
         {
             get
@@ -37,8 +39,9 @@ namespace HexTecGames.GridBaseSystem
             }
             this.grid = grid;
             this.gridObject = gridObject;
+            Rotate(gridObject.Rotation);
         }
-
+        public abstract void Rotate(int rotation);
         public abstract GridObject GetTileObject();
         public virtual void Deactivate()
         {

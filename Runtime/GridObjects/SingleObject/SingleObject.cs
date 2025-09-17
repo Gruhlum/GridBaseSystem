@@ -15,7 +15,5 @@ namespace HexTecGames.GridBaseSystem
         {
             return new SingleObjectSaveData(this);
         }
-
-
     }
 }

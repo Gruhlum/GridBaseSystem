@@ -321,7 +321,19 @@ namespace HexTecGames.GridBaseSystem
             }
             return allGridObjects;
         }
+        public List<GridObject> GetAllGridObjects(Coord coord)
+        {
+            List<GridObject> allGridObjects = new List<GridObject>();
 
+            foreach (GridLayer layer in gridLayers.Values)
+            {
+                if (!layer.IsEmpty(coord))
+                {
+                    allGridObjects.Add(layer.Get(coord));
+                }
+            }
+            return allGridObjects;
+        }
         public List<GridObject> GetNeighbourGridObjects(int layerIndex, Coord coord)
         {
             List<Coord> neighbourCoords = GetAdjacents(coord);

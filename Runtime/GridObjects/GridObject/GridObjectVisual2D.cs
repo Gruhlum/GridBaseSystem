@@ -18,7 +18,7 @@ namespace HexTecGames.GridBaseSystem
             }
         }
 
-        protected override void OnSetup(GridObject gridObj, BaseGrid grid)
+        protected override void OnSetup(T gridObj, BaseGrid grid)
         {
             base.OnSetup(gridObj, grid);
 
@@ -36,9 +36,9 @@ namespace HexTecGames.GridBaseSystem
         {
             sr.color = color;
         }
-        protected override void Rotate(int rotation)
+        public override void Rotate(int rotation)
         {
-            gameObject.transform.rotation = Quaternion.Euler(0, 0, GridObject.DirectionToDegrees(rotation));
+            gameObject.transform.rotation = Quaternion.Euler(0, 0, grid.DirectionToDegrees(rotation));
         }
 
         protected override void AddEvents(T gridObj)

@@ -24,7 +24,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 return base.Rotation;
             }
-            protected set
+            set
             {
                 base.Rotation = value;
                 OnRotated?.Invoke(this as T, Rotation);
@@ -43,18 +43,6 @@ namespace HexTecGames.GridBaseSystem
                 OnColorChanged?.Invoke(this as T, Color);
             }
         }
-        public virtual bool IsReplaceable
-        {
-            get
-            {
-                return isReplaceable;
-            }
-            set
-            {
-                isReplaceable = value;
-            }
-        }
-        private bool isReplaceable;
 
         public delegate void MoveEvent(T gridObj, Coord start, Coord target);
         public delegate void RotationEvent(T gridObj, int rotation);
@@ -72,7 +60,6 @@ namespace HexTecGames.GridBaseSystem
             this.Data = data;
             this.Rotation = rotation;
         }
-
 
         public sealed override void Remove()
         {

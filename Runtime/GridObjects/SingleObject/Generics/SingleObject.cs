@@ -6,6 +6,10 @@ namespace HexTecGames.GridBaseSystem.Generics
     public abstract class SingleObject<T, D, V> : GridObject<T, D, V>
         where T : SingleObject<T, D, V> where D : SingleObjectData<T, D, V> where V : SingleObjectVisual<T, D, V>
     {
+
+        /// <summary>
+        /// Does not belong to a specific Cell
+        /// </summary>
         public virtual bool IsUnbound
         {
             get

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class GridPlacementController : MonoBehaviour
+    public class GridPlacementController : AdvancedBehaviour
     {
         [SerializeField] protected BaseGrid grid = default;
         [SerializeField] protected GridEventSystem gridEventSystem = default;
@@ -19,11 +19,6 @@ namespace HexTecGames.GridBaseSystem
         //[SerializeField] private bool allowRemoving = default;
         //[SerializeField][DrawIf("allowRemoving", true)] private bool allowRemoveHoldingDown = default;
         //[SerializeField][DrawIf("allowRemoving", true)] private bool allowOverwriting = default;
-
-        [Header("Placement")]
-        [SerializeField] private TileHighlightSpawner highlightSpawner = default;
-        //[SerializeField] private Color invalidLocationCol = Color.red;
-        //[SerializeField] private Color validLocationCol = Color.green;
 
         [SerializeField] private SoundClipBase errorSound = default;
 
@@ -57,6 +52,9 @@ namespace HexTecGames.GridBaseSystem
         public event Action<GridObject> OnObjectPlaced;
         public event Action<PreBuildInfo> OnBeforeBuild;
 
+
+        private MultiSpawner spawner = new MultiSpawner();
+
         private int currentRotation;
         private int currentRemovalIndex;
         public bool AllowRemoval
@@ -73,8 +71,9 @@ namespace HexTecGames.GridBaseSystem
         [SerializeField] private bool allowRemoval = default;
 
 
-        protected virtual void Reset()
+        protected override void Reset()
         {
+            base.Reset();
             grid = transform.GetComponentInParent<BaseGrid>();
             ghost = transform.GetComponentInChildren<PlacementGhost>();
 
@@ -82,8 +81,6 @@ namespace HexTecGames.GridBaseSystem
             {
                 gridEventSystem = grid.transform.GetComponentInChildren<GridEventSystem>();
             }
-            highlightSpawner ??= new TileHighlightSpawner();
-            highlightSpawner.Grid = grid;
         }
 
         private void OnEnable()
@@ -221,20 +218,20 @@ namespace HexTecGames.GridBaseSystem
             ghost.Deactivate();
         }
 
-        public void SetSelectedObject(PlacementData data)
+        public void SetSelectedObject(PlacementData placementData)
         {
             if (!gameObject.activeSelf)
             {
                 return;
             }
-            if (data == null)
+            if (placementData == null)
             {
                 ClearSelectedPlacementData();
                 return;
             }
 
-            SelectedPlacementData = data;
-            ghost.Activate(data, HoverCoord);
+            SelectedPlacementData = placementData;
+            ghost.Activate(placementData, spawner.Spawn(placementData.Data.GetVisualPrefab()), HoverCoord);
             ResetRotation();
         }
         private void ResetRotation()

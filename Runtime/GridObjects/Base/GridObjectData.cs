@@ -24,15 +24,9 @@ namespace HexTecGames.GridBaseSystem
             get;
         }
 
+        public abstract GridObjectVisual GetVisualPrefab();
         public abstract bool IsValidPlacement(BaseGrid grid, Coord target, int rotation);
         public abstract Dictionary<int, HashSet<Coord>> GetNormalizedCoordDatas(Coord target, int rotation);
         public abstract List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord target, int rotation);
-
-        //public abstract GridObject CreateGridObject(BaseGrid grid, Coord target, int rotation, GridObjectSaveData saveData = null);
-        public GridObjectVisual CreateVisual()
-        {
-            return CreateVisual(null, null);
-        }
-        public abstract GridObjectVisual CreateVisual(GridObject obj, BaseGrid grid);
     }
 }
