@@ -5,8 +5,6 @@ namespace HexTecGames.GridBaseSystem
 {
     public abstract class GridObjectVisual : MonoBehaviour
     {
-        public abstract int TotalRotations { get; }
-
         public GridObject GridObject
         {
             get
@@ -24,8 +22,11 @@ namespace HexTecGames.GridBaseSystem
 
         public event Action<GridObjectVisual> OnDeactivated;
 
+        public abstract void SetData(GridObjectData data);
+        public abstract GridObjectData GetData();
         public void Setup(GridObject gridObject, BaseGrid grid)
         {
+            SetData(gridObject.BaseData);
             OnSetup(gridObject, grid);
             gameObject.SetActive(true);
             AfterSetup();

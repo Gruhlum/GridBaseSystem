@@ -12,7 +12,15 @@ namespace HexTecGames.GridBaseSystem
         where T : MultiObject<T, D, V> where D : MultiObjectData<T, D, V> where V : MultiObjectVisual<T, D, V>
     {
         public Dictionary<int, HashSet<Coord>> coordDatas;
+        [SerializeField] public List<Sprite> sprites = new List<Sprite>();
 
+        public override int TotalRotations
+        {
+            get
+            {
+                return sprites.Count;
+            }
+        }
         public override int Layer
         {
             get

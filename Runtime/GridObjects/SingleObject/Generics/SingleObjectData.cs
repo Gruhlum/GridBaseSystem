@@ -17,6 +17,15 @@ namespace HexTecGames.GridBaseSystem.Generics
                 return layer;
             }
         }
+
+        public override int TotalRotations
+        {
+            get
+            {
+                return totalRotations;
+            }
+        }
+        [SerializeField] private int totalRotations = 4;
         [SerializeField] private int layer = default;
 
         public override bool IsValidPlacement(BaseGrid grid, Coord target, int rotation)

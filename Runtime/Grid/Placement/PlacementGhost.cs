@@ -83,7 +83,6 @@ namespace HexTecGames.GridBaseSystem
         public void UpdatePlacementArea(Coord coord, int rotation)
         {
             this.coord = coord;
-            rotation = rotation % currentVisual.TotalRotations;
             this.rotation = rotation;
             transform.position = grid.CoordToWorldPosition(coord);
             currentVisual.Rotate(rotation);

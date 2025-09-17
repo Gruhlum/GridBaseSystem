@@ -21,12 +21,38 @@ namespace HexTecGames.GridBaseSystem
         }
         private T gridObject;
 
+        public D Data
+        {
+            get
+            {
+                return data;
+            }
+            private set
+            {
+                data = value;
+            }
+        }
+        private D data;
+
         public new event Action<V> OnDeactivated;
 
         protected virtual void OnDisable()
         {
             //Debug.Log("Deactivated");
             OnDeactivated?.Invoke(this as V);
+        }
+
+        public sealed override GridObjectData GetData()
+        {
+            return Data;
+        }
+        public sealed override void SetData(GridObjectData data)
+        {
+            SetData(data as D);
+        }
+        public virtual void SetData(D data)
+        {
+            this.Data = data;
         }
 
         protected sealed override void OnSetup(GridObject gridObject, BaseGrid grid)

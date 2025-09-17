@@ -19,6 +19,7 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private Color color = Color.white;
 
+        public abstract int TotalRotations { get; }
         public abstract int Layer
         {
             get;

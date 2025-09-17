@@ -114,6 +114,8 @@ namespace HexTecGames.GridBaseSystem
                 }
                 else currentRotation++;
 
+                currentRotation %= selectedPlacementData.Data.TotalRotations;
+
                 ghost.UpdatePlacementArea(gridEventSystem.MouseCoord, currentRotation);
             }
         }
@@ -201,16 +203,8 @@ namespace HexTecGames.GridBaseSystem
                 SelectedPlacementData.PlacementSound.Play();
             }
 
-            StartCoroutine(BuildDelayed(coord));
-        }
-
-        private IEnumerator BuildDelayed(Coord coord)
-        {
-            yield return null;
-            GridObject tileObject = CreateGridObject(coord);
-            //Debug.Log("Placing Object: " + tileObject.Name + " at: " + coord.ToString());
+            GridObject tileObject = CreateGridObject(coord, currentRotation);
             OnObjectPlaced?.Invoke(tileObject);
-            //ghost.UpdatePlacementArea();
         }
         public void ClearSelectedPlacementData()
         {
@@ -231,20 +225,29 @@ namespace HexTecGames.GridBaseSystem
             }
 
             SelectedPlacementData = placementData;
-            ghost.Activate(placementData, spawner.Spawn(placementData.Data.GetVisualPrefab()), HoverCoord);
+            GridObjectVisual visual = SpawnVisual(placementData);
+            ghost.Activate(placementData, visual, HoverCoord);
             ResetRotation();
         }
+
+        private GridObjectVisual SpawnVisual(PlacementData placementData)
+        {
+            var visual = spawner.Spawn(placementData.Data.GetVisualPrefab());
+            visual.SetData(placementData.Data);
+            return visual;
+        }
+
         private void ResetRotation()
         {
             currentRotation = 0;
             ghost.UpdatePlacementArea(gridEventSystem.MouseCoord, currentRotation);
         }
 
-        protected GridObject CreateGridObject(Coord coord)
+        protected GridObject CreateGridObject(Coord coord, int rotation)
         {
             if (SelectedPlacementData.Data is IGridObjectCreator creator)
             {
-                GridObject tileObj = creator.CreateGridObject(grid, coord, currentRotation);
+                GridObject tileObj = creator.CreateGridObject(grid, coord, rotation);
                 return tileObj;
             }
             else
