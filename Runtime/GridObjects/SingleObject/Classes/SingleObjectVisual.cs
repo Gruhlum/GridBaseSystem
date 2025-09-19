@@ -1,7 +1,5 @@
-using HexTecGames.GridBaseSystem.Generics;
-using UnityEngine;
 
-namespace HexTecGames.GridBaseSystem
+namespace HexTecGames.GridBaseSystem.Classes
 {
     public class SingleObjectVisual : SingleObjectVisual<SingleObject, SingleObjectData, SingleObjectVisual>
     {

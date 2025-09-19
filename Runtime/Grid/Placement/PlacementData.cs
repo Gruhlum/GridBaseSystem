@@ -69,7 +69,7 @@ namespace HexTecGames.GridBaseSystem
                 isDraggable = value;
             }
         }
-        [Space, SerializeField] private bool isDraggable;
+        [Space, SerializeField] private bool isDraggable = true;
         public virtual bool IsReplaceable
         {
             get
@@ -81,7 +81,7 @@ namespace HexTecGames.GridBaseSystem
                 isReplaceable = value;
             }
         }
-        [SerializeField] private bool isReplaceable;
+        [SerializeField] private bool isReplaceable = true;
 
         public SoundClipBase PlacementSound
         {

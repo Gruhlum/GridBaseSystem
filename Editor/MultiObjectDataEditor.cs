@@ -5,6 +5,7 @@ using UnityEditor;
 using HexTecGames.GridBaseSystem;
 using System.Linq;
 using HexTecGames.Basics;
+using HexTecGames.GridBaseSystem.Classes;
 
 namespace HexTecGames.GridHexSystem.Editor
 {

@@ -29,7 +29,10 @@ namespace HexTecGames.GridBaseSystem
             }
         }
         [SerializeField] private int layer = default;
-
+        [Space]
+        [SerializeField] private bool requiresSubLayer = default;
+        [SerializeField, DrawIf(nameof(requiresSubLayer), true)] private int requiredLayer = default;
+        [Space]
         [SerializeField] private List<CoordList> coordLists = new List<CoordList>();
 
 #if UNITY_EDITOR
@@ -49,6 +52,16 @@ namespace HexTecGames.GridBaseSystem
 #endif
         public void LoadDictionary()
         {
+            if (coordDatas != null)
+            {
+                if (!Application.isEditor)
+                {
+                    return;
+                }
+                coordDatas.Clear();
+            }
+            
+
             if (coordLists == null)
             {
                 return;
@@ -57,6 +70,7 @@ namespace HexTecGames.GridBaseSystem
             {
                 coordDatas = new Dictionary<int, HashSet<Coord>>();
             }
+
             foreach (var coordList in coordLists)
             {
                 coordDatas.Add(coordList.layer, coordList.GenerateHashSet());
@@ -77,63 +91,68 @@ namespace HexTecGames.GridBaseSystem
             else return false;
         }
 
-        private void ForEachNormalizedCoord(Coord target, int rotation, Action<int, Coord> action)
+        private bool IsValidCoord(BaseGrid grid, int layer, Coord normalized)
         {
-            if (coordDatas == null)
+            if (requiresSubLayer && grid.IsEmpty(requiredLayer, normalized))
             {
-                LoadDictionary();
+                return false;
             }
+            if (!grid.IsEmpty(layer, normalized))
+            {
+                return false;
+            }
+            return true;
+        }
+        public override bool IsValidPlacement(BaseGrid grid, Coord target, int rotation)
+        {
+            LoadDictionary();
+            foreach (var coordData in coordDatas)
+            {
+                foreach (var coord in coordData.Value)
+                {
+                    Coord normalized = coord.Normalize(target, rotation);
+                    if (!IsValidCoord(grid, layer, normalized))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        public override Dictionary<int, HashSet<Coord>> GetNormalizedCoordDatas(Coord target, int rotation)
+        {
+            LoadDictionary();
+
+            Dictionary<int, HashSet<Coord>> results = new Dictionary<int, HashSet<Coord>>();
 
             foreach (var coordData in coordDatas)
             {
                 foreach (var coord in coordData.Value)
                 {
-                    Coord normalized = target + coord;
-                    normalized.Rotate(target, rotation);
-                    action(coordData.Key, normalized);
+                    Coord normalized = coord.Normalize(target, rotation);
+                    if (!results.TryGetValue(layer, out var set))
+                    {
+                        set = new HashSet<Coord>();
+                        results[layer] = set;
+                    }
+                    set.Add(normalized);
                 }
             }
-        }
-        public override bool IsValidPlacement(BaseGrid grid, Coord target, int rotation)
-        {
-            bool isValid = true;
-
-            ForEachNormalizedCoord(target, rotation, (layer, normalized) =>
-            {
-                if (!grid.IsEmpty(layer, normalized))
-                {
-                    isValid = false;
-                }
-            });
-
-            return isValid;
-        }
-        public override Dictionary<int, HashSet<Coord>> GetNormalizedCoordDatas(Coord target, int rotation)
-        {
-            Dictionary<int, HashSet<Coord>> results = new Dictionary<int, HashSet<Coord>>();
-
-            ForEachNormalizedCoord(target, rotation, (layer, normalized) =>
-            {
-                if (!results.TryGetValue(layer, out var set))
-                {
-                    set = new HashSet<Coord>();
-                    results[layer] = set;
-                }
-                set.Add(normalized);
-            });
-
             return results;
         }
         public override List<BoolCoord> GetNormalizedValidCoords(BaseGrid grid, Coord target, int rotation)
         {
+            LoadDictionary();
             List<BoolCoord> boolCoords = new List<BoolCoord>();
 
-            ForEachNormalizedCoord(target, rotation, (layer, normalized) =>
+            foreach (var coordData in coordDatas)
             {
-                bool isValid = grid.IsEmpty(layer, normalized);
-                boolCoords.Add(new BoolCoord(normalized, isValid));
-            });
-
+                foreach (var coord in coordData.Value)
+                {
+                    Coord normalized = coord.Normalize(target, rotation);
+                    boolCoords.Add(new BoolCoord(normalized, IsValidCoord(grid, layer, normalized)));
+                }
+            }
             return boolCoords;
         }
     }

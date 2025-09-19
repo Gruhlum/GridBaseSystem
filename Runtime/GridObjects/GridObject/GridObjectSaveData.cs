@@ -1,6 +1,6 @@
 using HexTecGames.GridBaseSystem;
 
-namespace HexTecGames
+namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
     public class GridObjectSaveData<T, D, V> : GridObjectSaveData

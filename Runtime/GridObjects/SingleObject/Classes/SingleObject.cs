@@ -1,7 +1,6 @@
 using HexTecGames.Basics;
-using HexTecGames.GridBaseSystem.Generics;
 
-namespace HexTecGames.GridBaseSystem
+namespace HexTecGames.GridBaseSystem.Classes
 {
     [System.Serializable]
     public class SingleObject : SingleObject<SingleObject, SingleObjectData, SingleObjectVisual>

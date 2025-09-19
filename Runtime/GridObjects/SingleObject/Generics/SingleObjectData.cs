@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using HexTecGames.Basics;
 using UnityEngine;
 
-namespace HexTecGames.GridBaseSystem.Generics
+namespace HexTecGames.GridBaseSystem
 {
     [System.Serializable]
     public abstract class SingleObjectData<T, D, V> : GridObjectData<T, D, V>
@@ -25,13 +25,12 @@ namespace HexTecGames.GridBaseSystem.Generics
                 return totalRotations;
             }
         }
-        [SerializeField] private int totalRotations = 4;
+        [SerializeField, Min(1)] private int totalRotations = 1;
         [SerializeField] private int layer = default;
 
         public override bool IsValidPlacement(BaseGrid grid, Coord target, int rotation)
         {
-            Coord normalized = center + target;
-            normalized.Rotate(center, rotation);
+            Coord normalized = center.Normalize(target, rotation);
             return grid.IsEmpty(Layer, normalized);
         }
         public override Dictionary<int, HashSet<Coord>> GetNormalizedCoordDatas(Coord target, int rotation)
@@ -42,8 +41,7 @@ namespace HexTecGames.GridBaseSystem.Generics
         {
             List<BoolCoord> boolCoords = new List<BoolCoord>();
 
-            Coord normalized = center + target;
-            normalized.Rotate(center, rotation);
+            Coord normalized = center.Normalize(target, rotation);
             boolCoords.Add(new BoolCoord(normalized, grid.IsEmpty(Layer, normalized)));
             return boolCoords;
         }

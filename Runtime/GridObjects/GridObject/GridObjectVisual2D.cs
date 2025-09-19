@@ -36,10 +36,6 @@ namespace HexTecGames.GridBaseSystem
         {
             sr.color = color;
         }
-        public override void Rotate(int rotation)
-        {
-            gameObject.transform.rotation = Quaternion.Euler(0, 0, grid.DirectionToDegrees(rotation));
-        }
 
         protected override void AddEvents(T gridObj)
         {

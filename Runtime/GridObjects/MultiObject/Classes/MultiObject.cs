@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
+using HexTecGames.GridBaseSystem;
 using UnityEngine;
 
-namespace HexTecGames.GridBaseSystem
+namespace HexTecGames.GridBaseSystem.Classes
 {
     [System.Serializable]
     public class MultiObject : MultiObject<MultiObject, MultiObjectData, MultiObjectVisual>

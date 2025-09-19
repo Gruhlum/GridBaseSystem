@@ -104,21 +104,30 @@ namespace HexTecGames.GridBaseSystem
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                if (SelectedPlacementData == null)
-                {
-                    return;
-                }
                 if (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift))
                 {
-                    currentRotation--;
+                    RotateSelectedObject(-1);
                 }
-                else currentRotation++;
-
-                currentRotation %= selectedPlacementData.Data.TotalRotations;
-
-                ghost.UpdatePlacementArea(gridEventSystem.MouseCoord, currentRotation);
+                else RotateSelectedObject(1);
             }
         }
+
+        private void RotateSelectedObject(int change)
+        {
+            if (SelectedPlacementData == null)
+            {
+                return;
+            }
+            if (selectedPlacementData.Data.TotalRotations <= 1)
+            {
+                return;
+            }
+            currentRotation += change;
+
+            currentRotation %= selectedPlacementData.Data.TotalRotations;
+            ghost.UpdatePlacementArea(gridEventSystem.MouseCoord, currentRotation);
+        }
+
         private void GridEventSystem_OnMouseClicked(Coord coord, int btn)
         {
             if (btn == 0)
@@ -145,11 +154,10 @@ namespace HexTecGames.GridBaseSystem
             }
             if (gridEventSystem.IsDragging)
             {
-                if (gridEventSystem.LastMouseButton == 0)
+                if (SelectedPlacementData != null && SelectedPlacementData.IsDraggable && gridEventSystem.LastMouseButton == 0)
                 {
                     Build(coord);
                 }
-
                 else if (AllowRemoval && gridEventSystem.LastMouseButton == 1)
                 {
                     RemoveNext(currentRemovalIndex, coord);

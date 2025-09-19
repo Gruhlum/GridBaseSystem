@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
+using HexTecGames.GridBaseSystem;
 using UnityEngine;
 
-namespace HexTecGames.GridBaseSystem
+namespace HexTecGames.GridBaseSystem.Classes
 {
     [CreateAssetMenu(fileName = "New MultiObject", menuName = "HexTecGames/Grid/MultiObjectData")]
     public class MultiObjectData : MultiObjectData<MultiObject, MultiObjectData, MultiObjectVisual>, IGridObjectCreator
