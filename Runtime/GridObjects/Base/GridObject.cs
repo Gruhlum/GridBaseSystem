@@ -147,7 +147,10 @@ namespace HexTecGames.GridBaseSystem
         }
 
         public virtual void LoadSaveData(GridObjectSaveData saveData) { }
-        public abstract GridObjectSaveData GetSaveData();
+        public virtual GridObjectSaveData GetSaveData()
+        {
+            return new GridObjectSaveData(this);
+        }
         public Vector3 GetWorldPosition()
         {
             return Grid.CoordToWorldPosition(Center);

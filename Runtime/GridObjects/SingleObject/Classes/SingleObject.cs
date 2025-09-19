@@ -9,10 +9,5 @@ namespace HexTecGames.GridBaseSystem.Classes
             : base(data, center, rotation, saveData)
         {
         }
-
-        public override GridObjectSaveData GetSaveData()
-        {
-            return new SingleObjectSaveData(this);
-        }
     }
 }

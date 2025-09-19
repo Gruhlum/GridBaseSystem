@@ -12,10 +12,5 @@ namespace HexTecGames.GridBaseSystem.Classes
         public MultiObject(MultiObjectData data, Coord center, int rotation = 0, MultiObjectSaveData saveData = null) : base(data, center, rotation, saveData)
         {
         }
-
-        public override GridObjectSaveData GetSaveData()
-        {
-            return new MultiObjectSaveData(this);
-        }
     }
 }
