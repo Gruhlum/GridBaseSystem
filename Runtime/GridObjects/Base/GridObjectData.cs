@@ -24,7 +24,22 @@ namespace HexTecGames.GridBaseSystem
         {
             get;
         }
+        [Space]
+        [SerializeField] private bool requiresSubLayer = default;
+        [SerializeField, DrawIf(nameof(requiresSubLayer), true)] private int requiredLayer = default;
 
+        protected bool IsValidCoord(BaseGrid grid, int layer, Coord normalized)
+        {
+            if (requiresSubLayer && grid.IsEmpty(requiredLayer, normalized))
+            {
+                return false;
+            }
+            if (!grid.IsEmpty(layer, normalized))
+            {
+                return false;
+            }
+            return true;
+        }
         public abstract GridObjectVisual GetVisualPrefab();
         public abstract bool IsValidPlacement(BaseGrid grid, Coord target, int rotation);
         public abstract Dictionary<int, HashSet<Coord>> GetNormalizedCoordDatas(Coord target, int rotation);

@@ -30,9 +30,6 @@ namespace HexTecGames.GridBaseSystem
         }
         [SerializeField] private int layer = default;
         [Space]
-        [SerializeField] private bool requiresSubLayer = default;
-        [SerializeField, DrawIf(nameof(requiresSubLayer), true)] private int requiredLayer = default;
-        [Space]
         [SerializeField] private List<CoordList> coordLists = new List<CoordList>();
 
 #if UNITY_EDITOR
@@ -91,18 +88,6 @@ namespace HexTecGames.GridBaseSystem
             else return false;
         }
 
-        private bool IsValidCoord(BaseGrid grid, int layer, Coord normalized)
-        {
-            if (requiresSubLayer && grid.IsEmpty(requiredLayer, normalized))
-            {
-                return false;
-            }
-            if (!grid.IsEmpty(layer, normalized))
-            {
-                return false;
-            }
-            return true;
-        }
         public override bool IsValidPlacement(BaseGrid grid, Coord target, int rotation)
         {
             LoadDictionary();

@@ -31,7 +31,7 @@ namespace HexTecGames.GridBaseSystem
         public override bool IsValidPlacement(BaseGrid grid, Coord target, int rotation)
         {
             Coord normalized = center.Normalize(target, rotation);
-            return grid.IsEmpty(Layer, normalized);
+            return IsValidCoord(grid, Layer, normalized);
         }
         public override Dictionary<int, HashSet<Coord>> GetNormalizedCoordDatas(Coord target, int rotation)
         {
@@ -42,7 +42,7 @@ namespace HexTecGames.GridBaseSystem
             List<BoolCoord> boolCoords = new List<BoolCoord>();
 
             Coord normalized = center.Normalize(target, rotation);
-            boolCoords.Add(new BoolCoord(normalized, grid.IsEmpty(Layer, normalized)));
+            boolCoords.Add(new BoolCoord(normalized, IsValidCoord(grid, Layer, normalized)));
             return boolCoords;
         }
     }

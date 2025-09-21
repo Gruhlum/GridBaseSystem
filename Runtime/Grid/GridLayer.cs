@@ -75,7 +75,6 @@ namespace HexTecGames.GridBaseSystem
         {
             return !gridObjects.ContainsKey(coord);
         }
-
         public int Count()
         {
             return gridObjects.Count;

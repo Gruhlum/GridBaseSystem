@@ -122,6 +122,18 @@ namespace HexTecGames.GridBaseSystem
         {
         }
 
+        public void ClearAll()
+        {
+            foreach (var gridLayer in gridLayers.Values)
+            {
+                var results = gridLayer.GetAll();
+                foreach (var result in results)
+                {
+                    result.Remove();
+                }
+            }
+        }
+
         internal void AddGridObject(Dictionary<int, HashSet<Coord>> coordDict, GridObject gridObj)
         {
             foreach (var coordData in coordDict)

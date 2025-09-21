@@ -23,9 +23,15 @@ namespace HexTecGames.GridBaseSystem
 
         protected override void DrawItem(PlacementData item)
         {
-            nameGUI.text = item.DisplayName;
-            img.sprite = item.Icon;
-            img.color = item.GetColor();
+            if (nameGUI != null)
+            {
+                nameGUI.text = item.DisplayName;
+            }
+            if (img != null)
+            {
+                img.sprite = item.Icon;
+                img.color = item.GetColor();
+            }
         }
         public override void SetHighlight(bool active)
         {

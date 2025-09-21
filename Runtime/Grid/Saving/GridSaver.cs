@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace HexTecGames.GridBaseSystem
 {
-    public class GridSaver : MonoBehaviour
+    public class GridSaver : AdvancedBehaviour
     {
         [SerializeField] private BaseGrid grid = default;
 
         public enum SaveMode { Local, Assets };
 
-        [SerializeField] private bool autosave = true;
+        [SerializeField] private bool autoSave = true;
         public string GridName
         {
             get
@@ -38,13 +38,21 @@ namespace HexTecGames.GridBaseSystem
                 assetPath = value;
             }
         }
+
+        public bool AutoSave
+        {
+            get
+            {
+                return this.autoSave;
+            }
+            set
+            {
+                this.autoSave = value;
+            }
+        }
+
         [SerializeField, DrawIf(nameof(saveMode), SaveMode.Assets)] private string assetPath = "ScriptableObjects/Grids";
 
-
-        private void Reset()
-        {
-            grid = GetComponentInParent<BaseGrid>();
-        }
 
         private void OnEnable()
         {
@@ -56,7 +64,7 @@ namespace HexTecGames.GridBaseSystem
         }
         private void Application_quitting()
         {
-            if (autosave)
+            if (AutoSave)
             {
                 SaveGrid();
             }
