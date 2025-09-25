@@ -48,7 +48,7 @@ namespace HexTecGames.GridBaseSystem
                 Debug.Log("Prefab is null!");
                 return;
             }
-            GridObjectVisual visual = spawner.Spawn(prefab);
+            GridObjectVisual visual = spawner.Spawn(prefab, false);
             visual.Setup(gridObject, grid);
 
             int layer = gridObject.BaseData.Layer;
