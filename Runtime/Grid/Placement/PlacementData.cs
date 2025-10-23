@@ -109,7 +109,7 @@ namespace HexTecGames.GridBaseSystem
         {
             if (string.IsNullOrEmpty(DisplayName) && Data != null)
             {
-                DisplayName = Utility.CovertToDisplayName(Data.name);
+                DisplayName = RandomUtility.CovertToDisplayName(Data.name);
             }
         }
 
