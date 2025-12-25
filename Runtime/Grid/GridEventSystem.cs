@@ -98,7 +98,7 @@ namespace HexTecGames.GridBaseSystem
 
         private void Update()
         {
-            if (MouseController.IsPointerOverUI)
+            if (MouseController.PointerOverUI)
             {
                 IsDragging = false;
                 return;

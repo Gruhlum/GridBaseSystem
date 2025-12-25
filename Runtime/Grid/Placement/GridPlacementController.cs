@@ -95,9 +95,9 @@ namespace HexTecGames.GridBaseSystem
         }
         protected virtual void Update()
         {
-            ghost.Show(!MouseController.IsPointerOverUI);
+            ghost.Show(!MouseController.PointerOverUI);
 
-            if (MouseController.IsPointerOverUI)
+            if (MouseController.PointerOverUI)
             {
                 return;
             }
