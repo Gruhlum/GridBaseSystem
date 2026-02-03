@@ -2,8 +2,12 @@
     "name": "HexTecGames.GridBaseSystem",
     "rootNamespace": "",
     "references": [
-        "GUID:4cc4c207c147801449ee01314a8f99b8",
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:86a10f0d297811748a0773de20111031",
+        "GUID:a72763d4c97859c4b8662fedf6eafabe",
+        "GUID:f932bfaf6f91f5c43bc16094e51d60b9",
+        "GUID:9a42bf2b41ce64a4eb3442a073655f4d",
+        "GUID:8ae0847a8574bad43bb8d42117f88c99",
         "GUID:3548ff6b46477e543bb4a5984dc8579e"
     ],
     "includePlatforms": [],
