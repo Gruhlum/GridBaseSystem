@@ -104,7 +104,7 @@ namespace HexTecGames.UI
             if (IsActive)
             {
                 List<GridObject> results = Grid.GetAllGridObjects();
-                List<CoordDisplay> displays = coordSpawner.ReuseOrSpawn(results.Count(), false);
+                List<CoordDisplay> displays = coordSpawner.DeactivateAllAndSpawn(results.Count(), false);
 
                 for (int i = 0; i < displays.Count; i++)
                 {
